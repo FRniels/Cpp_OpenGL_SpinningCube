@@ -1,3 +1,6 @@
+// See the Documentation folder in the repository for the explanation of the visual studio project configuration 
+// to correctly include and link all necesarry files.
+
 #include <iostream>
 //This must be included before any other opengl things are included -> the glfw3.h includes gl.h !
 #include "GL/glew.h"    //This header file contains the function pointer to OpenGl functions

@@ -2,7 +2,7 @@
 
 ## Setting up GLFW: Static Linking
 
-1. Download GLFW binaries from their website (I use 32-bit, so I target a 32-bit platform).
+1. Download GLFW binaries from their website (I use 32-bit, so I target a 32-bit platform => build application for x86).
 2. Create a new folder structure: `Dependencies -> GLFW` in the solution folder.
 3. From the GLFW download, copy the `lib-vc2019` and `include` folder and paste them into `Dependencies -> GLFW`.
    - Using `lib-vc2019 -> glfw3.lib` because of static linking (so no dll).

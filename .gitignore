@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# File content index
+# 19ac6ae0-502b-4db2-9bd2-ac06b13e9171.vsidx
+.vs

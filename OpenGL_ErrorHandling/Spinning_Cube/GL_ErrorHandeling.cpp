@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+// #include <sstream>
 #include <string>
   
 #include "GL_ErrorHandeling.h"
@@ -55,4 +58,62 @@ void DecToHexa(GLenum errorCode, HexaString& storeHexValue)
 	reverse(storeHexValue.longFormat.begin(), storeHexValue.longFormat.end());
 	/*std::cout << "The gl error number in hexadecimal short format: " << storeHexValue.shortFormat << " long format: "
 		<< storeHexValue.longFormat << std::endl;*/
+}
+
+static void PrintGlewErrorCode(const std::string& filePath, HexaString& hexErrorCode)
+{
+	std::ifstream stream(filePath);
+
+	std::string line;
+	std::string glError;
+
+	while (getline(stream, line))
+	{
+		if (line.find("#define") != std::string::npos)
+		{
+			/*Some error code exist in both formats, why is that ? for example 0x4000 and 0x00004000 ? it's the same int value ?*/
+			if (line.find(hexErrorCode.shortFormat) != std::string::npos)
+			{
+				glError += line;
+			}
+			if (line.find(hexErrorCode.longFormat) != std::string::npos)
+			{
+				glError += " | " + line;
+				break;
+			}
+		}
+	}
+
+	std::cout << glError << std::endl;
+}
+
+bool GLLogCall(const char* function, const char* file, int line)
+{
+	/* If an error occured, glGetError() will return an error code
+	   Convert this decimal error code to hex to be able to look up the error
+	   enum in glew.h .
+	   Example error code decimal: 1280 -> hex: 0x0500
+	   Open glew.h->search(ctrl + f) for 0x0500->GL_INVALID_ENUM
+	   Get all errors that have occured, can be multiple errors so use a while loop */
+
+	GLenum error;
+	bool isError = false;
+	do
+	{
+		error = glGetError();
+
+		if (error != GL_NO_ERROR)
+		{
+			std::cout << "[OpenGl error] ( " << error << " )" << std::endl;
+			/*Search for the #define name corresponding to the hexadecimal error code*/
+			HexaString hexaString;
+			DecToHexa(error, hexaString);
+			PrintGlewErrorCode("../Dependecies/GLEW/include/GL/glew.h", hexaString);
+			std::cout << "Function: " << function << "\n" << "FILE:\n" << file << "\n" << "LINE:" << line << std::endl;
+			isError = true;
+		}
+	} while (error != GL_NO_ERROR);
+
+	/*Return false if an error occured so we can use this false in our assert*/
+	return (isError ? false : true);
 }

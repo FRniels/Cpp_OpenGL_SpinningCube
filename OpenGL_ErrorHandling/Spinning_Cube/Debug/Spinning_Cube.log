@@ -1,2 +1,6 @@
-﻿  Spinning_Cube.cpp
+﻿  GL_ErrorHandeling.cpp
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_ErrorHandling\Spinning_Cube\GL_ErrorHandeling.cpp(43,39): warning C4018: '<': signed/unsigned mismatch
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_ErrorHandling\Spinning_Cube\GL_ErrorHandeling.cpp(44,21): warning C4018: '<': signed/unsigned mismatch
+  Spinning_Cube.cpp
+  Generating Code...
   Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_ErrorHandling\Debug\Spinning_Cube.exe

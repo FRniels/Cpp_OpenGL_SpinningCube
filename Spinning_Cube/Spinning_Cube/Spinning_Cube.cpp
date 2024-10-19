@@ -1,3 +1,5 @@
+// THIS IS THE MAIN PROJECT
+
 // See the Documentation folder in the repository for the explanation of the visual studio project configuration 
 // to correctly include and link all necesarry files.
 
@@ -5,6 +7,8 @@
 //This must be included before any other opengl things are included -> the glfw3.h includes gl.h !
 #include "GL/glew.h"    //This header file contains the function pointer to OpenGl functions
 #include "GLFW/glfw3.h"
+
+#include "GL_ErrorHandeling.h"
 
 int main()
 {
@@ -34,12 +38,12 @@ int main()
 	{
 		/*RENDER*/
 		glClearColor(0.996F, 0.54F, 0.094F, 0.0F); // Orange
-		glClear(GL_COLOR_BUFFER_BIT);
+		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
 
-		glBegin(GL_TRIANGLES);
-		glVertex2f(0.0f, 0.5f);
-		glVertex2f(-0.5f, -0.5f);
-		glVertex2f(0.5f, -0.5f);
+		GL_Call(glBegin(GL_TRIANGLES));
+		GL_Call(glVertex2f(0.0f, 0.5f));
+		GL_Call(glVertex2f(-0.5f, -0.5f));
+		GL_Call(glVertex2f(0.5f, -0.5f));
 		glEnd();
 
 		/*Swap front and back buffers*/

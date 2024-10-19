@@ -133,7 +133,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GL_ErrorHandeling.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GL_ErrorHandeling.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

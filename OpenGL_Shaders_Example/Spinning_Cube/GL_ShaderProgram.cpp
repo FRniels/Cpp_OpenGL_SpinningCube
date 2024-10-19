@@ -32,28 +32,41 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 
 		while (getline(stream, line))
 		{
+			// TO DO: Block comment support /**/
 			if (strncmp(line.c_str(), "//", 2) != 0) // Ignore comments starting on a new line that start with a //
 			{
+				// Check which kind of shader is following in the upcoming lines
 				if (line.find("#shader") != std::string::npos)
 				{
 					if (line.find("vertex") != std::string::npos)
 					{
 						type = ShaderType::VERTEX;
-						std::cout << "Vertex shader found." << std::endl;
+						// std::cout << "Vertex shader found." << std::endl;
 					}
 					else if (line.find("fragment") != std::string::npos)
 					{
 						type = ShaderType::FRAGMENT;
-						std::cout << "Fragment shader found." << std::endl;
+						// std::cout << "Fragment shader found." << std::endl;
 					}
 				}
-			}
+				else // Actual shader code is found
+				{
+					std::size_t comment_start_index = std::string::npos;
+					comment_start_index = line.find("//");               // Check if a comment is made after a line of shader code
+					
+					if (comment_start_index != std::string::npos)        // Remove the comment after the line of shader code
+					{
+						line = line.substr(0, (comment_start_index)); 
+					}
 
+					std::cout << line << std::endl;
+				}
+			}
 		}
 	}
 	else
 	{
-		std::cout << "File path is not okay and stream object has failed to be created." << std::endl;
+		std::cout << "Failed to created a stream object. Check your file path." << std::endl;
 	}
 
 	stream.close();

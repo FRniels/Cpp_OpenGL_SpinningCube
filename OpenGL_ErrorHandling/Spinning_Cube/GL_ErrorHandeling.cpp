@@ -108,7 +108,7 @@ bool GLLogCall(const char* function, const char* file, int line)
 			/*Search for the #define name corresponding to the hexadecimal error code*/
 			HexaString hexaString;
 			DecToHexa(error, hexaString);
-			PrintGlewErrorCode("../Dependecies/GLEW/include/GL/glew.h", hexaString);
+			PrintGlewErrorCode("../Dependencies/GLEW/include/GL/glew.h", hexaString);
 			std::cout << "Function: " << function << "\n" << "FILE:\n" << file << "\n" << "LINE:" << line << std::endl;
 			isError = true;
 		}

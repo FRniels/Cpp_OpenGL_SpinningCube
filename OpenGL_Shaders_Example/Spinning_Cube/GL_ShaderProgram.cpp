@@ -46,7 +46,7 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 				// A comment like this could be made: /*comment*/ // comment => the last comment would be automatically skipped so this is not a problem.
 				// This does not allow for comments inside statements like if(i == 0 /* comment*/){} !
 			}
-			else if (strncmp(line.c_str(), "//", 2) != 0)      // Start of a comment a new line starting with //
+			else if (strncmp(line.c_str(), "//", 2) != 0)      // If a line starts with a single comment with //, skip the line
 			{
 				if (line.find("#shader") != std::string::npos) // Check which kind of shader is following in the upcoming lines
 				{
@@ -79,6 +79,7 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 						{
 							line = line.substr(0, (comment_start_index));
 							std::cout << line << std::endl;                                // Save the valid shader source code before the block comment starts with /*
+							ss[(int)type] << line << "\n";
 							while (getline(stream, line))
 							{
 								if (line.find("*/") != std::string::npos)                  // No checking if the end of a block comment */ eventually exist, if not, all lines after the opening /* will be ignored.
@@ -91,6 +92,10 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 					}
 
 					std::cout << line << std::endl;
+					if (type != ShaderType::NONE) // When comments are placed before the actual shader code, the shader type is not yet set and is by default ShaderType::NONE = -1 which is an invalid array index!
+					{
+						ss[(int)type] << line << "\n";
+					}
 				}
 			}
 		}
@@ -102,5 +107,5 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 
 	stream.close();
 
-	return { " ", " " };
+	return { ss[0].str(), ss[1].str() };
 }

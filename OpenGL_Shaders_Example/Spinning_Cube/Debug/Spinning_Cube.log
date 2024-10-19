@@ -1,9 +1,2 @@
-﻿  GL_ErrorHandeling.cpp
-C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Shaders_Example\Spinning_Cube\GL_ErrorHandeling.cpp(42,39): warning C4018: '<': signed/unsigned mismatch
-C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Shaders_Example\Spinning_Cube\GL_ErrorHandeling.cpp(43,21): warning C4018: '<': signed/unsigned mismatch
-  Spinning_Cube.cpp
-  Generating Code...
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
+﻿  Spinning_Cube.cpp
   Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Shaders_Example\Debug\Spinning_Cube.exe

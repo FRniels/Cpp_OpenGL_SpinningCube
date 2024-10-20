@@ -38,7 +38,19 @@ int main()
 		std::cout << "Error with initializing GLEW!" << std::endl;
 
 	/* Create Shader Program */
-	glUseProgram(GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"));
+	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader");
+	GL_Call(glUseProgram(shader_program));
+
+	/*Before an uniform can be declared, the program needs to be bound*/
+	GL_Call(int uniformLocation_color = glGetUniformLocation(shader_program, "u_Color"));
+
+	/*
+	  Note: Keep in mind that an uniform is removed by the compiler if you don't use it!
+			This will trigger this ASSERT(), so watch out for this because sometimes
+			you forget to remove an unused uniform or have one declared for later usage or another situation.
+	*/
+	ASSERT(uniformLocation_color != -1);
+	GL_Call(glUniform4f(uniformLocation_color, 0.0f, 1.0f, 1.0f, 1.0f)); // Set the shader uniform value
 
 	/*Loop until the user closes the window*/
 	while (!glfwWindowShouldClose(window))

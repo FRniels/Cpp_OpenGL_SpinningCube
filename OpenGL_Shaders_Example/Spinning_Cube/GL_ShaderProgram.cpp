@@ -125,6 +125,7 @@ unsigned int CompileShader(unsigned int type, std::string& source)
 	GL_Call(glGetShaderiv(shader, GL_COMPILE_STATUS, &result));
 	if (!result)
 	{
+		// Print the shader info log if the shader compilation failed
 		int length;
 		GL_Call(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length));
 

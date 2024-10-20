@@ -18,6 +18,8 @@ unsigned int CompileShader(unsigned int type, std::string& source);							// Ret
 
 unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmentShader);   // Returns the OpenGL shader program handle
 
+void UseShaderProgram(unsigned int shader_program); 
+
 void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4 data); 
 
 #endif  // GL_SHADER_PROGRAM

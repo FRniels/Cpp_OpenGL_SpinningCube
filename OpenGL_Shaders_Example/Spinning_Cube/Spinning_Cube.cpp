@@ -40,7 +40,7 @@ int main()
 
 	/* Create Shader Program */
 	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader");
-	GL_Call(glUseProgram(shader_program));
+	UseShaderProgram(shader_program);
 
 	/* Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself */
 	vec4 color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };

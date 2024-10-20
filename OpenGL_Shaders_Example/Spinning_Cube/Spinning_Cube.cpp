@@ -3,64 +3,55 @@
 
 #include <iostream>
 
-//This must be included before any other opengl things are included -> the glfw3.h includes gl.h !
-#include "GL/glew.h"    //This header file contains the function pointers to OpenGl functions
+//The glew header must be included before any other opengl related files are included -> the glfw3.h includes gl.h !
+#include "GL/glew.h" // This glew header contains the function pointers to OpenGl functions
 #include "GLFW/glfw3.h"
 
 #include "GL_User_Types.h"
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
+#include "GL_Draw.h"
 
 unsigned int GL_CreateShaderProgram(const std::string& filepPath);
-void GL_ClearScreen(void);
-void DrawTriangle(void);
+void GL_Render(void);
 
 int main()
 {
     GLFWwindow* window;
 
-	/* Initialize the library */
-	if (!glfwInit())
+	if (!glfwInit())										     // Initialize the library 
 		return -1;
 
-	/* Create windowed mode window and it's openGl context */
-	window = glfwCreateWindow(800, 600, "Window", NULL, NULL);
+	window = glfwCreateWindow(800, 600, "Window", NULL, NULL);   // Create windowed mode window and it's openGl context 
 	if (!window)
 	{
 		glfwTerminate();
 		return -1;
 	}
 
-	/* Set the window context to be the current context */
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);                              // Set the window context to be the current context 
 
-	/* Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION */
-	if (glewInit() != GLEW_OK)
+	if (glewInit() != GLEW_OK)                                   // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
 		std::cout << "Error with initializing GLEW!" << std::endl;
 
-	/* Create Shader Program */
-	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader");
+	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
 
-	/* Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself */
+	// Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself
 	vec4 color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
 	SetUniform_vec4(shader_program, "u_Color", color_vec);       // Note: vec4 will be passed as pointer as it is an array
 
 	vec4 position_vec = { 0.25f, 0.0f, 0.0f, 1.0f };
 	SetUniform_vec4(shader_program, "u_Position", position_vec); // Note: vec4 will be passed as pointer as it is an array
 
-	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
+	/* RENDER LOOP */
+	while (!glfwWindowShouldClose(window))                       // Loop until the user closes the window
 	{
-		/* RENDER */
-		GL_ClearScreen();
-		DrawTriangle();
+		GL_Render();
 
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(window);                                 // Swap front and back buffers 
 
-		/* Poll and process events */
-		glfwPollEvents();
+		glfwPollEvents();                                        // Poll and process events
 	}
 
 	glfwTerminate();
@@ -74,17 +65,8 @@ unsigned int GL_CreateShaderProgram(const std::string& filepPath)
 	return CreateShaderProgram(shaderProgramSources.VertexShader, shaderProgramSources.FragmentShader);
 }
 
-void GL_ClearScreen(void)
+void GL_Render(void)
 {
-	glClearColor(0.996F, 0.54F, 0.094F, 0.0F); // Orange
-	GL_Call(glClear(GL_COLOR_BUFFER_BIT));
-}
-
-void DrawTriangle(void)
-{
-	GL_Call(glBegin(GL_TRIANGLES));
-	GL_Call(glVertex2f(0.0f, 0.5f));
-	GL_Call(glVertex2f(-0.5f, -0.5f));
-	GL_Call(glVertex2f(0.5f, -0.5f));
-	glEnd();
+	GL_ClearScreen();
+	DrawTriangle();
 }

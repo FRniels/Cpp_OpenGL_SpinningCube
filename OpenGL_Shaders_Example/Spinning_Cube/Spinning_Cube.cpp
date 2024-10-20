@@ -10,6 +10,10 @@
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
 
+unsigned int GL_CreateShaderProgram(const std::string& filepPath);
+void GL_ClearScreen(void);
+void DrawTriangle(void);
+
 int main()
 {
     GLFWwindow* window;
@@ -34,32 +38,44 @@ int main()
 		std::cout << "Error with initializing GLEW!" << std::endl;
 
 	/* Create Shader Program */
-	ShaderProgramSource shaderProgramSources = ParseShader("../Resources/Shaders/Shader_Vertex_Fragment.shader");
-	unsigned int shaderProgram = CreateShaderProgram(shaderProgramSources.VertexShader, shaderProgramSources.FragmentShader);
-	glUseProgram(shaderProgram);
+	glUseProgram(GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"));
 
 	/*Loop until the user closes the window*/
 	while (!glfwWindowShouldClose(window))
 	{
 		/*RENDER*/
-		glClearColor(0.996F, 0.54F, 0.094F, 0.0F); // Orange
-		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
-
-		GL_Call(glBegin(GL_TRIANGLES));
-		GL_Call(glVertex2f(0.0f, 0.5f));
-		GL_Call(glVertex2f(-0.5f, -0.5f));
-		GL_Call(glVertex2f(0.5f, -0.5f));
-		glEnd();
+		GL_ClearScreen();
+		DrawTriangle();
 
 		/*Swap front and back buffers*/
 		glfwSwapBuffers(window);
 
 		/*Poll and process events*/
 		glfwPollEvents();
-
 	}
 
 	glfwTerminate();
 
     return 0;
+}
+
+unsigned int GL_CreateShaderProgram(const std::string& filepPath)
+{
+	ShaderProgramSource shaderProgramSources = ParseShader(filepPath);
+	return CreateShaderProgram(shaderProgramSources.VertexShader, shaderProgramSources.FragmentShader);
+}
+
+void GL_ClearScreen(void)
+{
+	glClearColor(0.996F, 0.54F, 0.094F, 0.0F); // Orange
+	GL_Call(glClear(GL_COLOR_BUFFER_BIT));
+}
+
+void DrawTriangle(void)
+{
+	GL_Call(glBegin(GL_TRIANGLES));
+	GL_Call(glVertex2f(0.0f, 0.5f));
+	GL_Call(glVertex2f(-0.5f, -0.5f));
+	GL_Call(glVertex2f(0.5f, -0.5f));
+	glEnd();
 }

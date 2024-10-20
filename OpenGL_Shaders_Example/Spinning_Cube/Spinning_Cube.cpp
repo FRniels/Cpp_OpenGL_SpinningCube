@@ -35,6 +35,8 @@ int main()
 
 	/* Create Shader Program */
 	ShaderProgramSource shaderProgramSources = ParseShader("../Resources/Shaders/Shader_Vertex_Fragment.shader");
+	unsigned int shaderProgram = CreateShaderProgram(shaderProgramSources.VertexShader, shaderProgramSources.FragmentShader);
+	glUseProgram(shaderProgram);
 
 	/*Loop until the user closes the window*/
 	while (!glfwWindowShouldClose(window))

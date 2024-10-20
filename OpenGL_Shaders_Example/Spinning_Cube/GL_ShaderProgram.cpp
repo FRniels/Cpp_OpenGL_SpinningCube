@@ -114,6 +114,8 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 
 unsigned int CompileShader(unsigned int type, std::string& source)
 {
+	// TO DO: ADD OPENGL ERROR HANDELING
+
 	unsigned int shader = glCreateShader(type);
 	const char* src = source.c_str();
 	glShaderSource(shader, 1, &src, nullptr);
@@ -132,7 +134,7 @@ unsigned int CompileShader(unsigned int type, std::string& source)
 
 		std::cout << (type == GL_VERTEX_SHADER ? "Vertex shader " : "Fragment shader ") << " failed to compile!" << std::endl;
 		std::cout << message << std::endl;
-		glDeleteShader(shader);
+		glDeleteShader(shader);	// The shader failed to compile so it is safe to delete the shader resources.
 		return 0;
 	}
 
@@ -141,5 +143,21 @@ unsigned int CompileShader(unsigned int type, std::string& source)
 
 unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmentShader)
 {
-	return 0; // NOT YET IMPLEMENTED: Temp value to satisfy the compiler
+	// TO DO: ADD OPENGL ERROR HANDELING
+
+	unsigned int program = glCreateProgram();
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+
+	// Bind both shaders to the OpenGL context and link them to form a shader program
+	glAttachShader(program, vs);
+	glAttachShader(program, fs);
+	glLinkProgram(program);
+	glValidateProgram(program);
+
+	// Delete the shader resources after the program validation succeeds.
+	glDeleteShader(vs);
+	glDeleteShader(fs);
+
+	return program;
 }

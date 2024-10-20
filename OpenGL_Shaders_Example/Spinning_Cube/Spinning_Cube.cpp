@@ -69,5 +69,10 @@ void GL_Render(void)
 {
 	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
 	GL_ClearScreen(clear_color);
-	DrawTriangle();
+
+	vec2f coo1 = { 0.0f, 0.5f };
+	vec2f coo2 = { -0.5f, -0.5f };
+	vec2f coo3 = { 0.5f, -0.5f };
+
+	DrawTriangle(coo1, coo2, coo3);
 }

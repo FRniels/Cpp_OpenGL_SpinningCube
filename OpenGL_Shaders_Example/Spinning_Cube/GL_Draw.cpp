@@ -7,11 +7,17 @@ void GL_ClearScreen(vec4f clear_color)
 	GL_Call(glClear(GL_COLOR_BUFFER_BIT));
 }
 
-void DrawTriangle(void)
+void DrawTriangle(vec2f coo1, vec2f coo2, vec2f coo3)
 {
 	GL_Call(glBegin(GL_TRIANGLES));
-	GL_Call(glVertex2f(0.0f, 0.5f));
+
+	/*GL_Call(glVertex2f(0.0f, 0.5f));
 	GL_Call(glVertex2f(-0.5f, -0.5f));
-	GL_Call(glVertex2f(0.5f, -0.5f));
+	GL_Call(glVertex2f(0.5f, -0.5f));*/
+
+	GL_Call(glVertex2f(*coo1, *(coo1 + 1)));
+	GL_Call(glVertex2f(*coo2, *(coo2 + 1)));
+	GL_Call(glVertex2f(*coo3, *(coo3 + 1)));
+
 	glEnd();
 }

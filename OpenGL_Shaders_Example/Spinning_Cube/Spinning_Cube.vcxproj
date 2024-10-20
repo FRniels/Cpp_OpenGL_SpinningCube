@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="GL_ErrorHandeling.h" />
     <ClInclude Include="GL_ShaderProgram.h" />
+    <ClInclude Include="GL_User_Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

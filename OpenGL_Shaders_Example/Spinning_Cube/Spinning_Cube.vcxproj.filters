@@ -32,5 +32,8 @@
     <ClInclude Include="GL_ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GL_User_Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -159,3 +159,29 @@ unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmen
 
 	return program;
 }
+
+void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4 data)
+{
+	/*
+	  Notes: 
+	    - Before an uniform handle can be retrieved, the shader program in which the uniform is used needs to be bound to the OpenGL context!
+		- Keep in mind that an uniform is removed by the compiler if you don't use it!
+		  This will trigger the ASSERT(), so watch out for this because sometimes
+	      you forget to remove an unused uniform or have one declared for later usage or another situation.
+	*/
+
+	// Print info about the uniform to be set
+	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: ";
+	for (int i = 0; i < VEC4_SIZE; ++i)
+	{
+		std::cout << *(data + i) << "F ";
+	}
+	std::cout << std::endl;
+
+	// Check if the uniform exists and set it's value if the uniform has a valid location
+	GL_Call(int uniformLocation_position = glGetUniformLocation(shader_program, u_Name.c_str()));
+	ASSERT(uniformLocation_position != -1);
+	GL_Call(glUniform4f(uniformLocation_position, *data, *(data + 1), *(data + 2), *(data + 3))); // Set the shader position uniform value
+}
+
+void SetUniform_vec4(unsigned int shader_program, unsigned int u_Location, vec4 data); // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS) => NOT IMPLEMENTED

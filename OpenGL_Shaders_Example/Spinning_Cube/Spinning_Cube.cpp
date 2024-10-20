@@ -4,9 +4,10 @@
 #include <iostream>
 
 //This must be included before any other opengl things are included -> the glfw3.h includes gl.h !
-#include "GL/glew.h"    //This header file contains the function pointer to OpenGl functions
+#include "GL/glew.h"    //This header file contains the function pointers to OpenGl functions
 #include "GLFW/glfw3.h"
 
+#include "GL_User_Types.h"
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
 
@@ -18,11 +19,11 @@ int main()
 {
     GLFWwindow* window;
 
-	/*Initialize the library*/
+	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
 
-	/*Create windowed mode window and it's openGl context*/
+	/* Create windowed mode window and it's openGl context */
 	window = glfwCreateWindow(800, 600, "Window", NULL, NULL);
 	if (!window)
 	{
@@ -30,10 +31,10 @@ int main()
 		return -1;
 	}
 
-	/*Set the window context to be the current context*/
+	/* Set the window context to be the current context */
 	glfwMakeContextCurrent(window);
 
-	/*Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION*/
+	/* Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION */
 	if (glewInit() != GLEW_OK)
 		std::cout << "Error with initializing GLEW!" << std::endl;
 
@@ -41,28 +42,24 @@ int main()
 	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader");
 	GL_Call(glUseProgram(shader_program));
 
-	/*Before an uniform can be declared, the program needs to be bound*/
-	GL_Call(int uniformLocation_color = glGetUniformLocation(shader_program, "u_Color"));
+	/* Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself */
+	vec4 color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
+	SetUniform_vec4(shader_program, "u_Color", color_vec);       // Note: vec4 will be passed as pointer as it is an array
 
-	/*
-	  Note: Keep in mind that an uniform is removed by the compiler if you don't use it!
-			This will trigger this ASSERT(), so watch out for this because sometimes
-			you forget to remove an unused uniform or have one declared for later usage or another situation.
-	*/
-	ASSERT(uniformLocation_color != -1);
-	GL_Call(glUniform4f(uniformLocation_color, 0.0f, 1.0f, 1.0f, 1.0f)); // Set the shader uniform value
+	vec4 position_vec = { 0.25f, 0.0f, 0.0f, 1.0f };
+	SetUniform_vec4(shader_program, "u_Position", position_vec); // Note: vec4 will be passed as pointer as it is an array
 
-	/*Loop until the user closes the window*/
+	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
-		/*RENDER*/
+		/* RENDER */
 		GL_ClearScreen();
 		DrawTriangle();
 
-		/*Swap front and back buffers*/
+		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
-		/*Poll and process events*/
+		/* Poll and process events */
 		glfwPollEvents();
 	}
 

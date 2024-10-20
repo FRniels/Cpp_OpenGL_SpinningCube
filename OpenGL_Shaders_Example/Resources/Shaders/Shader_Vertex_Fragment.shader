@@ -21,14 +21,15 @@
 #version 330 core
 
 layout(location = 0) in vec4 position; /* A block comment on the same line as shader source code */
-// uniform vec4 u_Position = vec4(0.0, 0.0, 0.0, 1.0);
+uniform vec4 u_Position = vec4(0.0, 0.0, 0.0, 1.0);
 
 void main()      // A comment on the same line as shader source code
 {
 	gl_Position = position;
-	gl_Position.x += 0.5;
-	// gl_Position.w += 0.5;  // Research: W is scale factor ?? Is it wrong to use it like a Z value ???
-	// gl_Position.z += 0.75; // Research: Z doesn't seem to affect anything in this case ?? Is Z purely used for checking overlapping ??
+	// gl_Position.x += 0.5;
+	gl_Position.x += u_Position.x;
+	// gl_Position.w += 0.5;        // Research: W is scale factor ?? Is it wrong to use it like a Z value ???
+	// gl_Position.z += 0.75;       // Research: Z doesn't seem to affect anything in this case ?? Is Z purely used for checking overlapping ??
 };
 
 #shader fragment // Another comment that the shader parser will ignore

@@ -34,6 +34,38 @@ int main()
 	if (glewInit() != GLEW_OK)                                   // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
 		std::cout << "Error with initializing GLEW!" << std::endl;
 
+
+	float positions[] = //Rectangle
+	{
+		-0.5f, -0.5f, //Bottom left corner
+		 0.5f, -0.5f, //Bottom right corner
+		 0.5f,  0.5f, //Top right corner
+		-0.5f,  0.5f, //Top left corner
+	};
+	unsigned int indices[] =
+	{
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	// TO DO: ADD MORE INFO TO THE CREATION AND USAGE OF THE VERTEX AND ELEMENT BUFFER
+
+	/*Vertex buffer*/
+	unsigned int buffer;
+	GL_Call(glGenBuffers(1, &buffer));
+	GL_Call(glBindBuffer(GL_ARRAY_BUFFER, buffer));
+	GL_Call(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
+
+	/*Data layout*/
+	GL_Call(glEnableVertexAttribArray(0));
+	GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
+
+	/*Element buffer*/
+	unsigned int ibo;
+	GL_Call(glGenBuffers(1, &ibo));
+	GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+	GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
+
 	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
 
@@ -70,9 +102,11 @@ void GL_Render(void)
 	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
 	GL_ClearScreen(clear_color);
 
-	vec2f coo1 = { 0.0f, 0.5f };
+	/*vec2f coo1 = { 0.0f, 0.5f };
 	vec2f coo2 = { -0.5f, -0.5f };
 	vec2f coo3 = { 0.5f, -0.5f };
 
-	DrawTriangle(coo1, coo2, coo3);
+	DrawTriangle(coo1, coo2, coo3);*/
+
+	GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr)); // Draw the current bound vertex buffer using the indices specified in the element buffer
 }

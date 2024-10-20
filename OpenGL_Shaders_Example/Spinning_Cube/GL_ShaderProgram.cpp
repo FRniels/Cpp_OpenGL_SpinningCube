@@ -5,6 +5,8 @@
 #include <sstream>
 #include <string>
 
+#include "GL/glew.h"
+
 //struct ShaderProgramSource
 //{
 //	std::string VertexShader;
@@ -108,4 +110,36 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 	stream.close();
 
 	return { ss[0].str(), ss[1].str() };
+}
+
+unsigned int CompileShader(unsigned int type, std::string& source)
+{
+	unsigned int shader = glCreateShader(type);
+	const char* src = source.c_str();
+	glShaderSource(shader, 1, &src, nullptr);
+	glCompileShader(shader);
+
+	/*Error handeling*/
+	int result;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
+	if (!result)
+	{
+		int length;
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+
+		char* message = (char*)alloca(length * sizeof(char));
+		glGetShaderInfoLog(shader, length, &length, message);
+
+		std::cout << (type == GL_VERTEX_SHADER ? "Vertex shader " : "Fragment shader ") << " failed to compile!" << std::endl;
+		std::cout << message << std::endl;
+		glDeleteShader(shader);
+		return 0;
+	}
+
+	return shader;
+}
+
+unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmentShader)
+{
+	return 0; // NOT YET IMPLEMENTED: Temp value to satisfy the compiler
 }

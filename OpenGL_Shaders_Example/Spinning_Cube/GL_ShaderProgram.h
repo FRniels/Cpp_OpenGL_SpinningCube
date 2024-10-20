@@ -13,5 +13,9 @@ struct ShaderProgramSource // Temporary declaration and implementation that have
 
 ShaderProgramSource ParseShader(const std::string& filepPath);
 
+unsigned int CompileShader(unsigned int type, std::string& source);
+
+unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmentShader);
+
 
 #endif  // GL_SHADER_PROGRAM

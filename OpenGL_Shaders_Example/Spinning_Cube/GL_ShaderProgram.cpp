@@ -165,7 +165,7 @@ void UseShaderProgram(unsigned int shader_program)
 	GL_Call(glUseProgram(shader_program));
 }
 
-void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4 data)
+void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4f data)
 {
 	/*
 	  Notes: 
@@ -177,7 +177,7 @@ void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec
 
 	// Print info about the uniform to be set
 	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: ";
-	for (int i = 0; i < VEC4_SIZE; ++i)
+	for (int i = 0; i < VEC4F_SIZE; ++i)
 	{
 		std::cout << *(data + i) << "F ";
 	}
@@ -189,4 +189,4 @@ void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec
 	GL_Call(glUniform4f(uniformLocation_position, *data, *(data + 1), *(data + 2), *(data + 3))); // Set the shader position uniform value
 }
 
-void SetUniform_vec4(unsigned int shader_program, unsigned int u_Location, vec4 data); // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS) => NOT IMPLEMENTED
+void SetUniform_vec4(unsigned int shader_program, unsigned int u_Location, vec4f data); // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS) => NOT IMPLEMENTED

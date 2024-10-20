@@ -20,6 +20,6 @@ unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmen
 
 void UseShaderProgram(unsigned int shader_program); 
 
-void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4 data); 
+void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4f data); 
 
 #endif  // GL_SHADER_PROGRAM

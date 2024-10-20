@@ -2,9 +2,10 @@
 #define GL_DRAW_H
 
 #include "GL/glew.h"
+#include "GL_User_Types.h"
 #include "GL_ErrorHandeling.h"
 
-void GL_ClearScreen(void);
+void GL_ClearScreen(vec4f clear_color);
 
 void DrawTriangle(void); // Note: This makes use of OpenGL legacy API calls => In actual applications, these GL calls should be replaced by GL calls that makes use of buffer/index objects
 

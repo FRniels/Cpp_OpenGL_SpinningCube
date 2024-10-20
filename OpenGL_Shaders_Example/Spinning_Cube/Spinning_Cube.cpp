@@ -38,16 +38,16 @@ int main()
 	UseShaderProgram(shader_program);
 
 	// Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself
-	vec4 color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
+	vec4f color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
 	SetUniform_vec4(shader_program, "u_Color", color_vec);       // Note: vec4 will be passed as pointer as it is an array
 
-	vec4 position_vec = { 0.25f, 0.0f, 0.0f, 1.0f };
+	vec4f position_vec = { 0.25f, 0.0f, 0.0f, 1.0f };
 	SetUniform_vec4(shader_program, "u_Position", position_vec); // Note: vec4 will be passed as pointer as it is an array
 
 	/* RENDER LOOP */
 	while (!glfwWindowShouldClose(window))                       // Loop until the user closes the window
 	{
-		GL_Render();
+		GL_Render();											 // Render the scene
 
 		glfwSwapBuffers(window);                                 // Swap front and back buffers 
 
@@ -67,6 +67,7 @@ unsigned int GL_CreateShaderProgram(const std::string& filepPath)
 
 void GL_Render(void)
 {
-	GL_ClearScreen();
+	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
+	GL_ClearScreen(clear_color);
 	DrawTriangle();
 }

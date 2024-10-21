@@ -10,6 +10,7 @@
 #include "GL_User_Types.h"
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
+#include "GL_Buffers.h"
 #include "GL_Draw.h"
 
 unsigned int GL_CreateShaderProgram(const std::string& filepPath);
@@ -48,23 +49,29 @@ int main()
 		2, 3, 0
 	};
 
-	// TO DO: ADD MORE INFO TO THE CREATION AND USAGE OF THE VERTEX AND ELEMENT BUFFER
+	// TO DO: 
+	//	- ADD MORE INFO TO THE CREATION AND USAGE OF THE VERTEX AND ELEMENT BUFFER
+	//  - ABSTRACT AWAY ALL OPENGL AND ERROR HANDELING CALLS FROM THE USER CODE
 
 	/*Vertex buffer*/
-	unsigned int buffer;
-	GL_Call(glGenBuffers(1, &buffer));
-	GL_Call(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-	GL_Call(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
+	// unsigned int buffer;
+	// GL_Call(glGenBuffers(1, &buffer));
+	// GL_Call(glBindBuffer(GL_ARRAY_BUFFER, buffer));
+	// GL_Call(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
+
+	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));
 
 	/*Data layout*/
 	GL_Call(glEnableVertexAttribArray(0));
 	GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
 
 	/*Element buffer*/
-	unsigned int ibo;
-	GL_Call(glGenBuffers(1, &ibo));
-	GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-	GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
+	// unsigned int ibo;
+	// GL_Call(glGenBuffers(1, &ibo));
+	// GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+	// GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
+
+	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int));
 
 	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
@@ -101,12 +108,6 @@ void GL_Render(void)
 {
 	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
 	GL_ClearScreen(clear_color);
-
-	/*vec2f coo1 = { 0.0f, 0.5f };
-	vec2f coo2 = { -0.5f, -0.5f };
-	vec2f coo3 = { 0.5f, -0.5f };
-
-	DrawTriangle(coo1, coo2, coo3);*/
 
 	GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr)); // Draw the current bound vertex buffer using the indices specified in the element buffer
 }

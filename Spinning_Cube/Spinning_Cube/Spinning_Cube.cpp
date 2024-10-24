@@ -10,6 +10,7 @@
 
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
+#include "GL_Buffers.h"
 #include "GL_Draw.h"
 
 unsigned int GL_CreateShaderProgram(const std::string& filepPath);
@@ -38,6 +39,28 @@ int main()
 	if (glewInit() != GLEW_OK)
 		std::cout << "Error with initializing GLEW!" << std::endl;
 
+	float positions[] = //Rectangle
+	{
+		-0.5f, -0.5f, //Bottom left corner
+		 0.5f, -0.5f, //Bottom right corner
+		 0.5f,  0.5f, //Top right corner
+		-0.5f,  0.5f, //Top left corner
+	};
+	unsigned int indices[] =
+	{
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));
+
+	/*Data layout*/
+	GL_Call(glEnableVertexAttribArray(0));
+	GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
+
+	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int));
+
+	// SHADERS
 	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
 
@@ -79,8 +102,5 @@ void GL_Render(void)
 	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
 	GL_ClearScreen(clear_color);
 
-	vec2f coo1 = { 0.0f, 0.5f };
-	vec2f coo2 = { -0.5f, -0.5f };
-	vec2f coo3 = { 0.5f, -0.5f };
-	DrawTriangle(coo1, coo2, coo3);
+	GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr)); // Draw the current bound vertex buffer using the indices specified in the element buffer
 }

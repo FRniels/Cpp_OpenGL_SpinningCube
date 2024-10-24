@@ -1,5 +1,10 @@
 #include "GL_Draw.h"
 
+void GL_ClearColor(vec4f color)
+{
+	glClearColor(*color, *(color + 1), *(color + 2), *(color + 3));
+}
+
 void GL_ClearScreen(vec4f clear_color)
 {
 	// glClearColor(0.996F, 0.54F, 0.094F, 0.0F); // Orange

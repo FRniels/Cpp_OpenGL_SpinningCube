@@ -1,2 +1,10 @@
-﻿  Spinning_Cube.cpp
+﻿  GL_Draw.cpp
+  GL_ElementBuffer.cpp
+  GL_ErrorHandeling.cpp
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Vertex_Element_Buffer_Example\Spinning_Cube\GL_ErrorHandeling.cpp(41,39): warning C4018: '<': signed/unsigned mismatch
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Vertex_Element_Buffer_Example\Spinning_Cube\GL_ErrorHandeling.cpp(42,21): warning C4018: '<': signed/unsigned mismatch
+  GL_ShaderProgram.cpp
+  Gl_VertexBuffer.cpp
+  Spinning_Cube.cpp
+  Generating Code...
   Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Vertex_Element_Buffer_Example\Debug\Spinning_Cube.exe

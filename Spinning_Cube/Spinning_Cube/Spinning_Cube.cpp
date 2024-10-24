@@ -9,6 +9,7 @@
 #include "GLFW/glfw3.h"
 
 #include "GL_ErrorHandeling.h"
+#include "GL_Draw.h"
 
 int main()
 {
@@ -40,11 +41,15 @@ int main()
 		glClearColor(0.996F, 0.54F, 0.094F, 0.0F); // Orange
 		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
 
-		GL_Call(glBegin(GL_TRIANGLES));
-		GL_Call(glVertex2f(0.0f, 0.5f));
-		GL_Call(glVertex2f(-0.5f, -0.5f));
-		GL_Call(glVertex2f(0.5f, -0.5f));
-		glEnd();
+		// GL_Call(glBegin(GL_TRIANGLES));
+		// GL_Call(glVertex2f(0.0f, 0.5f));
+		// GL_Call(glVertex2f(-0.5f, -0.5f));
+		// GL_Call(glVertex2f(0.5f, -0.5f));
+		// glEnd();
+		vec2f coo1 = { 0.0f, 0.5f };
+		vec2f coo2 = { -0.5f, -0.5f };
+		vec2f coo3 = { 0.5f, -0.5f };
+		DrawTriangle(coo1, coo2, coo3);
 
 		/*Swap front and back buffers*/
 		glfwSwapBuffers(window);

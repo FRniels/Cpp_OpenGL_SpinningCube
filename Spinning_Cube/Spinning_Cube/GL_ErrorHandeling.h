@@ -1,6 +1,7 @@
 #ifndef GL_ERROR_HANDELING
 #define GL_ERROR_HANDELING
 
+#include <string>
 #include "GL/glew.h"  
 
 struct HexaString;

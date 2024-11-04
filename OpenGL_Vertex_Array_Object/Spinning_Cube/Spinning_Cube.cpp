@@ -49,29 +49,22 @@ int main()
 		2, 3, 0
 	};
 
-	// TO DO: 
-	//	- ADD MORE INFO TO THE CREATION AND USAGE OF THE VERTEX AND ELEMENT BUFFER
-	//  - ABSTRACT AWAY ALL OPENGL AND ERROR HANDELING CALLS FROM THE USER CODE
+	// Vertex array: Instead of binding the vertex and element buffer directly to the OpenGL context, those buffers can be
+	//				 bound to a Vertex Array Object (VAO). IMPORTANT: to bind the vertex/element buffer to the vao, the vao
+	//               needs to be bound to the OpenGL context before binding the vertex/element buffer. 
+	//               This vao can than be unbound when not needed and bound to the OpenGL context later on when needed. 
+	//				 This allows for configuring vao's upfront and just bind the one that is needed before drawing.
+	unsigned int vertex_array_object;
+	GL_Call(glGenVertexArrays(1, &vertex_array_object));
+	GL_Call(glBindVertexArray(vertex_array_object));
 
-	/*Vertex buffer*/
-	// unsigned int buffer;
-	// GL_Call(glGenBuffers(1, &buffer));
-	// GL_Call(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-	// GL_Call(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
-
-	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));
+	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));       // The vertex buffer is bound to the OpenGL contect on instantiation
 
 	/*Data layout*/
 	GL_Call(glEnableVertexAttribArray(0));
 	GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
 
-	/*Element buffer*/
-	// unsigned int ibo;
-	// GL_Call(glGenBuffers(1, &ibo));
-	// GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-	// GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
-
-	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int));
+	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int)); // The element buffer is bound to the OpenGL contect on instantiation
 
 	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
@@ -83,15 +76,37 @@ int main()
 	vec4f position_vec = { 0.25f, 0.0f, 0.0f, 1.0f };
 	SetUniform_vec4(shader_program, "u_Position", position_vec); // Note: vec4 will be passed as pointer as it is an array
 
+	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
+	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
+	//            When trying to draw with such an 'unconfigured' vao, null pointer errors can/will or even worse, undefinded behaviour will occur.
+	// 
+	// Unbind all buffers including the vao and the shader program.
+	// When this specific vao is needed when drawing, this vao can be bound to the OpenGL context at that moment.
+	// The shader program is not stored inside the vao so it needs to be bound to the OpenGL context seperately.
+	GL_Call(glBindVertexArray(0));
+	bufferV.Unbound();
+	bufferE.Unbound();
+	GL_Call(glUseProgram(0));
+
+
 	/* RENDER LOOP */
 	while (!glfwWindowShouldClose(window))                       // Loop until the user closes the window
 	{
+		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing.
+		GL_Call(glBindVertexArray(vertex_array_object));
+		GL_Call(glUseProgram(shader_program));
 		GL_Render();											 // Render the scene
 
 		glfwSwapBuffers(window);                                 // Swap front and back buffers 
 
 		glfwPollEvents();                                        // Poll and process events
 	}
+
+	// Clean-up:
+	bufferV.Delete();
+	bufferE.Delete();
+	GL_Call(glDeleteProgram(shader_program));
+	GL_Call(glDeleteVertexArrays(1, &vertex_array_object));
 
 	glfwTerminate();
 

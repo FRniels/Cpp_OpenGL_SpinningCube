@@ -5,21 +5,24 @@
 #include "GL_User_Types.h"
 
 
-// struct ShaderProgramSource;
-struct ShaderProgramSource // Temporary declaration and implementation that have access to this struct from the main source file
+
+struct ShaderProgramSource 
 {
 	std::string VertexShader;
 	std::string FragmentShader;
 };
 
-ShaderProgramSource ParseShader(const std::string& filepPath);								// Returns the vertex and/or fragment shader source code
+ShaderProgramSource ParseShader(const std::string& filepPath);						   // Returns the vertex and/or fragment shader source code.
 
-unsigned int CompileShader(unsigned int type, std::string& source);							// Returns the OpenGL shader obj handle
+unsigned int CompileShader(unsigned int type, std::string& source);					   // Returns the OpenGL shader obj handle.
 
-unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmentShader);   // Returns the OpenGL shader program handle
+unsigned int CreateShaderProgram(const std::string& filepPath);						   // All shaders in 1 file: Pass the file path in which all shaders are found. Returns the OpenGL shader program handle.
 
-void UseShaderProgram(unsigned int shader_program);
+void UseShaderProgram(unsigned int shader_program); 
 
-void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4f data);
+// Uniform set function overloading:
+void SetUniform(unsigned int shader_program, const std::string& u_Name, float data);
+void SetUniform(unsigned int shader_program, const std::string& u_Name, vec4f data); 
+void SetUniform(unsigned int shader_program, unsigned int u_Location,   vec4f data);   // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS) => NOT IMPLEMENTED
 
 #endif  // GL_SHADER_PROGRAM

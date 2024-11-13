@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -134,20 +134,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GL_Draw.cpp" />
-    <ClCompile Include="GL_Draw_Primitive.cpp" />
     <ClCompile Include="GL_ElementBuffer.cpp" />
     <ClCompile Include="GL_ErrorHandeling.cpp" />
     <ClCompile Include="GL_ShaderProgram.cpp" />
-    <ClCompile Include="GL_VertexBuffer.cpp" />
+    <ClCompile Include="GL_VertexArray.cpp" />
+    <ClCompile Include="Gl_VertexBuffer.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GL_Buffers.h" />
     <ClInclude Include="GL_Draw.h" />
-    <ClInclude Include="GL_Draw_Primitive.h" />
     <ClInclude Include="GL_ErrorHandeling.h" />
     <ClInclude Include="GL_ShaderProgram.h" />
     <ClInclude Include="GL_User_Types.h" />
+    <ClInclude Include="GL_VertexArray.h" />
+    <ClInclude Include="GL_VertexBufferLayout.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

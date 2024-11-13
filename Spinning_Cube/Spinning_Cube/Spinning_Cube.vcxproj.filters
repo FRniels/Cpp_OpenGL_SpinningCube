@@ -21,16 +21,19 @@
     <ClCompile Include="GL_ErrorHandeling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GL_Draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GL_ShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GL_VertexBuffer.cpp">
+    <ClCompile Include="GL_Draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gl_VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GL_ElementBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GL_VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,16 +41,22 @@
     <ClInclude Include="GL_ErrorHandeling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GL_Draw.h">
+    <ClInclude Include="GL_ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GL_User_Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GL_ShaderProgram.h">
+    <ClInclude Include="GL_Draw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GL_Buffers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GL_VertexBufferLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GL_VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

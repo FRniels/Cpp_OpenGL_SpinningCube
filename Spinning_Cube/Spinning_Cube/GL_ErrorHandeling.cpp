@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 
 #include "GL_ErrorHandeling.h"
 
@@ -37,7 +36,7 @@ void DecToHexa(GLenum errorCode, HexaString& storeHexValue)
 		errorCode = errorCode / 16;
 	}
 
-	/*Fill the hex format with zeros. example: when storeHexValue = 500 the string length is shorter than 4char so i add a 0 in front*/
+	/* Fill the hex format with zeros. example: when storeHexValue = 500 the string length is shorter than 4char so i add a 0 in front */
 	int hexBytes = 4;
 	if (storeHexValue.shortFormat.size() < hexBytes)
 		for (int i = 0; i < (hexBytes - storeHexValue.shortFormat.size()); i++)

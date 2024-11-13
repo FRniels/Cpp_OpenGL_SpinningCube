@@ -24,12 +24,10 @@ layout(location = 0) in vec4 position; /* A block comment on the same line as sh
 uniform vec4 u_Position = vec4(0.0, 0.0, 0.0, 1.0);
 
 void main()      // A comment on the same line as shader source code
-{
+{	
 	gl_Position = position;
 	// gl_Position.x += 0.5;
 	gl_Position.x += u_Position.x;
-	// gl_Position.w += 0.5;        // Research: W is scale factor ?? Is it wrong to use it like a Z value ???
-	// gl_Position.z += 0.75;       // Research: Z doesn't seem to affect anything in this case ?? Is Z purely used for checking overlapping ??
 };
 
 #shader fragment // Another comment that the shader parser will ignore
@@ -38,10 +36,16 @@ void main()      // A comment on the same line as shader source code
 out vec4 color; /* A
 				   weird
 				   block comment */
-uniform vec4 u_Color = vec4(0.0, 0.0, 0.0, 1.0); // Uniform info: https://www.khronos.org/opengl/wiki/Uniform_(GLSL)
+// uniform vec4 u_Color = vec4(0.0, 0.0, 0.0, 1.0);    // Uniform info: https://www.khronos.org/opengl/wiki/Uniform_(GLSL)
+uniform float uWindow_Height = 0.0f;
 
 void main()
 {
-	// color = vec4(0.0, 1.0, 0.0, 1.0);         // Assign hardcoded color vector
-	color = u_Color;                             // Assign a uniform to the color output
+	// JUST TO DO SOMETHING RELEVANT WITH uWindow_Height, IF NOT DOING ANYTHING, THE COMPILER WILL DELETE THIS UNIFORM. WHEN TRYING TO GET THE UNIFORM LOCATION IN CPU CODE, IT WILL FAIL!
+	// color = vec4(0.0, 1.0, 0.0, 1.0);            // Assign hardcoded color vector
+	// color = u_Color;                                // Assign a uniform to the color output
+	
+	float lerpValue = gl_FragCoord.y / uWindow_Height;      // Assign a color that is a linear interpolation of 2 colors base on the Y-coo of the specific fragment.
+	
+	color = mix(vec4(1.0f, 1.0f, 1.0f, 1.0f), vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);
 };

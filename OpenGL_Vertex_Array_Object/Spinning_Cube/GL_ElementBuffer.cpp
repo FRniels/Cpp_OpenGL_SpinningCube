@@ -21,10 +21,16 @@ void GL_ElementBuffer::Bind() const /* const because this method doesn't modify 
 	GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle));
 }
 
+void GL_ElementBuffer::Unbind()
+{
+	GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+/*
 void GL_ElementBuffer::Unbound() const
 {
 	GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
+*/
 
 void GL_ElementBuffer::Delete() const
 {

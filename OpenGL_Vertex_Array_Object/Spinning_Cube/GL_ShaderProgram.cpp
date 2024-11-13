@@ -8,11 +8,6 @@
 #include "GL/glew.h"
 #include "GL_ErrorHandeling.h"
 
-//struct ShaderProgramSource
-//{
-//	std::string VertexShader;
-//	std::string FragmentShader;
-//};
 
 ShaderProgramSource ParseShader(const std::string& filepPath)
 {
@@ -120,7 +115,7 @@ unsigned int CompileShader(unsigned int type, std::string& source)
 	GL_Call(glShaderSource(shader, 1, &src, nullptr));
 	GL_Call(glCompileShader(shader));
 
-	/*Error handeling*/
+	// Error handeling 
 	int result;
 	GL_Call(glGetShaderiv(shader, GL_COMPILE_STATUS, &result));
 	if (!result)
@@ -141,11 +136,13 @@ unsigned int CompileShader(unsigned int type, std::string& source)
 	return shader;
 }
 
-unsigned int CreateShaderProgram(std::string& vertexShader, std::string& fragmentShader)
+unsigned int CreateShaderProgram(const std::string& filepPath)
 {
+	ShaderProgramSource shaderProgramSources = ParseShader(filepPath);							  
+
 	GL_Call(unsigned int program = glCreateProgram());
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, shaderProgramSources.VertexShader);         
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, shaderProgramSources.FragmentShader);     
 
 	// Bind both shaders to the OpenGL context and link them to form a shader program
 	GL_Call(glAttachShader(program, vs));
@@ -165,7 +162,24 @@ void UseShaderProgram(unsigned int shader_program)
 	GL_Call(glUseProgram(shader_program));
 }
 
-void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec4f data)
+void SetUniform(unsigned int shader_program, const std::string& u_Name, float data)
+{
+	/*
+	  Notes:
+		- Before an uniform handle can be retrieved, the shader program in which the uniform is used needs to be bound to the OpenGL context!
+		- Keep in mind that an uniform is removed by the compiler if you don't use it!
+		  This will trigger the ASSERT(), so watch out for this because sometimes
+		  you forget to remove an unused uniform or have one declared for later usage or another situation.
+	*/
+	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: " << data << std::endl;
+
+	// Check if the uniform exists and set it's value if the uniform has a valid location
+	GL_Call(int uniformLocation_position = glGetUniformLocation(shader_program, u_Name.c_str()));
+	ASSERT(uniformLocation_position != -1);
+	GL_Call(glUniform1f(uniformLocation_position, data));
+}
+
+void SetUniform(unsigned int shader_program, const std::string& u_Name, vec4f data)
 {
 	/*
 	  Notes: 
@@ -189,4 +203,4 @@ void SetUniform_vec4(unsigned int shader_program, const std::string& u_Name, vec
 	GL_Call(glUniform4f(uniformLocation_position, *data, *(data + 1), *(data + 2), *(data + 3))); // Set the shader position uniform value
 }
 
-void SetUniform_vec4(unsigned int shader_program, unsigned int u_Location, vec4f data); // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS) => NOT IMPLEMENTED
+

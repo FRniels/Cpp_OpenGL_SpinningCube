@@ -16,11 +16,11 @@ public:
 
 	virtual void Bind() const = 0; 
 
-	virtual void Unbound() const = 0;
+	// virtual void Unbound() const = 0;  // Changed to a static method in all derived class's. Unbinding a buffer isn't buffer specific because it just binds 0 to the OpenGL context.
 
 	virtual void Delete() const = 0;
 
-	virtual void Print() const = 0; // Just a test method
+	virtual void Print() const = 0;       
 };
 
 class GL_VertexBuffer : public GL_Buffer
@@ -31,7 +31,8 @@ public:
 
 	void Bind() const;
 
-	void Unbound() const;
+	static void Unbind();
+	// void Unbound() const;
 
 	void Delete() const;
 
@@ -49,7 +50,8 @@ public:
 
 	void Bind() const;
 
-	void Unbound() const;
+	static void Unbind();
+	// void Unbound() const;
 
 	void Delete() const;
 

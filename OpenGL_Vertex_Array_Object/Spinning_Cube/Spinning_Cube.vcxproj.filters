@@ -33,6 +33,9 @@
     <ClCompile Include="GL_ElementBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GL_VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GL_ErrorHandeling.h">
@@ -48,6 +51,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GL_Buffers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GL_VertexBufferLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GL_VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

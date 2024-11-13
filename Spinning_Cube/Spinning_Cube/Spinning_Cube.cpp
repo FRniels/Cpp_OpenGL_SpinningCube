@@ -60,28 +60,12 @@ int main()
 		2, 3, 0
 	};
 
-	// Vertex array: 
-	//     Instead of binding the vertex and element buffer directly to the OpenGL context, those buffers can be
-	//	   bound to a Vertex Array Object (VAO). 
-	//	   IMPORTANT: 
-	//	       To bind the vertex/element buffer to the vao, the vao needs to be bound to the OpenGL context before binding the vertex/element buffer. 
-	//		   This vao can than be unbound when not needed and bound to the OpenGL context later on when needed. 
-	//		   This allows for configuring vao's upfront and just bind the one that is needed before drawing.
+	
 	GL_Vertex_Array vertex_array;
-	// unsigned int vertex_array_object;
-	// GL_Call(glGenVertexArrays(1, &vertex_array_object));
-	// GL_Call(glBindVertexArray(vertex_array_object));
-
 	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));       // The vertex buffer is bound to the OpenGL context on instantiation
-
-	// Data layout
 	GL_VertexBufferLayout layout_bufferV;
 	layout_bufferV.Push<float>(2);									 // Push a layout of 2 * GL_FLOAT in the layout vector
-	// GL_Call(glEnableVertexAttribArray(0));
-	// GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
-
 	vertex_array.AddBuffer(bufferV, layout_bufferV);
-
 	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int)); // The element buffer is bound to the OpenGL contect on instantiation
 
 
@@ -91,14 +75,16 @@ int main()
 	// Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself
 	// Vertex shader uniforms:
 	vec4f position_vec = { 0.25f, 0.0f, 0.0f, 1.0f };
-	SetUniform(shader_program, "u_Position", position_vec);          // Note: vec4 will be passed as pointer as it is an array
+	GL_Uniform u_position = GetUniform(shader_program, "u_Position");
+	SetUniform4f(shader_program, u_position.Get_Handle(), position_vec);
 	
 	// Fragment shader uniforms:
 	vec4f color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
 	// SetUniform(shader_program, "u_Color",        color_vec);       // Note: vec4 will be passed as pointer as it is an array => Not using this uniform in the shader anymore
 	
 	glfwGetWindowSize(window, NULL, &u_window_coo[1]);
-	SetUniform(shader_program, "uWindow_Height", u_window_coo[1]);
+	GL_Uniform u_window_height = GetUniform(shader_program, "uWindow_Height");
+	SetUniform1f(shader_program, u_window_height.Get_Handle(), u_window_coo[1]);
 
 	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
 	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
@@ -108,7 +94,6 @@ int main()
 	// When this specific vao is needed when drawing, this vao can be bound to the OpenGL context at that moment.
 	// The shader program is not stored inside the vao so it needs to be bound to the OpenGL context seperately.
 	GL_Vertex_Array::Unbind();
-	// GL_Call(glBindVertexArray(0));
 	GL_VertexBuffer::Unbind();
 	GL_ElementBuffer::Unbind();
 	GL_Call(glUseProgram(0));
@@ -119,7 +104,6 @@ int main()
 	{
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
 		vertex_array.Bind();
-		// GL_Call(glBindVertexArray(vertex_array_object));
 		GL_Call(glUseProgram(shader_program));					 // Bind the required shader program to th OpenGL context
 
 		GL_Render();											 // Render the scene
@@ -133,7 +117,6 @@ int main()
 	bufferV.Delete();
 	bufferE.Delete();
 	vertex_array.Delete();
-	// GL_Call(glDeleteVertexArrays(1, &vertex_array_object));
 	GL_Call(glDeleteProgram(shader_program));
 
 	glfwTerminate();
@@ -147,7 +130,7 @@ void Callback_Resize(GLFWwindow* window, int width, int height)
 	u_window_coo[0] = width;
 	u_window_coo[1] = height;
 
-	SetUniform(shader_program, "uWindow_Height", height); // TO DO: Save the handle the first time and use this handle to search for all following calls to SetUniform() to avoid the overhead of search by string name
+	SetUniform1f(shader_program, "uWindow_Height", height); // TO DO: Save the handle the first time and use this handle to search for all following calls to SetUniform() to avoid the overhead of search by string name
 }
 
 void GL_Render(void)

@@ -5,9 +5,6 @@
 #include <sstream>
 #include <string>
 
-#include "GL/glew.h"
-#include "GL_ErrorHandeling.h"
-
 
 ShaderProgramSource ParseShader(const std::string& filepPath)
 {
@@ -162,34 +159,34 @@ void UseShaderProgram(unsigned int shader_program)
 	GL_Call(glUseProgram(shader_program));
 }
 
-void SetUniform(unsigned int shader_program, const std::string& u_Name, float data)
+GL_Uniform GetUniform(unsigned int shader_program, const std::string& u_Name)
 {
-	/*
-	  Notes:
-		- Before an uniform handle can be retrieved, the shader program in which the uniform is used needs to be bound to the OpenGL context!
-		- Keep in mind that an uniform is removed by the compiler if you don't use it!
-		  This will trigger the ASSERT(), so watch out for this because sometimes
-		  you forget to remove an unused uniform or have one declared for later usage or another situation.
-	*/
+	GL_Call(int uniformLocation = glGetUniformLocation(shader_program, u_Name.c_str()));
+	ASSERT(uniformLocation != -1);
+
+	GL_Uniform uniform(uniformLocation);
+	return uniform;
+}
+
+void SetUniform1f(unsigned int shader_program, const std::string& u_Name, float data)
+{
 	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: " << data << std::endl;
 
 	// Check if the uniform exists and set it's value if the uniform has a valid location
-	GL_Call(int uniformLocation_position = glGetUniformLocation(shader_program, u_Name.c_str()));
-	ASSERT(uniformLocation_position != -1);
-	GL_Call(glUniform1f(uniformLocation_position, data));
+	GL_Call(int uniformLocation = glGetUniformLocation(shader_program, u_Name.c_str()));
+	ASSERT(uniformLocation != -1);
+	GL_Call(glUniform1f(uniformLocation, data));
 }
 
-void SetUniform(unsigned int shader_program, const std::string& u_Name, vec4f data)
+void SetUniform1f(unsigned int shader_program, unsigned int u_Location, float data)
 {
-	/*
-	  Notes: 
-	    - Before an uniform handle can be retrieved, the shader program in which the uniform is used needs to be bound to the OpenGL context!
-		- Keep in mind that an uniform is removed by the compiler if you don't use it!
-		  This will trigger the ASSERT(), so watch out for this because sometimes
-	      you forget to remove an unused uniform or have one declared for later usage or another situation.
-	*/
+	ASSERT(u_Location != -1);
+	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: " << data << std::endl;
+	GL_Call(glUniform1f(u_Location, data));
+}
 
-	// Print info about the uniform to be set
+void SetUniform4f(unsigned int shader_program, const std::string& u_Name, vec4f data)
+{
 	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: ";
 	for (int i = 0; i < VEC4F_SIZE; ++i)
 	{
@@ -198,9 +195,22 @@ void SetUniform(unsigned int shader_program, const std::string& u_Name, vec4f da
 	std::cout << std::endl;
 
 	// Check if the uniform exists and set it's value if the uniform has a valid location
-	GL_Call(int uniformLocation_position = glGetUniformLocation(shader_program, u_Name.c_str()));
-	ASSERT(uniformLocation_position != -1);
-	GL_Call(glUniform4f(uniformLocation_position, *data, *(data + 1), *(data + 2), *(data + 3))); // Set the shader position uniform value
+	GL_Call(int uniformLocation = glGetUniformLocation(shader_program, u_Name.c_str()));
+	ASSERT(uniformLocation != -1);
+	GL_Call(glUniform4f(uniformLocation, *data, *(data + 1), *(data + 2), *(data + 3))); // Set the shader position uniform value
 }
 
+void SetUniform4f(unsigned int shader_program, unsigned int u_Location, vec4f data)
+{
+	ASSERT(u_Location != -1);
+
+	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: ";
+	for (int i = 0; i < VEC4F_SIZE; ++i)
+	{
+		std::cout << *(data + i) << "F ";
+	}
+	std::cout << std::endl;
+
+	GL_Call(glUniform4f(u_Location, *data, *(data + 1), *(data + 2), *(data + 3)));
+}
 

@@ -12,7 +12,7 @@ GL_VertexBuffer::~GL_VertexBuffer()
 	GL_Call(glDeleteBuffers(1, &handle));
 }
 
-void GL_VertexBuffer::Bind() const /*const because this method doesn't modify data*/
+void GL_VertexBuffer::Bind() const						// const because this method doesn't modify data
 {
 	GL_Call(glBindBuffer(GL_ARRAY_BUFFER, handle));
 }

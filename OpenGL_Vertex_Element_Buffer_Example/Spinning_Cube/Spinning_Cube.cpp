@@ -49,29 +49,24 @@ int main()
 		2, 3, 0
 	};
 
-	// TO DO: 
-	//	- ADD MORE INFO TO THE CREATION AND USAGE OF THE VERTEX AND ELEMENT BUFFER
-	//  - ABSTRACT AWAY ALL OPENGL AND ERROR HANDELING CALLS FROM THE USER CODE
 
 	/*Vertex buffer*/
+	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));
 	// unsigned int buffer;
 	// GL_Call(glGenBuffers(1, &buffer));
 	// GL_Call(glBindBuffer(GL_ARRAY_BUFFER, buffer));
 	// GL_Call(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
-
-	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));
 
 	/*Data layout*/
 	GL_Call(glEnableVertexAttribArray(0));
 	GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
 
 	/*Element buffer*/
+	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int));
 	// unsigned int ibo;
 	// GL_Call(glGenBuffers(1, &ibo));
 	// GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
 	// GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
-
-	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int));
 
 	unsigned int shader_program = GL_CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);

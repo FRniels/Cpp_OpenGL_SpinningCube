@@ -76,15 +76,18 @@ int main()
 	GL_Uniform u_position = GetUniform(shader_program, "u_Position");
 	SetUniform4f(shader_program, u_position.Get_Handle(), position_vec);
 	
-	float translate_x = 0.5F;
-	float translate_y = 0.5F;
-	Matrix4f mat_translation =
+
+	// float translate_x = 0.5F;
+	// float translate_y = 0.5F;
+	TranslationMatrix4f mat_translation; /*=
 	{
 		0.0f, 0.0f, 0.0f, translate_x,
 		0.0f, 0.0f, 0.0f, translate_y,
 		0.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 0.0f
-	};
+	};*/
+	vec3f translation_vec = { 0.5f, 0.5f, 0.0f };
+	mat_translation.SetTranslation3f(translation_vec);
 
 	// Fragment shader uniforms:
 	vec4f color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };

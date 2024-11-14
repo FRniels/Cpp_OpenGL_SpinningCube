@@ -8,7 +8,8 @@
 #include "GLFW/glfw3.h"
 
 #include "Window.h"
-#include "GL_User_Types.h"
+#include "GL_User_Types.h" // TO DO: MOVE THESE TYPES TO MATH TYPES 
+#include "Math_Types.h"
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
 #include "GL_VertexArray.h"
@@ -28,7 +29,7 @@ unsigned int shader_program;
 
 int main()
 {
-	Window window(800, 600, "Title");
+	Window window(800, 600, "Spinning cube");
 
 	if (glewInit() != GLEW_OK)
 	{
@@ -75,6 +76,16 @@ int main()
 	GL_Uniform u_position = GetUniform(shader_program, "u_Position");
 	SetUniform4f(shader_program, u_position.Get_Handle(), position_vec);
 	
+	float translate_x = 0.5F;
+	float translate_y = 0.5F;
+	Matrix4f mat_translation =
+	{
+		0.0f, 0.0f, 0.0f, translate_x,
+		0.0f, 0.0f, 0.0f, translate_y,
+		0.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f
+	};
+
 	// Fragment shader uniforms:
 	vec4f color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
 	// SetUniform(shader_program, "u_Color",        color_vec);       // Note: vec4 will be passed as pointer as it is an array => Not using this uniform in the shader anymore

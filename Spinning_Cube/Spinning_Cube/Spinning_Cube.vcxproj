@@ -140,6 +140,7 @@
     <ClCompile Include="GL_VertexArray.cpp" />
     <ClCompile Include="Gl_VertexBuffer.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GL_Buffers.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="GL_User_Types.h" />
     <ClInclude Include="GL_VertexArray.h" />
     <ClInclude Include="GL_VertexBufferLayout.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

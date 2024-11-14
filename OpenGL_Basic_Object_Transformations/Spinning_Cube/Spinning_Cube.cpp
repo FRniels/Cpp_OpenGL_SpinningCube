@@ -30,20 +30,13 @@ unsigned int shader_program;
 int main()
 {
 	Window window(800, 600, "Spinning cube");
+	glfwSetWindowSizeCallback(window.GetWindow(), Callback_Resize);
 
-	if (glewInit() != GLEW_OK)
+	if (glewInit() != GLEW_OK) // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
 	{
 		std::cout << "GLEW failed to init!" << std::endl;
 		window.Exit();
 	}
-
-
-	glfwSetWindowSizeCallback(window.GetWindow(), Callback_Resize);
-
-
-
-	if (glewInit() != GLEW_OK)                                      // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
-		std::cout << "Error with initializing GLEW!" << std::endl;
 
 
 	float positions[] =       // Rectangle
@@ -79,23 +72,23 @@ int main()
 
 	// float translate_x = 0.5F;
 	// float translate_y = 0.5F;
-	TranslationMatrix4f mat_translation; /*=
+	TranslationMatrix4f mat_translation; 
+	/*
 	{
 		0.0f, 0.0f, 0.0f, translate_x,
 		0.0f, 0.0f, 0.0f, translate_y,
 		0.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 0.0f
-	};*/
+	};
+	*/
 	vec3f translation_vec = { 0.5f, 0.5f, 0.0f };
 	mat_translation.SetTranslation3f(translation_vec);
 
 	// Fragment shader uniforms:
 	vec4f color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
-	// SetUniform(shader_program, "u_Color",        color_vec);       // Note: vec4 will be passed as pointer as it is an array => Not using this uniform in the shader anymore
 	
-	glfwGetWindowSize(window.GetWindow(), NULL, &u_window_coo[1]);
 	GL_Uniform u_window_height = GetUniform(shader_program, "uWindow_Height");
-	SetUniform1f(shader_program, u_window_height.Get_Handle(), u_window_coo[1]);
+	SetUniform1f(shader_program, u_window_height.Get_Handle(), window.GetWindowHeight());
 
 	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
 	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
@@ -107,13 +100,13 @@ int main()
 
 
 	// RENDER LOOP 
-	while (!glfwWindowShouldClose(window.GetWindow()))                       // Loop until the user closes the window
+	while (!window.ShouldWindowClose())              // Loop until the user closes the window
 	{
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
 		vertex_array.Bind();
-		GL_Call(glUseProgram(shader_program));			// Bind the required shader program to th OpenGL context
+		GL_Call(glUseProgram(shader_program));    	 // Bind the required shader program to th OpenGL context
 
-		Render();									    // Render the scene
+		Render();									 // Render the scene
 
 		window.SwapBuffers();
 

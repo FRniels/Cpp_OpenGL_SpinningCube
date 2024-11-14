@@ -3,6 +3,7 @@
 Window::Window(int width, int height, const std::string& title)
 	: width(width), height(height), title(title.c_str())
 {
+	
 	if (!glfwInit())
 	{
 		std::cout << "GLFW failed to init!" << std::endl;
@@ -38,9 +39,19 @@ void Window::PollEvents()
 	glfwPollEvents();
 }
 
+bool Window::ShouldWindowClose()
+{
+	return glfwWindowShouldClose(window) ? true : false;
+}
+
 int Window::Exit()
 {
 	std::cout << "Window is closing!" << std::endl;
 	glfwTerminate();
 	return -1;
+}
+
+void Window::GetWindowDimensions()
+{
+	glfwGetWindowSize(window, &width, &height);
 }

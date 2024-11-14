@@ -137,6 +137,7 @@
     <ClCompile Include="GL_ElementBuffer.cpp" />
     <ClCompile Include="GL_ErrorHandeling.cpp" />
     <ClCompile Include="GL_ShaderProgram.cpp" />
+    <ClCompile Include="GL_Uniform.cpp" />
     <ClCompile Include="GL_VertexArray.cpp" />
     <ClCompile Include="Gl_VertexBuffer.cpp" />
     <ClCompile Include="Math_Types.cpp" />

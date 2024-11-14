@@ -14,10 +14,17 @@ public:
 	Window(int width, int height, const std::string& title);
 	~Window();
 
-	void SwapBuffers();	// Swap front and back buffers 
-	void PollEvents();  // Poll and process events
-	int Exit();
+	int  GetWindowWidth()  { return width;  }
+	int  GetWindowHeight() { return height; }
+	void SwapBuffers();							// Swap front and back buffers 
+	void PollEvents();							// Poll and process events
+	bool ShouldWindowClose();
+	int  Exit();
 	inline GLFWwindow* GetWindow() const { return window; }
+
+private:
+	void GetWindowDimensions();
+
 };
 
 #endif; // WINDOW_H

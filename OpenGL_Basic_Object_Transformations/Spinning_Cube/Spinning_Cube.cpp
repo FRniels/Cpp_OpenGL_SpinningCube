@@ -19,7 +19,7 @@
 
 
 
-void Callback_Resize(GLFWwindow* window, int width, int height);
+// void Callback_Resize(GLFWwindow* window, int width, int height);
 void Render(void);
 
 
@@ -30,7 +30,7 @@ unsigned int shader_program;
 int main()
 {
 	Window window(800, 600, "Spinning cube");
-	glfwSetWindowSizeCallback(window.GetWindow(), Callback_Resize);
+	// glfwSetWindowSizeCallback(window.GetWindow(), Callback_Resize);
 
 	if (glewInit() != GLEW_OK) // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
 	{
@@ -85,8 +85,6 @@ int main()
 	mat_translation.SetTranslation3f(translation_vec);
 
 	// Fragment shader uniforms:
-	vec4f color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
-	
 	GL_Uniform u_window_height = GetUniform(shader_program, "uWindow_Height");
 	SetUniform1f(shader_program, u_window_height.Get_Handle(), window.GetWindowHeight());
 
@@ -124,14 +122,14 @@ int main()
     return 0;
 }
 
-void Callback_Resize(GLFWwindow* window, int width, int height)
-{
-	// std::cout << "Window width: " << width << " Window height: " << height << std::endl;
-	u_window_coo[0] = width;
-	u_window_coo[1] = height;
-
-	SetUniform1f(shader_program, "uWindow_Height", height); // TO DO: Save the handle the first time and use this handle to search for all following calls to SetUniform() to avoid the overhead of search by string name
-}
+//void Callback_Resize(GLFWwindow* window, int width, int height)
+//{
+//	// std::cout << "Window width: " << width << " Window height: " << height << std::endl;
+//	u_window_coo[0] = width;
+//	u_window_coo[1] = height;
+//
+//	SetUniform1f(shader_program, "uWindow_Height", height); // TO DO: Save the handle the first time and use this handle to search for all following calls to SetUniform() to avoid the overhead of search by string name
+//}
 
 void Render(void)
 {

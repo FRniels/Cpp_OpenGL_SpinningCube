@@ -22,26 +22,16 @@ Window::Window(int width, int height, const std::string& title)
 	}
 
 	glfwMakeContextCurrent(window);
+
+	// glfw accepts 1 user pointer to whatever the user likes. This pointer is retained until the glfw window is destroyed.
+	// To be able to access this specific Window class instance from the glfw callbacks, the pointer of this specific class instance is set as the user pointer.
+	glfwSetWindowUserPointer(window, this); 
+	SetResizeCallback();
 }
 
 Window::~Window()
 {
 	Exit();
-}
-
-void Window::SwapBuffers()
-{
-	glfwSwapBuffers(window);
-}
-
-void Window::PollEvents()
-{
-	glfwPollEvents();
-}
-
-bool Window::ShouldWindowClose()
-{
-	return glfwWindowShouldClose(window) ? true : false;
 }
 
 int Window::Exit()
@@ -51,7 +41,26 @@ int Window::Exit()
 	return -1;
 }
 
+void Window::SetResizeCallback()
+{
+	glfwSetWindowSizeCallback(window, Callback_Resize);
+}
+
 void Window::GetWindowDimensions()
 {
 	glfwGetWindowSize(window, &width, &height);
+}
+
+void Window::Callback_Resize(GLFWwindow* window, int width, int height)
+{
+	Window* this_window = (Window*)glfwGetWindowUserPointer(window);
+
+	// this_window->are_dimensions_changed = true;
+
+	this_window->width  = width;
+	this_window->height = height;
+
+	// std::cout << "Window width: " << this_window->width << " Window height: " << this_window->height << std::endl;
+
+	// SetUniform1f(shader_program, "uWindow_Height", height);
 }

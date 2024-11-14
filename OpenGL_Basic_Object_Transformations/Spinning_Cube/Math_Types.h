@@ -5,8 +5,8 @@
 
 class Matrix4f
 {
-public:
-	float mat4f[4][4];
+protected:
+	float mat4f[4][4] = { 0.0f };
 
 public:
 	Matrix4f(/*float m00, float m01, float m02, float m03,
@@ -21,13 +21,14 @@ public:
 	}
 
 	~Matrix4f() {}
+
 };
 
 
 class TranslationMatrix4f : public Matrix4f
 {
 public:
-	using Matrix4f::Matrix4f; // The using statement simplifies typing all the parameters again to pass them to the base constructor. This tell the compiler to use the base class construcor (c++11 feature)
+	using Matrix4f::Matrix4f;											// The using statement simplifies typing all the parameters again to pass them to the base constructor. This tell the compiler to use the base class construcor (c++11 feature)
 	/*
 	TranslationMatrix4f(float m00, float m01, float m02, float m03,
 		float m10, float m11, float m12, float m13,
@@ -36,7 +37,7 @@ public:
 	*/
 	~TranslationMatrix4f() {}
 
-	void SetTranslation3f(vec3f translation_xyz){}
+	void SetTranslation3f(vec3f translation_xyz);
 };
 
 class RotationMatrix4f : public Matrix4f
@@ -46,7 +47,7 @@ public:
 
 	~RotationMatrix4f() {}
 
-	void SetRotation4f(vec4f rotation_xyz, GL_ROTATION_AXIS roatation_axis) {}	// The rotation axis needs to be known because this influences which values to set in the Matrix4f
+	void SetRotation4f(float degrees, GL_ROTATION_AXIS roatation_axis);	// The rotation axis needs to be known because this influences which values to set in the Matrix4f
 };
 
 class ScalingMatrix4f : public Matrix4f
@@ -56,10 +57,10 @@ public:
 
 	~ScalingMatrix4f() {}
 
-	void SetScaling3f(vec3f scaling_xyz) {}
+	void SetScaling3f(vec3f scaling_xyz);
 };
 
-class TransformationMatrix4f : public Matrix4f    // This matrix is the matrix multiplication: TranslationMatrix4f * RotationMatrix4f * ScalingMatrix4f => The order of matrix multiplication is very important!
+class TransformationMatrix4f : public Matrix4f							// This matrix is the matrix multiplication: TranslationMatrix4f * RotationMatrix4f * ScalingMatrix4f => The order of matrix multiplication is very important!
 {
 public:
 	using Matrix4f::Matrix4f; 

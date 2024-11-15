@@ -1,7 +1,12 @@
 #ifndef MATH_TYPES_H
 #define MATH_TYPES_H
 
+#include <math.h>
 #include "GL_User_Types.h"
+
+#define PI 3.14159265359
+#define TO_RADIANS(degrees) (degrees * (PI / 180))
+#define TO_DEGREES(radians) (radians * (180 / PI)) 
 
 class Matrix4f
 {
@@ -50,7 +55,12 @@ public:
 
 	~RotationMatrix4f() {}
 
-	void SetRotation4f(float degrees, GL_ROTATION_AXIS rotation_axis);	// The rotation axis needs to be known because this influences which values to set in the Matrix4f
+	void SetRotation(float degrees, GL_ROTATION_AXIS rotation_axis);	// The rotation axis needs to be known because this influences which values to set in the Matrix4f
+
+private:
+	void SetRotationX(float degrees);
+	void SetRotationY(float degrees);
+	void SetRotationZ(float degrees);
 };
 
 class ScalingMatrix4f : public Matrix4f

@@ -9,6 +9,7 @@
 
 layout(location = 0) in vec3 position; 	// Changed the type to vec3 instead of the vec4 in the previous examples. With vec4, the default W value will be 0 and thus unuseful.
 uniform mat4 u_Scaling_mat; 
+uniform mat4 u_RotationZ_mat;
 uniform mat4 u_Translation_mat;
 
 void main()      
@@ -26,10 +27,14 @@ void main()
 	// // gl_Position = vec4(position, 1.0) * u_Scaling_mat;
 	
 	// ROTATION:
+	// Correct order:
+	// gl_Position = u_RotationZ_mat * vec4(position, 1.0);        // Vector comes after the matrix
+	// Incorrect order:
+	// // gl_Position = vec4(position, 1.0) * u_RotationZ_mat; 
 	
 	// TRANSLATION:
 	// Correct order:
-	// gl_Position = u_Translation_mat * vec4(position, 1.0);
+	// gl_Position = u_Translation_mat * vec4(position, 1.0);   // Vector comes after the matrix
 	// Incorrect order:
 	// // gl_Position = vec4(position, 1.0) * u_Translation_mat; // Test this line of code to see the weird result that probably was not the expected result!
 	
@@ -37,12 +42,12 @@ void main()
 	
 	// The order of mulitplying the matrices together is very important, just like it was in step .1
 	// The order in which the different transformation matrices are multiplied most of the time:
-	// First Scaling, followed by Rotation and finally Translation. This is 'backwards notated mathematically: Translation * Rotation * Scaling
+	// First Scaling, followed by Rotation and finally Translation. This is backwards notated mathematically: Translation * Rotation * Scaling
 	
 	// When for example the order of Translation and Rotation is reversed, the result will be that the rotated vertices will rotate around the center point with a radius of the translation value.
 	// This could be a desired effect when it is done by intention!
-	mat4 transformation_mat = u_Translation_mat * u_Scaling_mat;		// Multiply both transformations together to form one transformation matrix 
-	gl_Position = transformation_mat * vec4(position, 1.0);				// that can be multiplied with the incoming vertices vector.
+	mat4 transformation_mat = u_Translation_mat * u_RotationZ_mat * u_Scaling_mat;  // Multiply the seperate transformations together to form one transformation matrix 
+	gl_Position = transformation_mat * vec4(position, 1.0);						    // that can be multiplied with the incoming vertices vector.
 	
 };
 

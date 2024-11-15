@@ -23,7 +23,7 @@ void Render(void);
 
 int main()
 {
-	Window window(800, 600, "Spinning cube");
+	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
 	if (glewInit() != GLEW_OK) // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
 	{
@@ -58,6 +58,7 @@ int main()
 
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
+	// SCALING
 	ScalingMatrix4f mat_scaling;
 	/*
 	{
@@ -73,6 +74,14 @@ int main()
 	GL_Uniform u_scaling_mat = GetUniform(shader_program, "u_Scaling_mat");
 	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling); // Pass the rotation matrix to the shader
 	
+	// ROTATION
+	RotationMatrix4f mat_rotation_z;
+	mat_rotation_z.SetRotation(45.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
+
+	GL_Uniform u_rotation_z_mat = GetUniform(shader_program, "u_RotationZ_mat");
+	SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z); // Pass the rotation matrix to the shader
+
+	// TRANSLATION
 	TranslationMatrix4f mat_translation; 
 	/*
 	{

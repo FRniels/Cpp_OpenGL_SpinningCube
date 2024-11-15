@@ -60,7 +60,8 @@ void Window::Callback_Resize(GLFWwindow* window, int width, int height)
 	this_window->width  = width;
 	this_window->height = height;
 
-	// std::cout << "Window width: " << this_window->width << " Window height: " << this_window->height << std::endl;
+	std::cout << "Window width: " << this_window->width << " Window height: " << this_window->height << std::endl;
 
+	// TO DO: THE CALLBACK HAS NO ACCESS TO THE SHADER PROGRAM => SOLVE THIS
 	// SetUniform1f(shader_program, "uWindow_Height", height);
 }

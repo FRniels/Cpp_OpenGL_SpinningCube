@@ -18,10 +18,13 @@ public:
 		mat4f[1][0] = m00; mat4f[1][1] = m01; mat4f[1][2] = m02; mat4f[1][3] = m03;
 		mat4f[2][0] = m00; mat4f[2][1] = m01; mat4f[2][2] = m02; mat4f[2][3] = m03;
 		mat4f[3][0] = m00; mat4f[3][1] = m01; mat4f[3][2] = m02; mat4f[3][3] = m03*/;
+
+		mat4f[0][0] = mat4f[1][1] = mat4f[2][2] = mat4f[3][3] = 1.0f; // Set the default unity matrix
 	}
 
 	~Matrix4f() {}
 
+	const float* GetMatrix() const { return &mat4f[0][0]; }             // Return a const pointer with const a function so that the original pointer can't be changed and the contents of the matrix can't be changed.
 };
 
 
@@ -47,7 +50,7 @@ public:
 
 	~RotationMatrix4f() {}
 
-	void SetRotation4f(float degrees, GL_ROTATION_AXIS roatation_axis);	// The rotation axis needs to be known because this influences which values to set in the Matrix4f
+	void SetRotation4f(float degrees, GL_ROTATION_AXIS rotation_axis);	// The rotation axis needs to be known because this influences which values to set in the Matrix4f
 };
 
 class ScalingMatrix4f : public Matrix4f

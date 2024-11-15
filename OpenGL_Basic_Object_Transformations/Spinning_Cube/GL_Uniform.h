@@ -27,6 +27,6 @@ void SetUniform1f(   unsigned int shader_program, unsigned int       u_Location,
 void SetUniform4f(   unsigned int shader_program, const std::string& u_Name,     vec4f			 data);
 void SetUniform4f(   unsigned int shader_program, unsigned int		 u_Location, vec4f           data);   // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS)
 void SetUniformMat4f(unsigned int shader_program, const std::string& u_Name,     const Matrix4f& mat4f);
-void SetUniformMat4f(unsigned int shader_program, unsigned int		 u_Location, const Matrix4f& mat4f);   // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS) 
+void SetUniformMat4f(unsigned int shader_program, unsigned int		 u_Location, const Matrix4f& mat4f);  // SHOULD BE FASTER TO SEARCH UNIFORMS BY HANDLE THAN BY NAME (GL DOCS) 
 
 #endif; // GL_UNIFORM_H

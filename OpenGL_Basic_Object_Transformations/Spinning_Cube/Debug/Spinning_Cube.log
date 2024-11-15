@@ -1,7 +1,3 @@
-﻿  GL_ShaderProgram.cpp
-  GL_Uniform.cpp
-  Math_Types.cpp
-  Spinning_Cube.cpp
-C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Basic_Object_Transformations\Spinning_Cube\Spinning_Cube.cpp(83,83): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
+﻿  Spinning_Cube.cpp
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Basic_Object_Transformations\Spinning_Cube\Spinning_Cube.cpp(94,83): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Basic_Object_Transformations\Debug\Spinning_Cube.exe

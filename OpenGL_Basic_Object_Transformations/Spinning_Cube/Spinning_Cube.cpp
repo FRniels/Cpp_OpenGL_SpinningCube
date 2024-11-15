@@ -4,7 +4,7 @@
 #include <iostream>
 
 //The glew header must be included before any other opengl related files are included -> the glfw3.h includes gl.h !
-#include "GL/glew.h"     // This glew header contains the function pointers to OpenGl functions
+#include "GL/glew.h"     // The glew header contains the function pointers to OpenGl functions
 #include "GLFW/glfw3.h"
 
 #include "Window.h"
@@ -56,29 +56,40 @@ int main()
 	unsigned int shader_program = CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
 
-	// Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself
-	// Vertex shader uniforms:
+	// SET SHADER UNIFORMS
+	// VERTEX SHADER UNIFORMS:
+	ScalingMatrix4f mat_scaling;
+	/*
+	{
+		scale_x, 0.0f,    0.0f,    0.0f,
+		0.0f,    scale_Y, 0.0f,    0.0f,
+		0.0f,    0.0f,    scale_Z, 0.0f,
+		0.0f,    0.0f,    0.0f,    1.0f
+	};
+	*/
+	vec3f scaling_vec = { 0.5f, 0.5f, 1.0f };
+	mat_scaling.SetScaling3f(scaling_vec);									  // Set the X, Y and Z scaling values in the translation matrix
+
+	GL_Uniform u_scaling_mat = GetUniform(shader_program, "u_Scaling_mat");
+	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling); // Pass the rotation matrix to the shader
 	
-	// float translate_x = 0.5F;
-	// float translate_y = 0.5F;
 	TranslationMatrix4f mat_translation; 
 	/*
 	{
 		1.0f, 0.0f, 0.0f, translate_x,
 		0.0f, 1.0f, 0.0f, translate_y,
-		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, translate_z,
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
 	*/
-	// Set the X, Y and Z translation values in the translation matrix
 	vec3f translation_vec = { 0.25f, 0.25f, 0.0f };
-	mat_translation.SetTranslation3f(translation_vec);
+	mat_translation.SetTranslation3f(translation_vec);								  // Set the X, Y and Z translation values in the translation matrix
 
-	// Pass the translation matrix to the shader
 	GL_Uniform u_translation_mat = GetUniform(shader_program, "u_Translation_mat"); 
-	SetUniformMat4f(shader_program, u_translation_mat.Get_Handle(), mat_translation);
+	SetUniformMat4f(shader_program, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
 
-	// Fragment shader uniforms:
+
+	// FRAGMENT SHADER UNIFORMS:
 	GL_Uniform u_window_height = GetUniform(shader_program, "uWindow_Height");
 	SetUniform1f(shader_program, u_window_height.Get_Handle(), window.GetWindowHeight());
 

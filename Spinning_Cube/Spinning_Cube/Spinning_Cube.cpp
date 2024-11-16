@@ -3,47 +3,28 @@
 
 #include <iostream>
 
-//The glew header must be included before any other opengl related files are included -> the glfw3.h includes gl.h !
-#include "GL/glew.h"     // This glew header contains the function pointers to OpenGl functions
+// The glew header must be included before any other opengl related files are included -> the glfw3.h includes gl.h !
+#include "GL/glew.h"     // The glew header contains the function pointers to OpenGl functions
 #include "GLFW/glfw3.h"
 
 #include "Window.h"
-#include "GL_User_Types.h"
+#include "GL_User_Types.h" 
+#include "Math_Types.h"
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
 #include "GL_VertexArray.h"
 #include "GL_VertexBufferLayout.h"
 #include "GL_Buffers.h"
 #include "GL_Draw.h"
+#include "Timer.h"
 
 
 
-void Callback_Resize(GLFWwindow* window, int width, int height);
 void Render(void);
-
-
-vec2i u_window_coo = { 0, 0 }; // Global so that the window resize callback has access to this vec2f => TO DO: CAN I PASS AN EXTRA ARGUMENT TO THE CALLBACK ??
-
-unsigned int shader_program;
 
 int main()
 {
-	Window window(800, 600, "Title");
-
-	if (glewInit() != GLEW_OK)
-	{
-		std::cout << "GLEW failed to init!" << std::endl;
-		window.Exit();
-	}
-
-
-	glfwSetWindowSizeCallback(window.GetWindow(), Callback_Resize);
-
-
-
-	if (glewInit() != GLEW_OK)                                      // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
-		std::cout << "Error with initializing GLEW!" << std::endl;
-
+	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
 	float positions[] =       // Rectangle
 	{ 
@@ -66,22 +47,39 @@ int main()
 	vertex_array.AddBuffer(bufferV, layout_bufferV);
 	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int)); // The element buffer is bound to the OpenGL contect on instantiation
 
-	shader_program = CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
+	unsigned int shader_program = CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
 
-	// Set shader uniforms => Note: uniforms should only be set from the user (cpu) code and not from within the shader code itself
-	// Vertex shader uniforms:
-	vec4f position_vec = { 0.25f, 0.0f, 0.0f, 1.0f };
-	GL_Uniform u_position = GetUniform(shader_program, "u_Position");
-	SetUniform4f(shader_program, u_position.Get_Handle(), position_vec);
+	// SET SHADER UNIFORMS
+	// VERTEX SHADER UNIFORMS:
+	// SCALING
+	ScalingMatrix4f mat_scaling;
+	vec3f scaling_vec = { 0.5f, 0.5f, 1.0f };
+	mat_scaling.SetScaling3f(scaling_vec);									          // Set the X, Y and Z scaling values in the translation matrix
+
+	GL_Uniform u_scaling_mat = GetUniform(shader_program, "u_Scaling_mat");
+	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
 	
-	// Fragment shader uniforms:
-	vec4f color_vec = { 0.0f, 1.0f, 1.0f, 1.0f };
-	// SetUniform(shader_program, "u_Color",        color_vec);       // Note: vec4 will be passed as pointer as it is an array => Not using this uniform in the shader anymore
-	
-	glfwGetWindowSize(window.GetWindow(), NULL, &u_window_coo[1]);
+	// ROTATION
+	RotationMatrix4f mat_rotation_z;
+	// mat_rotation_z.SetRotation(45.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
+	mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
+
+	GL_Uniform u_rotation_z_mat = GetUniform(shader_program, "u_RotationZ_mat");
+	SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z);   // Pass the rotation matrix to the shader
+
+	// TRANSLATION
+	TranslationMatrix4f mat_translation; 
+	vec3f translation_vec = { 0.25f, 0.25f, 0.0f };
+	mat_translation.SetTranslation3f(translation_vec);								  // Set the X, Y and Z translation values in the translation matrix
+
+	GL_Uniform u_translation_mat = GetUniform(shader_program, "u_Translation_mat"); 
+	SetUniformMat4f(shader_program, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
+
+
+	// FRAGMENT SHADER UNIFORMS:
 	GL_Uniform u_window_height = GetUniform(shader_program, "uWindow_Height");
-	SetUniform1f(shader_program, u_window_height.Get_Handle(), u_window_coo[1]);
+	SetUniform1f(shader_program, u_window_height.Get_Handle(), window.GetWindowHeight());
 
 	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
 	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
@@ -93,13 +91,30 @@ int main()
 
 
 	// RENDER LOOP 
-	while (!glfwWindowShouldClose(window.GetWindow()))                       // Loop until the user closes the window
+	float rotation_z = 0.0f;
+	Timer translation_timer(window.GetWindowTime(), FPS_60_PERIOD);
+	window.InitTime();
+
+	while (!window.ShouldWindowClose())              // Loop until the user closes the window
 	{
+		window.UpdateTime();
+
+		if (translation_timer.IsTimerExpired()) 
+		{
+			// std::cout << "Translation timer expired. Reset timer." << std::endl;
+			// UPDATE THE ROTATION Z MATRIX AND PASS THE UPDATED ROTATION MATRIX TO THE VERTEX SHADER.
+			++rotation_z;
+			mat_rotation_z.SetRotation(rotation_z, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
+			SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z); 
+
+			translation_timer.Reset();
+		}
+
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
 		vertex_array.Bind();
-		GL_Call(glUseProgram(shader_program));			// Bind the required shader program to th OpenGL context
+		GL_Call(glUseProgram(shader_program));    	 // Bind the required shader program to th OpenGL context
 
-		Render();									    // Render the scene
+		Render();									 // Render the scene
 
 		window.SwapBuffers();
 
@@ -115,15 +130,6 @@ int main()
 	window.Exit();
 
     return 0;
-}
-
-void Callback_Resize(GLFWwindow* window, int width, int height)
-{
-	// std::cout << "Window width: " << width << " Window height: " << height << std::endl;
-	u_window_coo[0] = width;
-	u_window_coo[1] = height;
-
-	SetUniform1f(shader_program, "uWindow_Height", height); // TO DO: Save the handle the first time and use this handle to search for all following calls to SetUniform() to avoid the overhead of search by string name
 }
 
 void Render(void)

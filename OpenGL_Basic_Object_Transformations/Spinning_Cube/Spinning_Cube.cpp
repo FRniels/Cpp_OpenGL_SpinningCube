@@ -61,14 +61,6 @@ int main()
 	// VERTEX SHADER UNIFORMS:
 	// SCALING
 	ScalingMatrix4f mat_scaling;
-	/*
-	{
-		scale_x, 0.0f,    0.0f,    0.0f,
-		0.0f,    scale_Y, 0.0f,    0.0f,
-		0.0f,    0.0f,    scale_Z, 0.0f,
-		0.0f,    0.0f,    0.0f,    1.0f
-	};
-	*/
 	vec3f scaling_vec = { 0.5f, 0.5f, 1.0f };
 	mat_scaling.SetScaling3f(scaling_vec);									        // Set the X, Y and Z scaling values in the translation matrix
 
@@ -85,14 +77,6 @@ int main()
 
 	// TRANSLATION
 	TranslationMatrix4f mat_translation; 
-	/*
-	{
-		1.0f, 0.0f, 0.0f, translate_x,
-		0.0f, 1.0f, 0.0f, translate_y,
-		0.0f, 0.0f, 1.0f, translate_z,
-		0.0f, 0.0f, 0.0f, 1.0f
-	};
-	*/
 	vec3f translation_vec = { 0.25f, 0.25f, 0.0f };
 	mat_translation.SetTranslation3f(translation_vec);								  // Set the X, Y and Z translation values in the translation matrix
 

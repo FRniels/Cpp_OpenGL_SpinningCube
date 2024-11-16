@@ -21,21 +21,29 @@
 #version 330 core
 
 layout(location = 0) in vec4 position; /* A block comment on the same line as shader source code */
+layout(location = 1) in vec4 color;
+
 uniform vec4 u_Position = vec4(0.0, 0.0, 0.0, 1.0);
+
+out vec4 colorFromVertex;
 
 void main()      // A comment on the same line as shader source code
 {	
 	gl_Position = position;
 	// gl_Position.x += 0.5;
 	gl_Position.x += u_Position.x;
+
+	colorFromVertex = color; // Pass the incoming color from the vertices data to the fragment shader. This color data can also be modified here if necessary.
 };
 
 #shader fragment // Another comment that the shader parser will ignore
 #version 330 core
 
+in vec4 colorFromVertex;	// The name needs to be the same as the out variable of the vertex shader
 out vec4 color; /* A
 				   weird
 				   block comment */
+
 // uniform vec4 u_Color = vec4(0.0, 0.0, 0.0, 1.0);    // Uniform info: https://www.khronos.org/opengl/wiki/Uniform_(GLSL)
 uniform float uWindow_Height = 0.0f;
 
@@ -47,5 +55,6 @@ void main()
 	
 	float lerpValue = gl_FragCoord.y / uWindow_Height;      // Assign a color that is a linear interpolation of 2 colors base on the Y-coo of the specific fragment.
 	
-	color = mix(vec4(1.0f, 1.0f, 1.0f, 1.0f), vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);
+	// color = mix(vec4(1.0f, 1.0f, 1.0f, 1.0f), vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);
+	color = mix(colorFromVertex, vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);
 };

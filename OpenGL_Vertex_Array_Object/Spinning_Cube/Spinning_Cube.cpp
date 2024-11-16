@@ -54,6 +54,16 @@ int main()
 		 0.5f,  0.5f,		  // Top right corner
 		-0.5f,  0.5f,         // Top left corner
 	};
+
+	float vertices[] =		  // A vertex can also hold other data than pure position data such as color data.
+	{
+		//Position:		Color:
+		-0.5f, -0.5f,	0.0f, 0.5f, 0.5f, 1.0f, // Bottom left corner
+		 0.5f, -0.5f,	0.0f, 0.5f, 0.5f, 1.0f, // Bottom right corner
+		 0.5f,  0.5f,	0.0f, 0.5f, 0.5f, 1.0f, // Top right corner
+		-0.5f,  0.5f,	0.0f, 0.5f, 0.5f, 1.0f  // Top left corner
+	};
+
 	unsigned int indices[] =  // Rectangle indices
 	{
 		0, 1, 2,
@@ -72,17 +82,19 @@ int main()
 	// GL_Call(glGenVertexArrays(1, &vertex_array_object));
 	// GL_Call(glBindVertexArray(vertex_array_object));
 
-	GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));       // The vertex buffer is bound to the OpenGL context on instantiation
+	// GL_VertexBuffer bufferV(positions, 4 * 2 * sizeof(float));       // The vertex buffer is bound to the OpenGL context on instantiation
+	GL_VertexBuffer bufferV(vertices, 4 * 6 * sizeof(float));
 
 	// Data layout
 	GL_VertexBufferLayout layout_bufferV;
-	layout_bufferV.Push<float>(2);									 // Push a layout of 2 * GL_FLOAT in the layout vector
+	layout_bufferV.Push<float>(2);				// Push the amount of floats per vertex that are used for the vertex position
 	// GL_Call(glEnableVertexAttribArray(0));
 	// GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
+	layout_bufferV.Push<float>(4);				// Push the amount of floats per vertex that are used for the vertex color
 
 	vertex_array.AddBuffer(bufferV, layout_bufferV);
 
-	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int)); // The element buffer is bound to the OpenGL contect on instantiation
+	GL_ElementBuffer bufferE(indices, 2 * 3); // The element buffer is bound to the OpenGL contect on instantiation
 
 
 	shader_program = CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 

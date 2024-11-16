@@ -27,6 +27,8 @@ Window::Window(int width, int height, const std::string& title)
 	// To be able to access this specific Window class instance from the glfw callbacks, the pointer of this specific class instance is set as the user pointer.
 	glfwSetWindowUserPointer(window, this); 
 	SetResizeCallback();
+
+	InitGLEW();	// Initialize GLEW: FIRST THERE NEEDS TO BE A VALID OPENGL CONTEXT!!! CALL THIS AFTER THE CONTEXT CREATION 
 }
 
 Window::~Window()
@@ -49,6 +51,15 @@ void Window::SetResizeCallback()
 void Window::GetWindowDimensions()
 {
 	glfwGetWindowSize(window, &width, &height);
+}
+
+void Window::InitGLEW()
+{
+	if (glewInit() != GLEW_OK) // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
+	{
+		std::cout << "GLEW failed to init!" << std::endl;
+		Exit();
+	}
 }
 
 void Window::Callback_Resize(GLFWwindow* window, int width, int height)

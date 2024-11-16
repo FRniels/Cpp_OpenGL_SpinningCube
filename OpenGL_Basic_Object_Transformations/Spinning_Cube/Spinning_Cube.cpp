@@ -3,12 +3,12 @@
 
 #include <iostream>
 
-//The glew header must be included before any other opengl related files are included -> the glfw3.h includes gl.h !
+// The glew header must be included before any other opengl related files are included -> the glfw3.h includes gl.h !
 #include "GL/glew.h"     // The glew header contains the function pointers to OpenGl functions
 #include "GLFW/glfw3.h"
 
 #include "Window.h"
-#include "GL_User_Types.h" // TO DO: MOVE THESE TYPES TO MATH TYPES 
+#include "GL_User_Types.h" 
 #include "Math_Types.h"
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
@@ -25,13 +25,6 @@ void Render(void);
 int main()
 {
 	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
-
-	if (glewInit() != GLEW_OK) // Initialize GLEW: YOU FIRST NEED TO HAVE A VALID OPENGL CONTEXT!!! SO CALL THIS AFTER THE CONTEXT CREATION 
-	{
-		std::cout << "GLEW failed to init!" << std::endl;
-		window.Exit();
-	}
-
 
 	float positions[] =       // Rectangle
 	{ 
@@ -62,10 +55,10 @@ int main()
 	// SCALING
 	ScalingMatrix4f mat_scaling;
 	vec3f scaling_vec = { 0.5f, 0.5f, 1.0f };
-	mat_scaling.SetScaling3f(scaling_vec);									        // Set the X, Y and Z scaling values in the translation matrix
+	mat_scaling.SetScaling3f(scaling_vec);									          // Set the X, Y and Z scaling values in the translation matrix
 
 	GL_Uniform u_scaling_mat = GetUniform(shader_program, "u_Scaling_mat");
-	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling);       // Pass the rotation matrix to the shader
+	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
 	
 	// ROTATION
 	RotationMatrix4f mat_rotation_z;
@@ -73,7 +66,7 @@ int main()
 	mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 
 	GL_Uniform u_rotation_z_mat = GetUniform(shader_program, "u_RotationZ_mat");
-	SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z); // Pass the rotation matrix to the shader
+	SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z);   // Pass the rotation matrix to the shader
 
 	// TRANSLATION
 	TranslationMatrix4f mat_translation; 

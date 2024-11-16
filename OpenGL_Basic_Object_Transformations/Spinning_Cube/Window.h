@@ -2,7 +2,9 @@
 #define WINDOW_H
 
 #include <iostream>
-#include "GLFW/glfw3.h"
+// The glew header must be included before any other opengl related files are included -> the glfw3.h includes gl.h !
+#include "GL/glew.h"	 // The glew header contains the function pointers to OpenGl functions
+#include "GLFW/glfw3.h"	
 #include "Timer.h"
 
 // Info about inline member functions: https://isocpp.org/wiki/faq/inline-functions#inline-member-fns
@@ -34,6 +36,7 @@ public:
 private:
 	void SetResizeCallback();
 	void GetWindowDimensions();
+	void InitGLEW();			 // Initialize GLEW: FIRST THERE NEEDS TO BE A VALID OPENGL CONTEXT!!! CALL THIS AFTER THE CONTEXT CREATION 
 
 	static void Callback_Resize(GLFWwindow* window, int width, int height);
 };

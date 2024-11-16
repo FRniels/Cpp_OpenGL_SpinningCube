@@ -33,7 +33,7 @@ public:
 class Timer 
 {
 public:
-	double  period_s    = 0.0;
+	double  period_s    = 0.0;	// The period may be changed at any point. The timer will account for the period when it is reset again.
 
 private:
 	const Time_t& window_time;

@@ -154,6 +154,7 @@
     <ClInclude Include="GL_VertexArray.h" />
     <ClInclude Include="GL_VertexBufferLayout.h" />
     <ClInclude Include="Math_Types.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

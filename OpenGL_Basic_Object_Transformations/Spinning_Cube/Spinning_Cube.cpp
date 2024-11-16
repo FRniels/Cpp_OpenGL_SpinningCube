@@ -16,6 +16,7 @@
 #include "GL_VertexBufferLayout.h"
 #include "GL_Buffers.h"
 #include "GL_Draw.h"
+#include "Timer.h"
 
 
 
@@ -69,14 +70,15 @@ int main()
 	};
 	*/
 	vec3f scaling_vec = { 0.5f, 0.5f, 1.0f };
-	mat_scaling.SetScaling3f(scaling_vec);									  // Set the X, Y and Z scaling values in the translation matrix
+	mat_scaling.SetScaling3f(scaling_vec);									        // Set the X, Y and Z scaling values in the translation matrix
 
 	GL_Uniform u_scaling_mat = GetUniform(shader_program, "u_Scaling_mat");
-	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling); // Pass the rotation matrix to the shader
+	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling);       // Pass the rotation matrix to the shader
 	
 	// ROTATION
 	RotationMatrix4f mat_rotation_z;
-	mat_rotation_z.SetRotation(45.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
+	// mat_rotation_z.SetRotation(45.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
+	mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 
 	GL_Uniform u_rotation_z_mat = GetUniform(shader_program, "u_RotationZ_mat");
 	SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z); // Pass the rotation matrix to the shader
@@ -112,8 +114,25 @@ int main()
 
 
 	// RENDER LOOP 
+	float rotation_z = 0.0f;
+	Timer translation_timer(window.GetWindowTime(), FPS_60_PERIOD);
+	window.InitTime();
+
 	while (!window.ShouldWindowClose())              // Loop until the user closes the window
 	{
+		window.UpdateTime();
+
+		if (translation_timer.IsTimerExpired()) 
+		{
+			// std::cout << "Translation timer expired. Reset timer." << std::endl;
+			// UPDATE THE ROTATION Z MATRIX AND PASS THE UPDATED ROTATION MATRIX TO THE VERTEX SHADER.
+			++rotation_z;
+			mat_rotation_z.SetRotation(rotation_z, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
+			SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z); 
+
+			translation_timer.Reset();
+		}
+
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
 		vertex_array.Bind();
 		GL_Call(glUseProgram(shader_program));    	 // Bind the required shader program to th OpenGL context

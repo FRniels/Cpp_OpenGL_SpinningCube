@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "GLFW/glfw3.h"
+#include "Timer.h"
 
 // Info about inline member functions: https://isocpp.org/wiki/faq/inline-functions#inline-member-fns
 
@@ -13,15 +14,19 @@ private:
 	int width, height;
 	const char* title;
 	// bool are_dimensions_changed = false;
+	Time_t window_time;
 
 public:
 	Window(int width, int height, const std::string& title);
 	~Window();
 
-	int  GetWindowWidth()  { return width;  }
-	int  GetWindowHeight() { return height; }
-	void SwapBuffers();			// Swap front and back buffers 
-	void PollEvents();		    // Poll and process events
+	int  GetWindowWidth()		  const	{ return width; }
+	int  GetWindowHeight()        const	{ return height; }
+	void InitTime()						{ window_time.Init(); }
+	void UpdateTime()					{ window_time.Update(); }
+	const Time_t& GetWindowTime() const { return window_time;  }
+	void SwapBuffers();													// Swap front and back buffers 
+	void PollEvents();													// Poll and process events
 	bool ShouldWindowClose();
 	int  Exit();
 	inline GLFWwindow* GetWindow() const { return window; }

@@ -62,7 +62,7 @@ int main()
 	GL_Call(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
 
 	/*Element buffer*/
-	GL_ElementBuffer bufferE(indices, 2 * 3 * sizeof(unsigned int));
+	GL_ElementBuffer bufferE(indices, 2 * 3);
 	// unsigned int ibo;
 	// GL_Call(glGenBuffers(1, &ibo));
 	// GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));

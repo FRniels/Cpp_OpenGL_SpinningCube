@@ -15,3 +15,4 @@ Taking my first footsteps into OpenGL programming.
 	4. OpenGL Shaders
 	5. OpenGL Vertex/Element buffer
 	6. OpenGL Vertex Array Object
+	7. OpenGl Basic Object Transformations

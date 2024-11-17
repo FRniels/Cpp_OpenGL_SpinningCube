@@ -1,3 +1,5 @@
-﻿  Spinning_Cube.cpp
+﻿  GL_Draw.cpp
+  Spinning_Cube.cpp
 C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Perspective_Projection\Spinning_Cube\Spinning_Cube.cpp(161,83): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
   Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Perspective_Projection\Debug\Spinning_Cube.exe

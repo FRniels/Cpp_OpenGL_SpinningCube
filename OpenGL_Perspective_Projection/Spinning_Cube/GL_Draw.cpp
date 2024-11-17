@@ -7,7 +7,7 @@ void GL_ClearScreen(vec4f clear_color)
 	
 	// Clear the screen
 	GL_Call(glClear(GL_COLOR_BUFFER_BIT));
-	// GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)); // NEW: CLEAR THE DEPTH BUFFER EACH FRAME
+	// GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)); // TO DO: RESEARCH DEPTH TEST => IF DEPTH TEST IS ENABLED, THE CUBE DISAPPEARS
 }
 
 void DrawTriangle(vec2f coo1, vec2f coo2, vec2f coo3)

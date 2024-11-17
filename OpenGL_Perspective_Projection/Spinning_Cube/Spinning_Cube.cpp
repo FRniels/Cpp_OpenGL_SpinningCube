@@ -132,13 +132,13 @@ int main()
 	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
 	
 	// ROTATION
-	RotationMatrix4f mat_rotation_z;
-	mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
+	RotationMatrix4f mat_rotation_y;
+	mat_rotation_y.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
 	// mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 	// mat_rotation_z.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
-	GL_Uniform u_rotation_z_mat = GetUniform(shader_program, "u_RotationZ_mat");
-	SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z);   // Pass the rotation matrix to the shader
+	GL_Uniform u_rotation_y_mat = GetUniform(shader_program, "u_RotationY_mat");
+	SetUniformMat4f(shader_program, u_rotation_y_mat.Get_Handle(), mat_rotation_y);   // Pass the rotation matrix to the shader
 
 	// TRANSLATION
 	TranslationMatrix4f mat_translation; 
@@ -176,14 +176,14 @@ int main()
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
 
-	// DEPTH TESTING
+	// DEPTH TESTING		 // TO DO: RESEARCH DEPTH TEST => IF DEPTH TEST IS ENABLED, THE CUBE DISAPPEARS
 	// Enable depth test     // THE DEPTH MUST BE CLEARED EACH FRAME => SEE THE RENDER FUNCTION FOR THE CHANGE IN CODE!
 	// glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
 	// glDepthFunc(GL_LESS);
 
 	// RENDER LOOP 
-	float rotation_z = 0.0f;
+	float rotation_y = 0.0f;
 	Timer translation_timer(window.GetWindowTime(), FPS_60_PERIOD);
 	window.InitTime();
 
@@ -195,9 +195,9 @@ int main()
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			// UPDATE THE ROTATION Z MATRIX AND PASS THE UPDATED ROTATION MATRIX TO THE VERTEX SHADER.
-			++rotation_z;
-			mat_rotation_z.SetRotation(rotation_z, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS); // NOTE: CHANGED TO Y FOR TEST
-			SetUniformMat4f(shader_program, u_rotation_z_mat.Get_Handle(), mat_rotation_z); 
+			++rotation_y;
+			mat_rotation_y.SetRotation(rotation_y, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS); 
+			SetUniformMat4f(shader_program, u_rotation_y_mat.Get_Handle(), mat_rotation_y);
 
 			translation_timer.Reset();
 		}

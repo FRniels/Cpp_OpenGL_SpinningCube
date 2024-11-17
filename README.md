@@ -16,4 +16,5 @@ Taking my first footsteps into OpenGL programming.
 	5. OpenGL Vertex/Element buffer
 	6. OpenGL Vertex Array Object
 	7. OpenGl Basic Object Transformations
-	8. Main project: Spinning Cube
+	8. OpenGL Perspective Projection
+	9. Main project: Spinning Cube

@@ -27,35 +27,32 @@ int main()
 	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
 
-	//float vertices[] =		  // A vertex can also hold other data than pure position data such as color data.
-	//{
-	//	//Position:		Color:
-	//	-0.5f, -0.5f,	0.0f, 0.5f, 0.5f, 1.0f, // Bottom left corner
-	//	 0.5f, -0.5f,	0.0f, 0.5f, 0.5f, 1.0f, // Bottom right corner
-	//	 0.5f,  0.5f,	0.0f, 0.5f, 0.5f, 1.0f, // Top right corner
-	//	-0.5f,  0.5f,	0.0f, 0.5f, 0.5f, 1.0f  // Top left corner
-	//};
-
-	//unsigned int indices[] =					// Rectangle indices
-	//{
-	//	0, 1, 2,
-	//	2, 3, 0
-	//};
-
-	// BLENDER .ply EXPORT
-	float cube_vertices[] =
+	float floor_vertices[] =
 	{
-		-0.5f,  0.5f,  0.5f, // 0. Front: Top left
-		 0.5f,  0.5f,  0.5f, // 1. Front: Top right
-		 0.5f,  0.5f, -0.5f, // 2. Back:  Top right
-		-0.5f,  0.5f, -0.5f, // 3. Back:  Top left
-		-0.5f, -0.5f, -0.5f, // 4. Back:  Bottom left
-		 0.5f, -0.5f, -0.5f, // 5. Back:  Bottom right
-		 0.5f, -0.5f,  0.5f, // 6. Front: Bottom right
-		-0.5f, -0.5f,  0.5f  // 7. Front: Bottom left
+		//Position:		       Color:
+		 0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 0. Top right
+		-0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 1. Top left
+		-0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 2. Bottom left
+		 0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f  // 3. Bottom right
 	};
-	 
-	unsigned int cube_indices[] = // Fails to render, except for 1 triangle			
+	float floor_indices[] =	   // Counter clockwise
+	{
+		0, 1, 2,			   // Top right, top left, bottom left
+		2, 3, 0                // Bottom left, bottom left, top right
+	};
+
+	float cube_vertices[] =	   // BLENDER .ply EXPORT
+	{
+		-0.5f,  0.5f,  0.5f,   // 0. Front: Top left
+		 0.5f,  0.5f,  0.5f,   // 1. Front: Top right
+		 0.5f,  0.5f, -0.5f,   // 2. Back:  Top right
+		-0.5f,  0.5f, -0.5f,   // 3. Back:  Top left
+		-0.5f, -0.5f, -0.5f,   // 4. Back:  Bottom left
+		 0.5f, -0.5f, -0.5f,   // 5. Back:  Bottom right
+		 0.5f, -0.5f,  0.5f,   // 6. Front: Bottom right
+		-0.5f, -0.5f,  0.5f    // 7. Front: Bottom left
+	}; 
+	unsigned int cube_indices[] = // Counter clockwise		
 	{
 		// BLENDER EXPORT: Fails to render, except for 1 triangle => 4, 0, 1 doesn't make any sense to me ???
 		/*4, 0, 1, 2, 3,
@@ -65,7 +62,7 @@ int main()
 		4, 7, 0, 3, 4,
 		4, 6, 1, 0, 7*/
 
-		// Counter clockwise => CHECK ALL ORDERS: https://stackoverflow.com/questions/8142388/in-what-order-should-i-send-my-vertices-to-opengl-for-culling
+		// Cube order explanation: https://stackoverflow.com/questions/8142388/in-what-order-should-i-send-my-vertices-to-opengl-for-culling
 		// FRONT FACE:
 		// TRIANGLE 1:
 		1, 0, 7,       // Front Top right, Front top left, Front bottom left
@@ -107,15 +104,12 @@ int main()
 
 	
 	GL_Vertex_Array vertex_array;
-	// GL_VertexBuffer bufferV(vertices, 4 * 6 * sizeof(float));       // The vertex buffer is bound to the OpenGL context on instantiation
-	GL_VertexBuffer bufferV(cube_vertices, 8 * 3 * sizeof(float));       // The vertex buffer is bound to the OpenGL context on instantiation
+	GL_VertexBuffer bufferV(cube_vertices, 8 * 3 * sizeof(float));   // The vertex buffer is bound to the OpenGL context on instantiation
 	GL_VertexBufferLayout layout_bufferV;
-	// layout_bufferV.Push<float>(2);									// Push the amount of floats per vertex that are used for the vertex position
-	layout_bufferV.Push<float>(3);									// Push the amount of floats per vertex that are used for the vertex position
+	layout_bufferV.Push<float>(3);									 // Push the amount of floats per vertex that are used for the vertex position
 	// layout_bufferV.Push<float>(4);									// Push the amount of floats per vertex that are used for the vertex color
 	vertex_array.AddBuffer(bufferV, layout_bufferV);
-	// GL_ElementBuffer bufferE(indices, 2 * 3 );						// The element buffer is bound to the OpenGL contect on instantiation
-	GL_ElementBuffer bufferE(cube_indices, 12 * 3);						// The element buffer is bound to the OpenGL contect on instantiation
+	GL_ElementBuffer bufferE(cube_indices, 12 * 3);				     // The element buffer is bound to the OpenGL contect on instantiation
 
 	unsigned int shader_program = CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program);
@@ -124,7 +118,6 @@ int main()
 	// VERTEX SHADER UNIFORMS:
 	// SCALING
 	ScalingMatrix4f mat_scaling;
-	// vec3f scaling_vec = { 0.5f, 0.5f, 1.0f };
 	vec3f scaling_vec = { 1.0f, 1.0f, 1.0f };
 	mat_scaling.SetScaling3f(scaling_vec);									          // Set the X, Y and Z scaling values in the translation matrix
 
@@ -133,7 +126,7 @@ int main()
 	
 	// ROTATION
 	RotationMatrix4f mat_rotation_y;
-	mat_rotation_y.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
+	// mat_rotation_y.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
 	// mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 	// mat_rotation_z.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
@@ -142,7 +135,6 @@ int main()
 
 	// TRANSLATION
 	TranslationMatrix4f mat_translation; 
-	// vec3f translation_vec = { 0.25f, 0.25f, 0.0f };
 	vec3f translation_vec = { 0.0f, 0.0f, 2.0f };
 	mat_translation.SetTranslation3f(translation_vec);								  // Set the X, Y and Z translation values in the translation matrix
 

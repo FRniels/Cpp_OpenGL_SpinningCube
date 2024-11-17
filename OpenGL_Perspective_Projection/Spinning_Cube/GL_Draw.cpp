@@ -4,7 +4,10 @@ void GL_ClearScreen(vec4f clear_color)
 {
 	// glClearColor(0.996F, 0.54F, 0.094F, 0.0F); // Orange
 	glClearColor(*clear_color, *(clear_color + 1), *(clear_color + 2), *(clear_color + 3)); 
+	
+	// Clear the screen
 	GL_Call(glClear(GL_COLOR_BUFFER_BIT));
+	// GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)); // NEW: CLEAR THE DEPTH BUFFER EACH FRAME
 }
 
 void DrawTriangle(vec2f coo1, vec2f coo2, vec2f coo3)

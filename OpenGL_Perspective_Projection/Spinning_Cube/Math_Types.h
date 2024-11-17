@@ -5,8 +5,8 @@
 #include "GL_User_Types.h"
 
 #define PI 3.14159265359
-#define TO_RADIANS(degrees) (degrees * (PI / 180))
-#define TO_DEGREES(radians) (radians * (180 / PI)) 
+#define TO_RADIANS(degrees) ((degrees) * (PI / 180))
+#define TO_DEGREES(radians) ((radians) * (180 / PI)) 
 
 class Matrix4f
 {
@@ -36,7 +36,7 @@ public:
 class TranslationMatrix4f : public Matrix4f
 {
 public:
-	using Matrix4f::Matrix4f;											// The using statement simplifies typing all the parameters again to pass them to the base constructor. This tell the compiler to use the base class construcor (c++11 feature)
+	// using Matrix4f::Matrix4f;											// The using statement simplifies typing all the parameters again to pass them to the base constructor. This tell the compiler to use the base class construcor (c++11 feature)
 	/*
 	TranslationMatrix4f(float m00, float m01, float m02, float m03,
 		float m10, float m11, float m12, float m13,
@@ -51,7 +51,7 @@ public:
 class RotationMatrix4f : public Matrix4f
 {
 public:
-	using Matrix4f::Matrix4f; 
+	// using Matrix4f::Matrix4f; 
 
 	~RotationMatrix4f() {}
 
@@ -66,19 +66,32 @@ private:
 class ScalingMatrix4f : public Matrix4f
 {
 public:
-	using Matrix4f::Matrix4f; 
+	// using Matrix4f::Matrix4f; 
 
 	~ScalingMatrix4f() {}
 
 	void SetScaling3f(vec3f scaling_xyz);
 };
 
-class TransformationMatrix4f : public Matrix4f							// This matrix is the matrix multiplication: TranslationMatrix4f * RotationMatrix4f * ScalingMatrix4f => The order of matrix multiplication is very important!
+class TransformationMatrix4f : public Matrix4f	// This matrix is the matrix multiplication: TranslationMatrix4f * RotationMatrix4f * ScalingMatrix4f => The order of matrix multiplication is very important!
 {
 public:
-	using Matrix4f::Matrix4f; 
+	// using Matrix4f::Matrix4f; 
 
 	~TransformationMatrix4f() {}
+};
+
+class ProjectionMatrix4f : public Matrix4f		// This matrix needs to be multiplied with the FINAL transformation matrix to transform the vertices and achieve perspective projection (sense of depth by accounting for the z values of the vertices. 
+{												// No transformations may be made on this projection matrix !!
+private:
+	float FOV = 0.0f; // Vertical and horizontal Field Of View. => Later feature: allow for a seperate Vertical and Horizontal FOV.
+
+public:
+	// using Matrix4f::Matrix4f;
+
+	~ProjectionMatrix4f() {}
+
+	void SetFOV(float fov_degrees);
 };
 
 #endif // MATH_TYPES_H

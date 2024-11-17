@@ -113,3 +113,31 @@ void ScalingMatrix4f::SetScaling3f(vec3f scaling_xyz)									// Set the X, Y an
 	};
 	*/
 }
+
+void ProjectionMatrix4f::SetFOV(float fov_degrees)
+{
+	FOV = fov_degrees;
+	float tanHalfFOV_rad        = tanf(TO_RADIANS(fov_degrees / 2.0f));
+	float reciprocal_tanHalfFOV = 1.0f / tanHalfFOV_rad;
+
+	// TO DO: RESEARCH WHICH IS THE VERTICAL AND WHICH IS THE HORIZONTAL FOV
+	mat4f[0][0] = reciprocal_tanHalfFOV;	
+	mat4f[1][1] = reciprocal_tanHalfFOV;	
+	// ADJUST THE FOLLOWING MATRIX VALUES:
+	mat4f[3][2] = 1.0f;
+	mat4f[3][3] = 0.0f;
+	// THIS IS DONE SO THAT THE VALUE OF THE Z COMPONENT IS COPIED INTO THE W COMPONENT
+	// WHEN THIS PROJECTION MATRIX IS MULTIPLIED WITH THE TRANSFORMATION MATRIX.
+
+	/*
+	{
+		1/tan(tanHalfFOV), 0.0f,			  0.0f,    0.0f,
+		0.0f,              1/tan(tanHalfFOV), 0.0f,    0.0f,
+		0.0f,              0.0f,			  1.0f,    0.0f,
+		0.0f,              0.0f,			  1.0f,    0.0f   // SETTING W TO 0.0f AND mat4f[3][2] TO 1.0F WILL CAUSE A COPY OF THE Z COMPONENT INTO THE W COMPONENT AFTER MULTIPLICATION
+	};
+	*/
+
+	// MORE INFO: https://www.youtube.com/watch?v=LhQ85bPCAJ8&list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA&index=14
+}
+

@@ -1,3 +1,23 @@
-﻿  Spinning_Cube.cpp
-C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Spinning_Cube.cpp(154,83): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  GL_ShaderProgram.cpp
+  GL_Uniform.cpp
+  Math_Types.cpp
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(47,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(48,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(49,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(50,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(64,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(65,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(66,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(67,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(81,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(82,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(83,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(84,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Math_Types.cpp(120,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Spinning_Cube.cpp
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Spinning_Cube.cpp(157,83): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
   Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Debug\Spinning_Cube.exe

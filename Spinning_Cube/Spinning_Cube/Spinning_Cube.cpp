@@ -26,6 +26,11 @@ int main()
 {
 	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
+	// TO DO: FINISH THE MATRIX MULTIPLICATION OPERATOR OVERLOAD
+	// TranslationMatrix4f trans;
+	// RotationMatrix4f rot;
+	// Matrix4f* transf = rot * trans;
+
 
 	float floor_vertices[] =
 	{

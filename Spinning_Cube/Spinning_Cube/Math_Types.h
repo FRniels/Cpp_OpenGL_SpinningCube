@@ -8,8 +8,13 @@
 #define TO_RADIANS(degrees) ((degrees) * (PI / 180))
 #define TO_DEGREES(radians) ((radians) * (180 / PI)) 
 
+class TransformationMatrix4f;
+
 class Matrix4f
 {
+
+friend TransformationMatrix4f;
+
 protected:
 	float mat4f[4][4] = { 0.0f };
 
@@ -73,13 +78,17 @@ public:
 	void SetScaling3f(vec3f scaling_xyz);
 };
 
+
 class TransformationMatrix4f : public Matrix4f	// This matrix is the matrix multiplication: TranslationMatrix4f * RotationMatrix4f * ScalingMatrix4f => The order of matrix multiplication is very important!
 {
 public:
 	// using Matrix4f::Matrix4f; 
 
 	~TransformationMatrix4f() {}
+
+	inline Matrix4f operator*(const Matrix4f& right_hand_side);
 };
+
 
 class ProjectionMatrix4f : public Matrix4f		// This matrix needs to be multiplied with the FINAL transformation matrix to transform the vertices and achieve perspective projection (sense of depth by accounting for the z values of the vertices. 
 {												// No transformations may be made on this projection matrix !!

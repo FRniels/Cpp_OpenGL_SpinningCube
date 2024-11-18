@@ -141,3 +141,21 @@ void ProjectionMatrix4f::SetFOV(float fov_degrees)
 	// MORE INFO: https://www.youtube.com/watch?v=LhQ85bPCAJ8&list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA&index=14
 }
 
+inline Matrix4f TransformationMatrix4f::operator*(const Matrix4f& right_hand_side) // WHY CANT I ACCES THE MATRIX ARRAY MAT4F WITHOUT MAKING THIS CLASS A FRIEND OF THE BASE CLASS
+{																				   // THIS CLASS IS A CHILD CLASS AND THE MATRIX ARRAY IS PROTECTED ????
+	Matrix4f mat_result;
+
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		for (unsigned int j = 0; j < 4; ++j)
+		{
+			mat4f[i][j] = 
+				mat4f[i][0] * right_hand_side.mat4f[0][j] +
+				mat4f[i][1] * right_hand_side.mat4f[1][j] +
+				mat4f[i][2] * right_hand_side.mat4f[2][j] +
+				mat4f[i][3] * right_hand_side.mat4f[3][j];
+		}
+	}
+
+	return mat_result;
+}

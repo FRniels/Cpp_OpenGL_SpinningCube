@@ -11,7 +11,7 @@ GL_Uniform GetUniform(unsigned int shader_program, const std::string& u_Name)
 
 void SetUniform1f(unsigned int shader_program, const std::string& u_Name, float data)
 {
-	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: " << data << std::endl;
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: " << data << std::endl;
 
 	// Check if the uniform exists and set it's value if the uniform has a valid location
 	GL_Call(int uniformLocation = glGetUniformLocation(shader_program, u_Name.c_str()));
@@ -28,7 +28,7 @@ void SetUniform1f(unsigned int shader_program, unsigned int u_Location, float da
 
 void SetUniform4f(unsigned int shader_program, const std::string& u_Name, vec4f data)
 {
-	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: ";
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << " Value: ";
 	for (int i = 0; i < VEC4F_SIZE; ++i)
 	{
 		std::cout << *(data + i) << "F ";
@@ -45,7 +45,7 @@ void SetUniform4f(unsigned int shader_program, unsigned int u_Location, vec4f da
 {
 	ASSERT(u_Location != -1);
 
-	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: ";
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: ";
 	for (int i = 0; i < VEC4F_SIZE; ++i)
 	{
 		std::cout << *(data + i) << "F ";
@@ -57,7 +57,7 @@ void SetUniform4f(unsigned int shader_program, unsigned int u_Location, vec4f da
 
 void SetUniformMat4f(unsigned int shader_program, const std::string& u_Name, const Matrix4f& mat4f)
 {
-	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << std::endl;
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Name: " << u_Name << std::endl;
 	GL_Call(int uniformLocation = glGetUniformLocation(shader_program, u_Name.c_str()));
 	ASSERT(uniformLocation != -1);
 	GL_Call(glUniformMatrix4fv(uniformLocation, 1, GL_TRUE, mat4f.GetMatrix())); // Row major matrix: transpose == GL_TRUE
@@ -66,6 +66,6 @@ void SetUniformMat4f(unsigned int shader_program, const std::string& u_Name, con
 void SetUniformMat4f(unsigned int shader_program, unsigned int u_Location, const Matrix4f& mat4f)
 {
 	ASSERT(u_Location != -1);
-	std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << std::endl;
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << std::endl;
 	GL_Call(glUniformMatrix4fv(u_Location, 1, GL_TRUE, mat4f.GetMatrix())); 
 }

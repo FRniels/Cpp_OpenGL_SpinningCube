@@ -26,19 +26,6 @@ int main()
 {
 	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
-	// TEST: MATRIX MULTIPLICATION OPERATOR OVERLOAD
-	TranslationMatrix4f trans;
-	vec3f trans_test = { 2.0f, 2.5f, 1.0f };
-	trans.SetTranslation3f(trans_test);
-	RotationMatrix4f rot;
-
-	ScalingMatrix4f scale;
-	vec3f scale_test = { 3.0f, 3.0f, 3.0f };
-	scale.SetScaling3f(scale_test);
-	Matrix4f transformation_test = trans * rot * scale;
-
-	Matrix4f debug_breakpoint_mat;
-	// TEST: MATRIX MULTIPLICATION OPERATOR OVERLOAD
 
 	float floor_vertices[] =
 	{
@@ -116,13 +103,13 @@ int main()
 	};
 
 	
-	GL_Vertex_Array vertex_array;
-	GL_VertexBuffer bufferV(cube_vertices, 8 * 3 * sizeof(float));   // The vertex buffer is bound to the OpenGL context on instantiation
-	GL_VertexBufferLayout layout_bufferV;
-	layout_bufferV.Push<float>(3);									 // Push the amount of floats per vertex that are used for the vertex position
-	// layout_bufferV.Push<float>(4);									// Push the amount of floats per vertex that are used for the vertex color
-	vertex_array.AddBuffer(bufferV, layout_bufferV);
-	GL_ElementBuffer bufferE(cube_indices, 12 * 3);				     // The element buffer is bound to the OpenGL contect on instantiation
+	GL_Vertex_Array vertex_array_cube;
+	GL_VertexBuffer bufferV_cube(cube_vertices, 8 * 3 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
+	GL_VertexBufferLayout layout_bufferV_cube;
+	layout_bufferV_cube.Push<float>(3);									 // Push the amount of floats per vertex that are used for the vertex position
+	// layout_bufferV_cube.Push<float>(4);									// Push the amount of floats per vertex that are used for the vertex color
+	vertex_array_cube.AddBuffer(bufferV_cube, layout_bufferV_cube);
+	GL_ElementBuffer bufferE_cube(cube_indices, 12 * 3);				 // The element buffer is bound to the OpenGL contect on instantiation
 
 	unsigned int shader_program_cube = CreateShaderProgram("../Resources/Shaders/Cube.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program_cube);
@@ -130,34 +117,25 @@ int main()
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
 	// SCALING
-	ScalingMatrix4f mat_scaling;
-	vec3f scaling_vec = { 1.0f, 1.0f, 1.0f };
-	mat_scaling.SetScaling3f(scaling_vec);									          // Set the X, Y and Z scaling values in the translation matrix
-
-	// GL_Uniform u_scaling_mat = GetUniform(shader_program_cube, "u_Scaling_mat");
-	// SetUniformMat4f(shader_program_cube, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
+	ScalingMatrix4f mat_scaling_cube;
+	vec3f scaling_vec_cube = { 1.0f, 1.0f, 1.0f };
+	mat_scaling_cube.SetScaling3f(scaling_vec_cube);														  // Set the X, Y and Z scaling values in the translation matrix
 	
 	// ROTATION
-	RotationMatrix4f mat_rotation_y;
+	RotationMatrix4f mat_rotation_y_cube;
 	// mat_rotation_y.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
 	// mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 	// mat_rotation_z.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
-	// GL_Uniform u_rotation_y_mat = GetUniform(shader_program_cube, "u_RotationY_mat");
-	// SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);   // Pass the rotation matrix to the shader
-
 	// TRANSLATION
-	TranslationMatrix4f mat_translation; 
-	vec3f translation_vec = { 0.0f, 0.0f, 2.5f };
-	mat_translation.SetTranslation3f(translation_vec);								  // Set the X, Y and Z translation values in the translation matrix
-
-	// GL_Uniform u_translation_mat = GetUniform(shader_program_cube, "u_Translation_mat");
-	// SetUniformMat4f(shader_program_cube, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
+	TranslationMatrix4f mat_translation_cube;
+	vec3f translation_vec_cube = { 0.0f, 0.0f, 2.5f };
+	mat_translation_cube.SetTranslation3f(translation_vec_cube);											  // Set the X, Y and Z translation values in the translation matrix
 
 	// TRANSFORMATION
-	Matrix4f mat_transformation = mat_translation * mat_rotation_y * mat_scaling;
-	GL_Uniform u_transformation_mat = GetUniform(shader_program_cube, "u_Transformation_mat");
-	SetUniformMat4f(shader_program_cube, u_transformation_mat.Get_Handle(), mat_transformation);         // Pass the transformation matrix to the shader
+	Matrix4f mat_transformation_cube = mat_translation_cube * mat_rotation_y_cube * mat_scaling_cube;
+	GL_Uniform u_transformation_mat_cube = GetUniform(shader_program_cube, "u_Transformation_mat");
+	SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), mat_transformation_cube);  // Pass the transformation matrix to the shader
 
 	// PROJECTION
 	ProjectionMatrix4f projection_mat;
@@ -204,7 +182,7 @@ int main()
 		window.UpdateTime();
 
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
-		vertex_array.Bind();
+		vertex_array_cube.Bind();
 		GL_Call(glUseProgram(shader_program_cube));    	 // Bind the required shader program to th OpenGL context
 
 		if (translation_timer.IsTimerExpired()) 
@@ -212,10 +190,9 @@ int main()
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			// UPDATE THE ROTATION Z MATRIX AND PASS THE UPDATED ROTATION MATRIX TO THE VERTEX SHADER.
 			++rotation_y;
-			mat_rotation_y.SetRotation(rotation_y, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS); 
-			// SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);
-			mat_transformation = mat_translation * mat_rotation_y * mat_scaling;						  // Calculate the transformation matrix again
-			SetUniformMat4f(shader_program_cube, u_transformation_mat.Get_Handle(), mat_transformation);  // Pass the transformation matrix to the shader
+			mat_rotation_y_cube.SetRotation(rotation_y, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
+			mat_transformation_cube = mat_translation_cube * mat_rotation_y_cube * mat_scaling_cube;			    // Calculate the transformation matrix again
+			SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), mat_transformation_cube);  // Pass the transformation matrix to the shader
 
 			translation_timer.Reset();
 		}
@@ -228,9 +205,9 @@ int main()
 	}
 
 	// Clean-up:
-	bufferV.Delete();
-	bufferE.Delete();
-	vertex_array.Delete();
+	bufferV_cube.Delete();
+	bufferE_cube.Delete();
+	vertex_array_cube.Delete();
 	GL_Call(glDeleteProgram(shader_program_cube));
 
 	window.Exit();

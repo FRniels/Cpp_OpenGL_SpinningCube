@@ -53,11 +53,12 @@ void main()
 	// When for example the order of Translation and Rotation is reversed, the result will be that the rotated vertices will rotate around the center point with a radius of the translation value.
 	// This could be a desired effect when it is done by intention!
 	// mat4 transformation_mat = u_Translation_mat * u_RotationY_mat * u_Scaling_mat;  // Multiply the seperate transformations together to form one transformation matrix 
-	// gl_Position = transformation_mat * vec4(position, 1.0);						// that can be multiplied with the incoming vertices vector.
-	
+															    					   // that can be multiplied with the incoming vertices vector.
 	// vec4 transformed_vertex = transformation_mat * vec4(position, 1.0);
+
+
 	vec4 transformed_vertex = u_Transformation_mat * vec4(position, 1.0);
-	gl_Position = u_Projection_mat * transformed_vertex;						    // Project the transformed vertex
+	gl_Position = u_Projection_mat * transformed_vertex;						       // Project the transformed vertex
 	
 	// colorFromVertex = color;
 };

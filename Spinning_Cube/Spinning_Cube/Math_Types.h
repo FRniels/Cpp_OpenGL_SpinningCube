@@ -8,12 +8,12 @@
 #define TO_RADIANS(degrees) ((degrees) * (PI / 180))
 #define TO_DEGREES(radians) ((radians) * (180 / PI)) 
 
-class TransformationMatrix4f;
+// class TransformationMatrix4f;
 
 class Matrix4f
 {
 
-friend TransformationMatrix4f;
+// friend TransformationMatrix4f; // THIS NEEDS TO BE REMOVED AFTER THE TRANSFOMATION MATRIX IS REMOVED
 
 protected:
 	float mat4f[4][4] = { 0.0f };
@@ -35,6 +35,25 @@ public:
 	~Matrix4f() {}
 
 	const float* GetMatrix() const { return &mat4f[0][0]; }             // Return a const pointer with const a function so that the original pointer can't be changed and the contents of the matrix can't be changed.
+	
+	inline Matrix4f operator*(const Matrix4f& right_hand_side)
+	{
+		Matrix4f mat_result;
+
+		for (unsigned int i = 0; i < 4; ++i)
+		{
+			for (unsigned int j = 0; j < 4; ++j)
+			{
+				mat_result.mat4f[i][j] =
+					mat4f[i][0] * right_hand_side.mat4f[0][j] +
+					mat4f[i][1] * right_hand_side.mat4f[1][j] +
+					mat4f[i][2] * right_hand_side.mat4f[2][j] +
+					mat4f[i][3] * right_hand_side.mat4f[3][j];
+			}
+		}
+
+		return mat_result;
+	}
 };
 
 
@@ -78,7 +97,7 @@ public:
 	void SetScaling3f(vec3f scaling_xyz);
 };
 
-
+/*
 class TransformationMatrix4f : public Matrix4f	// This matrix is the matrix multiplication: TranslationMatrix4f * RotationMatrix4f * ScalingMatrix4f => The order of matrix multiplication is very important!
 {
 public:
@@ -86,9 +105,10 @@ public:
 
 	~TransformationMatrix4f() {}
 
-	inline Matrix4f operator*(const Matrix4f& right_hand_side);
+	// DECLARE THIS OPERATOR OVERLOADING INSIDE THE BASE CLASS! REMOVE THE TRANSFORMATION MATRIX CLASS BECAUSE IT DOESN'T ACTUALLY DO SOMETHING!
+	// inline Matrix4f operator*(const Matrix4f& right_hand_side);
 };
-
+*/
 
 class ProjectionMatrix4f : public Matrix4f		// This matrix needs to be multiplied with the FINAL transformation matrix to transform the vertices and achieve perspective projection (sense of depth by accounting for the z values of the vertices. 
 {												// No transformations may be made on this projection matrix !!

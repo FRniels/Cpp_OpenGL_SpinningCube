@@ -1,5 +1,6 @@
 #include "Math_Types.h"
 
+
 // TRANSLATION
 void TranslationMatrix4f::SetTranslation3f(vec3f translation_xyz)						// Set the X, Y and Z translation values in the matrix
 {
@@ -141,6 +142,8 @@ void ProjectionMatrix4f::SetFOV(float fov_degrees)
 	// MORE INFO: https://www.youtube.com/watch?v=LhQ85bPCAJ8&list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA&index=14
 }
 
+// DECLARE THIS OPERATOR OVERLOADING INSIDE THE BASE CLASS! REMOVE THE TRANSFORMATION MATRIX CLASS BECAUSE IT DOESN'T ACTUALLY DO SOMETHING!
+/*
 inline Matrix4f TransformationMatrix4f::operator*(const Matrix4f& right_hand_side) // WHY CANT I ACCES THE MATRIX ARRAY MAT4F WITHOUT MAKING THIS CLASS A FRIEND OF THE BASE CLASS
 {																				   // THIS CLASS IS A CHILD CLASS AND THE MATRIX ARRAY IS PROTECTED ????
 	Matrix4f mat_result;
@@ -159,3 +162,4 @@ inline Matrix4f TransformationMatrix4f::operator*(const Matrix4f& right_hand_sid
 
 	return mat_result;
 }
+*/

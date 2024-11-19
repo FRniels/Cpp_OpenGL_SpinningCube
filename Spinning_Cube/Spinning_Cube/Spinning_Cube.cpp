@@ -26,11 +26,18 @@ int main()
 {
 	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
-	// TO DO: FINISH THE MATRIX MULTIPLICATION OPERATOR OVERLOAD
-	// TranslationMatrix4f trans;
-	// RotationMatrix4f rot;
-	// Matrix4f* transf = rot * trans;
+	// TEST: MATRIX MULTIPLICATION OPERATOR OVERLOAD
+	TranslationMatrix4f trans;
+	vec3f trans_test = { 2.0f, 2.5f, 1.0f };
+	trans.SetTranslation3f(trans_test);
+	RotationMatrix4f rot;
 
+	ScalingMatrix4f scale;
+	vec3f scale_test = { 3.0f, 3.0f, 3.0f };
+	scale.SetScaling3f(scale_test);
+	Matrix4f transformation_mat4 = trans * rot * scale;
+
+	Matrix4f debug_breakpoint_mat;
 
 	float floor_vertices[] =
 	{
@@ -116,8 +123,8 @@ int main()
 	vertex_array.AddBuffer(bufferV, layout_bufferV);
 	GL_ElementBuffer bufferE(cube_indices, 12 * 3);				     // The element buffer is bound to the OpenGL contect on instantiation
 
-	unsigned int shader_program = CreateShaderProgram("../Resources/Shaders/Shader_Vertex_Fragment.shader"); // Create Shader Program 
-	UseShaderProgram(shader_program);
+	unsigned int shader_program_cube = CreateShaderProgram("../Resources/Shaders/Cube.shader"); // Create Shader Program 
+	UseShaderProgram(shader_program_cube);
 
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
@@ -126,8 +133,8 @@ int main()
 	vec3f scaling_vec = { 1.0f, 1.0f, 1.0f };
 	mat_scaling.SetScaling3f(scaling_vec);									          // Set the X, Y and Z scaling values in the translation matrix
 
-	GL_Uniform u_scaling_mat = GetUniform(shader_program, "u_Scaling_mat");
-	SetUniformMat4f(shader_program, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
+	GL_Uniform u_scaling_mat = GetUniform(shader_program_cube, "u_Scaling_mat");
+	SetUniformMat4f(shader_program_cube, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
 	
 	// ROTATION
 	RotationMatrix4f mat_rotation_y;
@@ -135,27 +142,27 @@ int main()
 	// mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 	// mat_rotation_z.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
-	GL_Uniform u_rotation_y_mat = GetUniform(shader_program, "u_RotationY_mat");
-	SetUniformMat4f(shader_program, u_rotation_y_mat.Get_Handle(), mat_rotation_y);   // Pass the rotation matrix to the shader
+	GL_Uniform u_rotation_y_mat = GetUniform(shader_program_cube, "u_RotationY_mat");
+	SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);   // Pass the rotation matrix to the shader
 
 	// TRANSLATION
 	TranslationMatrix4f mat_translation; 
-	vec3f translation_vec = { 0.0f, 0.0f, 2.0f };
+	vec3f translation_vec = { 0.0f, 0.0f, 2.5f };
 	mat_translation.SetTranslation3f(translation_vec);								  // Set the X, Y and Z translation values in the translation matrix
 
-	GL_Uniform u_translation_mat = GetUniform(shader_program, "u_Translation_mat"); 
-	SetUniformMat4f(shader_program, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
+	GL_Uniform u_translation_mat = GetUniform(shader_program_cube, "u_Translation_mat");
+	SetUniformMat4f(shader_program_cube, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
 
 	// PROJECTION
 	ProjectionMatrix4f projection_mat;
 	projection_mat.SetFOV(90.0f);
 
-	GL_Uniform u_projection_mat = GetUniform(shader_program, "u_Projection_mat");     // Pass the projection matrix to the shader
-	SetUniformMat4f(shader_program, u_projection_mat.Get_Handle(), projection_mat);   // IF THE CUBE IS NOT VISIBLE, TRANSLATE IT ALONG THE POSITIVE Z AXIS, THE CUBE WILL PROBABLY BE DEFINED IN CLIP SPACE COORDINATES [-1, 1] 
+	GL_Uniform u_projection_mat = GetUniform(shader_program_cube, "u_Projection_mat");     // Pass the projection matrix to the shader
+	SetUniformMat4f(shader_program_cube, u_projection_mat.Get_Handle(), projection_mat);   // IF THE CUBE IS NOT VISIBLE, TRANSLATE IT ALONG THE POSITIVE Z AXIS, THE CUBE WILL PROBABLY BE DEFINED IN CLIP SPACE COORDINATES [-1, 1] 
 																					  // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION
 	// FRAGMENT SHADER UNIFORMS:
-	GL_Uniform u_window_height = GetUniform(shader_program, "uWindow_Height");
-	SetUniform1f(shader_program, u_window_height.Get_Handle(), window.GetWindowHeight());
+	GL_Uniform u_window_height = GetUniform(shader_program_cube, "uWindow_Height");
+	SetUniform1f(shader_program_cube, u_window_height.Get_Handle(), window.GetWindowHeight());
 
 	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
 	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
@@ -181,12 +188,16 @@ int main()
 
 	// RENDER LOOP 
 	float rotation_y = 0.0f;
-	Timer translation_timer(window.GetWindowTime(), FPS_60_PERIOD);
+	Timer translation_timer(window.GetWindowTime(), 1/ 200.0); // FPS_60_PERIOD
 	window.InitTime();
 
 	while (!window.ShouldWindowClose())              // Loop until the user closes the window
 	{
 		window.UpdateTime();
+
+		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
+		vertex_array.Bind();
+		GL_Call(glUseProgram(shader_program_cube));    	 // Bind the required shader program to th OpenGL context
 
 		if (translation_timer.IsTimerExpired()) 
 		{
@@ -194,14 +205,10 @@ int main()
 			// UPDATE THE ROTATION Z MATRIX AND PASS THE UPDATED ROTATION MATRIX TO THE VERTEX SHADER.
 			++rotation_y;
 			mat_rotation_y.SetRotation(rotation_y, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS); 
-			SetUniformMat4f(shader_program, u_rotation_y_mat.Get_Handle(), mat_rotation_y);
+			SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);
 
 			translation_timer.Reset();
 		}
-
-		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
-		vertex_array.Bind();
-		GL_Call(glUseProgram(shader_program));    	 // Bind the required shader program to th OpenGL context
 
 		Render();									 // Render the scene
 
@@ -214,7 +221,7 @@ int main()
 	bufferV.Delete();
 	bufferE.Delete();
 	vertex_array.Delete();
-	GL_Call(glDeleteProgram(shader_program));
+	GL_Call(glDeleteProgram(shader_program_cube));
 
 	window.Exit();
 

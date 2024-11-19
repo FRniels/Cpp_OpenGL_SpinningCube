@@ -35,9 +35,10 @@ int main()
 	ScalingMatrix4f scale;
 	vec3f scale_test = { 3.0f, 3.0f, 3.0f };
 	scale.SetScaling3f(scale_test);
-	Matrix4f transformation_mat4 = trans * rot * scale;
+	Matrix4f transformation_test = trans * rot * scale;
 
 	Matrix4f debug_breakpoint_mat;
+	// TEST: MATRIX MULTIPLICATION OPERATOR OVERLOAD
 
 	float floor_vertices[] =
 	{
@@ -152,6 +153,9 @@ int main()
 
 	GL_Uniform u_translation_mat = GetUniform(shader_program_cube, "u_Translation_mat");
 	SetUniformMat4f(shader_program_cube, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
+
+	// TRANSFORMATION
+	Matrix4f mat_transformation = mat_translation * mat_rotation_y * mat_scaling;
 
 	// PROJECTION
 	ProjectionMatrix4f projection_mat;

@@ -15,6 +15,7 @@ layout(location = 0) in vec3 position; 	// Changed the type to vec3 instead of t
 uniform mat4 u_Scaling_mat; 
 uniform mat4 u_RotationY_mat;
 uniform mat4 u_Translation_mat;
+uniform mat4 u_Transfornmation_mat;
 uniform mat4 u_Projection_mat;
 
 void main()      

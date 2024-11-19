@@ -134,8 +134,8 @@ int main()
 	vec3f scaling_vec = { 1.0f, 1.0f, 1.0f };
 	mat_scaling.SetScaling3f(scaling_vec);									          // Set the X, Y and Z scaling values in the translation matrix
 
-	GL_Uniform u_scaling_mat = GetUniform(shader_program_cube, "u_Scaling_mat");
-	SetUniformMat4f(shader_program_cube, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
+	// GL_Uniform u_scaling_mat = GetUniform(shader_program_cube, "u_Scaling_mat");
+	// SetUniformMat4f(shader_program_cube, u_scaling_mat.Get_Handle(), mat_scaling);         // Pass the rotation matrix to the shader
 	
 	// ROTATION
 	RotationMatrix4f mat_rotation_y;
@@ -143,19 +143,21 @@ int main()
 	// mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 	// mat_rotation_z.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
-	GL_Uniform u_rotation_y_mat = GetUniform(shader_program_cube, "u_RotationY_mat");
-	SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);   // Pass the rotation matrix to the shader
+	// GL_Uniform u_rotation_y_mat = GetUniform(shader_program_cube, "u_RotationY_mat");
+	// SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);   // Pass the rotation matrix to the shader
 
 	// TRANSLATION
 	TranslationMatrix4f mat_translation; 
 	vec3f translation_vec = { 0.0f, 0.0f, 2.5f };
 	mat_translation.SetTranslation3f(translation_vec);								  // Set the X, Y and Z translation values in the translation matrix
 
-	GL_Uniform u_translation_mat = GetUniform(shader_program_cube, "u_Translation_mat");
-	SetUniformMat4f(shader_program_cube, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
+	// GL_Uniform u_translation_mat = GetUniform(shader_program_cube, "u_Translation_mat");
+	// SetUniformMat4f(shader_program_cube, u_translation_mat.Get_Handle(), mat_translation); // Pass the translation matrix to the shader
 
 	// TRANSFORMATION
 	Matrix4f mat_transformation = mat_translation * mat_rotation_y * mat_scaling;
+	GL_Uniform u_transformation_mat = GetUniform(shader_program_cube, "u_Transformation_mat");
+	SetUniformMat4f(shader_program_cube, u_transformation_mat.Get_Handle(), mat_transformation);         // Pass the transformation matrix to the shader
 
 	// PROJECTION
 	ProjectionMatrix4f projection_mat;
@@ -163,7 +165,9 @@ int main()
 
 	GL_Uniform u_projection_mat = GetUniform(shader_program_cube, "u_Projection_mat");     // Pass the projection matrix to the shader
 	SetUniformMat4f(shader_program_cube, u_projection_mat.Get_Handle(), projection_mat);   // IF THE CUBE IS NOT VISIBLE, TRANSLATE IT ALONG THE POSITIVE Z AXIS, THE CUBE WILL PROBABLY BE DEFINED IN CLIP SPACE COORDINATES [-1, 1] 
-																					  // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION
+																					       // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION
+	
+																						   
 	// FRAGMENT SHADER UNIFORMS:
 	GL_Uniform u_window_height = GetUniform(shader_program_cube, "uWindow_Height");
 	SetUniform1f(shader_program_cube, u_window_height.Get_Handle(), window.GetWindowHeight());
@@ -209,7 +213,9 @@ int main()
 			// UPDATE THE ROTATION Z MATRIX AND PASS THE UPDATED ROTATION MATRIX TO THE VERTEX SHADER.
 			++rotation_y;
 			mat_rotation_y.SetRotation(rotation_y, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS); 
-			SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);
+			// SetUniformMat4f(shader_program_cube, u_rotation_y_mat.Get_Handle(), mat_rotation_y);
+			mat_transformation = mat_translation * mat_rotation_y * mat_scaling;						  // Calculate the transformation matrix again
+			SetUniformMat4f(shader_program_cube, u_transformation_mat.Get_Handle(), mat_transformation);  // Pass the transformation matrix to the shader
 
 			translation_timer.Reset();
 		}

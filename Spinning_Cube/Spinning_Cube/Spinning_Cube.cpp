@@ -44,13 +44,56 @@ int main()
 		2, 3, 0                     // Bottom left, bottom left, top right
 	};
 
+	float floor_checkerboard_vertices[] = // THIS IS JUST A QUICK TEST. I NEED TO INCLUDE A WHITE AND BLACK VERTEX FOR SOME COORDINATES WHICH IS A WASTE OF SPACE!
+	{
+		//Position:		       Color:
+		 0.0f,   0.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f, //  0. Center:        black
+		 0.0f,   0.0f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  1. Center:        white
+		 0.5f,   0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  2. Top    right   white
+		 0.0f,   0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  3. Top    center  white
+		 0.0f,   0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, //  4. Top    center  black
+		-0.5f,   0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, //  5. Top    left    black
+		-0.5f,   0.0f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, //  6. Left   center  black
+		-0.5f,   0.0f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  7. Left   center  white
+		-0.5f,  -0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  8. Bottom left    white
+		 0.0f,  -0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  9. Bottom center  white
+		 0.0f,  -0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, // 10. Bottom center  black
+		 0.5f,  -0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, // 11. Bottom right   black
+		 0.5f,   0.0f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, // 12. Right  center  black
+		 0.5f,   0.0f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, // 13. Right  center  white
+	};
+	unsigned int floor_checkerboard_indices[] = // Counter clockwise
+	{
+		// TOP RIGHT WHITE PLANE
+		2,  3, 1,   // Top right white,     Top center white,     Center white
+		1, 13, 2,   // Center white,        Right  center white,  Top right white
+		// TOP LEFT BLACK PLANE
+		4, 5, 6,    // Top center black,    Top left black,       Left center black
+		6, 0, 4,    // Left center black,   Center black,         Top center black
+		// BOTTOM LEFT WHITE PLANE
+		1, 7, 8,    // Center white,        Left center white,    Bottom left white
+		8, 9, 1,    // Bottom left white,   Bottom center white,  Center white
+		// BOTTOM RIGHT BLACK PLANE
+		12,  0, 10, // Right center black,  Center black,         Bottom center black
+		10, 11, 12  // Bottom center black, Bottom right black,   Right center black
+	};
+
+	// THESE LINES USE floor_vertices[] and floor_indices[]
+	//GL_Vertex_Array vertex_array_floor;
+	//GL_VertexBuffer bufferV_floor(floor_vertices, 4 * 7 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
+	//GL_VertexBufferLayout layout_bufferV_floor;
+	//layout_bufferV_floor.Push<float>(3);								   // Push the amount of floats per vertex that are used for the vertex position
+	//layout_bufferV_floor.Push<float>(4);								   // Push the amount of floats per vertex that are used for the vertex color
+	//vertex_array_floor.AddBuffer(bufferV_floor, layout_bufferV_floor);
+	//GL_ElementBuffer bufferE_floor(floor_indices, 2 * 3);				   // The element buffer is bound to the OpenGL contect on instantiation
+
 	GL_Vertex_Array vertex_array_floor;
-	GL_VertexBuffer bufferV_floor(floor_vertices, 4 * 7 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
+	GL_VertexBuffer bufferV_floor(floor_checkerboard_vertices, 14 * 7 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
 	GL_VertexBufferLayout layout_bufferV_floor;
 	layout_bufferV_floor.Push<float>(3);								   // Push the amount of floats per vertex that are used for the vertex position
 	layout_bufferV_floor.Push<float>(4);								   // Push the amount of floats per vertex that are used for the vertex color
 	vertex_array_floor.AddBuffer(bufferV_floor, layout_bufferV_floor);
-	GL_ElementBuffer bufferE_floor(floor_indices, 2 * 3);				   // The element buffer is bound to the OpenGL contect on instantiation
+	GL_ElementBuffer bufferE_floor(floor_checkerboard_indices, 8 * 3);	   // The element buffer is bound to the OpenGL contect on instantiation
 	unsigned int shader_program_floor = CreateShaderProgram("../Resources/Shaders/Floor.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program_floor);
 
@@ -234,7 +277,9 @@ int main()
 		// RENDER THE FLOOR
 		vertex_array_floor.Bind();
 		GL_Call(glUseProgram(shader_program_floor));
-		GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		// ORIGNAL ONE COLOR FLOOR PLANE
+		// GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));
 		GL_Vertex_Array::Unbind();
 		GL_Call(glUseProgram(0));
 

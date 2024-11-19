@@ -12,18 +12,12 @@ layout(location = 1) in vec4 color;
 
 out vec4 colorFromVertex;
 
-uniform mat4 u_Scaling_mat; 
-uniform mat4 u_RotationY_mat;
-uniform mat4 u_Translation_mat;
+uniform mat4 u_Transformation_mat;
 uniform mat4 u_Projection_mat;
 
 void main()      
 {	
-	
-	// When for example the order of Translation and Rotation is reversed, the result will be that the rotated vertices will rotate around the center point with a radius of the translation value.
-	// This could be a desired effect when it is done by intention!
-	mat4 transformation_mat = u_Translation_mat * u_RotationY_mat * u_Scaling_mat;  // Multiply the seperate transformations together to form one transformation matrix 
-	vec4 transformed_vertex = transformation_mat * vec4(position, 1.0);
+	vec4 transformed_vertex = u_Transformation_mat * vec4(position, 1.0);
 	gl_Position = u_Projection_mat * transformed_vertex;						    // Project the transformed vertex
 	
 	colorFromVertex = color;

@@ -18,7 +18,7 @@
 #include "GL_Draw.h"
 #include "Timer.h"
 
-
+// TO DO: IF THE USER ALREADY SET A ROTATION MATRIX AND TRIES TO CHANGE THE AXIS OF THE SAME INSTANCE, RESET THE CURRENT ROTATION MATRIX BEFORE SETTING THE NEW VALUES!
 
 void Render(void);
 
@@ -26,6 +26,9 @@ int main()
 {
 	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
+	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
+	ProjectionMatrix4f projection_mat;
+	projection_mat.SetFOV(90.0f);
 
 	float floor_vertices[] =
 	{
@@ -35,11 +38,49 @@ int main()
 		-0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 2. Bottom left
 		 0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f  // 3. Bottom right
 	};
-	float floor_indices[] =	   // Counter clockwise
+	unsigned int floor_indices[] =	// Counter clockwise
 	{
-		0, 1, 2,			   // Top right, top left, bottom left
-		2, 3, 0                // Bottom left, bottom left, top right
+		0, 1, 2,			        // Top right, top left, bottom left
+		2, 3, 0                     // Bottom left, bottom left, top right
 	};
+
+	GL_Vertex_Array vertex_array_floor;
+	GL_VertexBuffer bufferV_floor(floor_vertices, 4 * 7 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
+	GL_VertexBufferLayout layout_bufferV_floor;
+	layout_bufferV_floor.Push<float>(3);								   // Push the amount of floats per vertex that are used for the vertex position
+	layout_bufferV_floor.Push<float>(4);								   // Push the amount of floats per vertex that are used for the vertex color
+	vertex_array_floor.AddBuffer(bufferV_floor, layout_bufferV_floor);
+	GL_ElementBuffer bufferE_floor(floor_indices, 2 * 3);				   // The element buffer is bound to the OpenGL contect on instantiation
+	unsigned int shader_program_floor = CreateShaderProgram("../Resources/Shaders/Floor.shader"); // Create Shader Program 
+	UseShaderProgram(shader_program_floor);
+
+	// SET SHADER UNIFORMS
+	// VERTEX SHADER UNIFORMS:
+	// SCALING
+	ScalingMatrix4f mat_scaling_floor;
+	vec3f scaling_vec_floor = { 2.5f, 2.5f, 1.0f };
+	mat_scaling_floor.SetScaling3f(scaling_vec_floor);
+	// ROTATION
+	RotationMatrix4f mat_rotation_x_floor;
+	mat_rotation_x_floor.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
+	// TRANSLATION
+	TranslationMatrix4f mat_translation_floor;
+	vec3f translation_vec_floor = { 0.0f, -0.75f, 2.5f };
+	mat_translation_floor.SetTranslation3f(translation_vec_floor);
+	// TRANSFORMATION
+	Matrix4f mat_transformation_floor = mat_translation_floor * mat_rotation_x_floor * mat_scaling_floor;
+	GL_Uniform u_transformation_mat_floor = GetUniform(shader_program_floor, "u_Transformation_mat");
+	SetUniformMat4f(shader_program_floor, u_transformation_mat_floor.Get_Handle(), mat_transformation_floor);
+	// PROJECTION
+	GL_Uniform u_projection_mat_floor = GetUniform(shader_program_floor, "u_Projection_mat");
+	SetUniformMat4f(shader_program_floor, u_projection_mat_floor.Get_Handle(), projection_mat);
+
+	GL_Vertex_Array::Unbind();
+	GL_VertexBuffer::Unbind();
+	GL_ElementBuffer::Unbind();
+	GL_Call(glUseProgram(0));
+
+
 
 	float cube_vertices[] =	   // BLENDER .ply EXPORT
 	{
@@ -123,9 +164,9 @@ int main()
 	
 	// ROTATION
 	RotationMatrix4f mat_rotation_y_cube;
-	// mat_rotation_y.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
+	// mat_rotation_y.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 	// mat_rotation_z.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
-	// mat_rotation_z.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
+	// mat_rotation_z.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_Z_AXIS);
 
 	// TRANSLATION
 	TranslationMatrix4f mat_translation_cube;
@@ -137,13 +178,14 @@ int main()
 	GL_Uniform u_transformation_mat_cube = GetUniform(shader_program_cube, "u_Transformation_mat");
 	SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), mat_transformation_cube);  // Pass the transformation matrix to the shader
 
-	// PROJECTION
-	ProjectionMatrix4f projection_mat;
-	projection_mat.SetFOV(90.0f);
 
-	GL_Uniform u_projection_mat = GetUniform(shader_program_cube, "u_Projection_mat");     // Pass the projection matrix to the shader
-	SetUniformMat4f(shader_program_cube, u_projection_mat.Get_Handle(), projection_mat);   // IF THE CUBE IS NOT VISIBLE, TRANSLATE IT ALONG THE POSITIVE Z AXIS, THE CUBE WILL PROBABLY BE DEFINED IN CLIP SPACE COORDINATES [-1, 1] 
-																					       // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION
+	//// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
+	//ProjectionMatrix4f projection_mat;
+	//projection_mat.SetFOV(90.0f);
+
+	GL_Uniform u_projection_mat_cube = GetUniform(shader_program_cube, "u_Projection_mat");     // Pass the projection matrix to the shaders
+	SetUniformMat4f(shader_program_cube, u_projection_mat_cube.Get_Handle(), projection_mat);   // IF THE CUBE IS NOT VISIBLE, TRANSLATE IT ALONG THE POSITIVE Z AXIS, THE CUBE WILL PROBABLY BE DEFINED IN CLIP SPACE COORDINATES [-1, 1] 
+																					            // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION
 	
 																						   
 	// FRAGMENT SHADER UNIFORMS:
@@ -172,6 +214,12 @@ int main()
 	// Accept fragment if it closer to the camera than the former one
 	// glDepthFunc(GL_LESS);
 
+
+	
+	// SET SCREEN CLEAR COLOR
+	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
+	glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
+	
 	// RENDER LOOP 
 	float rotation_y = 0.0f;
 	Timer translation_timer(window.GetWindowTime(), 1/ 200.0); // FPS_60_PERIOD
@@ -181,9 +229,20 @@ int main()
 	{
 		window.UpdateTime();
 
+		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
+
+		// RENDER THE FLOOR
+		vertex_array_floor.Bind();
+		GL_Call(glUseProgram(shader_program_floor));
+		GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		GL_Vertex_Array::Unbind();
+		GL_Call(glUseProgram(0));
+
+
+		// TRANSFORM AND RENDER THE CUBE:
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
 		vertex_array_cube.Bind();
-		GL_Call(glUseProgram(shader_program_cube));    	 // Bind the required shader program to th OpenGL context
+		GL_Call(glUseProgram(shader_program_cube));    	 // Bind the required shader program to the OpenGL context
 
 		if (translation_timer.IsTimerExpired()) 
 		{
@@ -197,7 +256,12 @@ int main()
 			translation_timer.Reset();
 		}
 
-		Render();									 // Render the scene
+		GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
+		GL_Vertex_Array::Unbind();
+		GL_Call(glUseProgram(0));
+
+		// ORIGINAL
+		// Render();									 // Render the scene
 
 		window.SwapBuffers();
 
@@ -205,6 +269,11 @@ int main()
 	}
 
 	// Clean-up:
+	bufferV_floor.Delete();
+	bufferE_floor.Delete();
+	vertex_array_floor.Delete();
+	GL_Call(glDeleteProgram(shader_program_floor));
+
 	bufferV_cube.Delete();
 	bufferE_cube.Delete();
 	vertex_array_cube.Delete();
@@ -215,9 +284,9 @@ int main()
     return 0;
 }
 
-void Render(void)
+void Render(void) // TO DO: MOVE SETTING THE CLEARCOLOR, CLEARING AND RENDERING TO THE WINDOW CLASS ??
 {
-	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
+	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F }; // TO DO: Setting the clear color is happening each call to Render() => This should only happen when a change in color needs to occur!
 	GL_ClearScreen(clear_color); // NEW: NOW CLEARS THE DEPTH BUFFER EACH FRAME => COMMENTED OUT
 
 	GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // Draw the current bound vertex buffer using the indices specified in the element buffer

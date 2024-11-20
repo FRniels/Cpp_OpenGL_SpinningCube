@@ -21,6 +21,8 @@ Window::Window(int width, int height, const std::string& title)
 		Exit();
 	}
 
+	aspect_ratio = (float)width / (float)height;
+
 	glfwMakeContextCurrent(window);
 
 	// glfw accepts 1 user pointer to whatever the user likes. This pointer is retained until the glfw window is destroyed.
@@ -70,8 +72,9 @@ void Window::Callback_Resize(GLFWwindow* window, int width, int height)
 
 	this_window->width  = width;
 	this_window->height = height;
+	this_window->aspect_ratio = (float)width / (float)height;
 
-	std::cout << "Window width: " << this_window->width << " Window height: " << this_window->height << std::endl;
+	std::cout << "Window width: " << this_window->width << " Window height: " << this_window->height << " Aspect ratio: " << this_window->aspect_ratio << std::endl;
 
 	// TO DO: THE CALLBACK HAS NO ACCESS TO THE SHADER PROGRAM => SOLVE THIS
 	// SetUniform1f(shader_program, "uWindow_Height", height);

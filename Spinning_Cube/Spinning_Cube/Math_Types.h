@@ -113,14 +113,18 @@ public:
 class ProjectionMatrix4f : public Matrix4f		// This matrix needs to be multiplied with the FINAL transformation matrix to transform the vertices and achieve perspective projection (sense of depth by accounting for the z values of the vertices. 
 {												// No transformations may be made on this projection matrix !!
 private:
-	float FOV = 0.0f; // Vertical and horizontal Field Of View. => Later feature: allow for a seperate Vertical and Horizontal FOV.
+	// float FOV = 0.0f; // Vertical and horizontal Field Of View. => Later feature: allow for a seperate Vertical and Horizontal FOV.
 
 public:
 	// using Matrix4f::Matrix4f;
-
+	ProjectionMatrix4f() {}
 	~ProjectionMatrix4f() {}
 
+	void SetProjectionMatrix(float fov_degrees, float aspect_ration);
+
+private:
 	void SetFOV(float fov_degrees);
+	void SetAspectRatio(float aspect_ration);
 };
 
 #endif // MATH_TYPES_H

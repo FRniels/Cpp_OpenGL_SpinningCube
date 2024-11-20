@@ -8,6 +8,7 @@
 #include "GLFW/glfw3.h"
 
 #include "Window.h"
+#include "Camera.h"
 #include "GL_User_Types.h" 
 #include "Math_Types.h"
 #include "GL_ErrorHandeling.h"
@@ -26,9 +27,11 @@ int main()
 {
 	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
+	Camera camera(90.0f, window.GetAspectRatio());
+
 	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
 	ProjectionMatrix4f projection_mat;
-	projection_mat.SetFOV(90.0f);
+	projection_mat.SetProjectionMatrix(90.0f, window.GetAspectRatio());
 
 	float floor_vertices[] =
 	{

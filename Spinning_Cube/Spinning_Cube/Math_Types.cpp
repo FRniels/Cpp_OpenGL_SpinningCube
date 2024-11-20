@@ -115,9 +115,17 @@ void ScalingMatrix4f::SetScaling3f(vec3f scaling_xyz)									// Set the X, Y an
 	*/
 }
 
+
+void ProjectionMatrix4f::SetProjectionMatrix(float fov_degrees, float aspect_ration)
+{
+	// Note: The FOV needs to be set first before being able to set the aspect ratio!
+	SetFOV(fov_degrees);
+	SetAspectRatio(aspect_ration);
+}
+
 void ProjectionMatrix4f::SetFOV(float fov_degrees)
 {
-	FOV = fov_degrees;
+	// FOV = fov_degrees;
 	float tanHalfFOV_rad        = tanf(TO_RADIANS(fov_degrees / 2.0f));
 	float reciprocal_tanHalfFOV = 1.0f / tanHalfFOV_rad;
 
@@ -125,10 +133,10 @@ void ProjectionMatrix4f::SetFOV(float fov_degrees)
 	mat4f[0][0] = reciprocal_tanHalfFOV;	
 	mat4f[1][1] = reciprocal_tanHalfFOV;	
 	// ADJUST THE FOLLOWING MATRIX VALUES:
-	mat4f[3][2] = 1.0f;
-	mat4f[3][3] = 0.0f;
 	// THIS IS DONE SO THAT THE VALUE OF THE Z COMPONENT IS COPIED INTO THE W COMPONENT
 	// WHEN THIS PROJECTION MATRIX IS MULTIPLIED WITH THE TRANSFORMATION MATRIX.
+	mat4f[3][2] = 1.0f;
+	mat4f[3][3] = 0.0f;
 
 	/*
 	{
@@ -142,24 +150,8 @@ void ProjectionMatrix4f::SetFOV(float fov_degrees)
 	// MORE INFO: https://www.youtube.com/watch?v=LhQ85bPCAJ8&list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA&index=14
 }
 
-// DECLARE THIS OPERATOR OVERLOADING INSIDE THE BASE CLASS! REMOVE THE TRANSFORMATION MATRIX CLASS BECAUSE IT DOESN'T ACTUALLY DO SOMETHING!
-/*
-inline Matrix4f TransformationMatrix4f::operator*(const Matrix4f& right_hand_side) // WHY CANT I ACCES THE MATRIX ARRAY MAT4F WITHOUT MAKING THIS CLASS A FRIEND OF THE BASE CLASS
-{																				   // THIS CLASS IS A CHILD CLASS AND THE MATRIX ARRAY IS PROTECTED ????
-	Matrix4f mat_result;
-
-	for (unsigned int i = 0; i < 4; ++i)
-	{
-		for (unsigned int j = 0; j < 4; ++j)
-		{
-			mat4f[i][j] = 
-				mat4f[i][0] * right_hand_side.mat4f[0][j] +
-				mat4f[i][1] * right_hand_side.mat4f[1][j] +
-				mat4f[i][2] * right_hand_side.mat4f[2][j] +
-				mat4f[i][3] * right_hand_side.mat4f[3][j];
-		}
-	}
-
-	return mat_result;
+void ProjectionMatrix4f::SetAspectRatio(float aspect_ration)
+{
+	// Aspect ratio info: https://www.youtube.com/watch?v=md3jFANT3UM&list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA&index=16
+	mat4f[0][0] /= aspect_ration;
 }
-*/

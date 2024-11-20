@@ -14,8 +14,9 @@ class Window
 private:
 	GLFWwindow* window;
 	int width, height;
+	float aspect_ratio;
+	bool is_aspect_ratio_changed;
 	const char* title;
-	// bool are_dimensions_changed = false;
 	Time_t window_time;
 
 public:
@@ -24,6 +25,7 @@ public:
 
 	int  GetWindowWidth()		  const	{ return width; }
 	int  GetWindowHeight()        const	{ return height; }
+	float GetAspectRatio()        const{ return aspect_ratio; }
 	void InitTime()						{ window_time.Init(); }
 	void UpdateTime()					{ window_time.Update(); }
 	const Time_t& GetWindowTime() const { return window_time;  }

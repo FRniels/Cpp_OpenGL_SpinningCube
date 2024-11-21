@@ -10,6 +10,12 @@
 
 class Primitive_Shape2D : public Object
 {
+protected:
+	GL_Vertex_Array       vertex_array;			 
+	GL_VertexBuffer       bufferV;
+	GL_VertexBufferLayout layout_bufferV;
+	GL_ElementBuffer      bufferE;
+
 public:
 	Primitive_Shape2D() {}
 	~Primitive_Shape2D() {}
@@ -67,11 +73,6 @@ private:
 		12,  0, 10, // Right center black,  Center black,         Bottom center black
 		10, 11, 12  // Bottom center black, Bottom right black,   Right center black
 	};
-
-	GL_Vertex_Array vertex_array;			 // TO DO: SHOULD I DECLARE THESE GL TYPES IN THE PRIMITIVE 2D CLASS OR THE OBJECT BASE CLASS ???
-	GL_VertexBuffer bufferV; 
-	GL_VertexBufferLayout layout_bufferV;
-	GL_ElementBuffer bufferE;
 
 public:
 	Plane();

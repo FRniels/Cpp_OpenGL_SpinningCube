@@ -10,6 +10,12 @@
 
 class Primitive_Shape3D : public Object
 {
+protected:
+	GL_Vertex_Array       vertex_array;
+	GL_VertexBuffer       bufferV;
+	GL_VertexBufferLayout layout_bufferV;
+	GL_ElementBuffer      bufferE;
+
 public:
 	Primitive_Shape3D() {}
 	~Primitive_Shape3D() {}
@@ -95,11 +101,6 @@ private:
 		4, 7, 0        // Front bottom left, Back bottom left, Back top left
 	};
 
-	GL_Vertex_Array vertex_array;
-	GL_VertexBuffer bufferV;
-	GL_VertexBufferLayout layout_bufferV;
-	GL_ElementBuffer bufferE;
-
 public:
 	Cube();
 	~Cube() {}
@@ -140,11 +141,6 @@ private:
 		1, 0, 3,       // Back bottom right, Back top,           Front top
 		3, 5, 1        // Front top,         Front bottom right, Back bottom right
 	};
-
-	GL_Vertex_Array vertex_array;
-	GL_VertexBuffer bufferV;
-	GL_VertexBufferLayout layout_bufferV;
-	GL_ElementBuffer bufferE;
 
 public:
 	Triangle_3D();

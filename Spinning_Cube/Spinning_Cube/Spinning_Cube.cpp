@@ -34,32 +34,7 @@ int main()
 
 	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
 	ProjectionMatrix4f projection_mat = camera.projection_mat; // TO DO: THIS IS JUST A QUICK TEST TO SEE IF THE ASPECT RATIO WORKS => ASPECT RATIO TESTED AND WORKS!
-	// ORIGINAL:
-	// ProjectionMatrix4f projection_mat;
-	// projection_mat.SetProjectionMatrix(90.0f, window.GetAspectRatio());
 
-	//float floor_vertices[] = // TO DO: THESE VERTICES SHOULD BE CONVERTED TO A UNITY CUBE AND THE CONVERTED VERTICES AND INDICES SHOULD BE USED IN THE PLANE CLASS WHEN THE PLANE CAN BE DYNAMICALLY CREATED
-	//{
-	//	//Position:		       Color:
-	//	 0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 0. Top right
-	//	-0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 1. Top left
-	//	-0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 2. Bottom left
-	//	 0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f  // 3. Bottom right
-	//};
-	//unsigned int floor_indices[] =	// Counter clockwise
-	//{
-	//	0, 1, 2,			        // Top right, top left, bottom left
-	//	2, 3, 0                     // Bottom left, bottom left, top right
-	//};
-
-	// THESE LINES USE floor_vertices[] and floor_indices[]
-	//GL_Vertex_Array vertex_array_floor;
-	//GL_VertexBuffer bufferV_floor(floor_vertices, 4 * 7 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
-	//GL_VertexBufferLayout layout_bufferV_floor;
-	//layout_bufferV_floor.Push<float>(3);								   // Push the amount of floats per vertex that are used for the vertex position
-	//layout_bufferV_floor.Push<float>(4);								   // Push the amount of floats per vertex that are used for the vertex color
-	//vertex_array_floor.AddBuffer(bufferV_floor, layout_bufferV_floor);
-	//GL_ElementBuffer bufferE_floor(floor_indices, 2 * 3);				   // The element buffer is bound to the OpenGL contect on instantiation
 
 	Plane floor_plane;
 	
@@ -73,17 +48,21 @@ int main()
 	ScalingMatrix4f mat_scaling_floor;
 	vec3f scaling_vec_floor = { 3.0f, 3.0f, 1.0f };
 	mat_scaling_floor.SetScaling3f(scaling_vec_floor);
+
 	// ROTATION
 	RotationMatrix4f mat_rotation_x_floor;
 	mat_rotation_x_floor.SetRotation(90.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
+
 	// TRANSLATION
 	TranslationMatrix4f mat_translation_floor;
 	vec3f translation_vec_floor = { 0.0f, -0.75f, 2.5f };
 	mat_translation_floor.SetTranslation3f(translation_vec_floor);
+
 	// TRANSFORMATION
 	Matrix4f mat_transformation_floor = mat_translation_floor * mat_rotation_x_floor * mat_scaling_floor;
 	GL_Uniform u_transformation_mat_floor = GetUniform(shader_program_floor, "u_Transformation_mat");
 	SetUniformMat4f(shader_program_floor, u_transformation_mat_floor.Get_Handle(), mat_transformation_floor);
+
 	// PROJECTION
 	GL_Uniform u_projection_mat_floor = GetUniform(shader_program_floor, "u_Projection_mat");
 	SetUniformMat4f(shader_program_floor, u_projection_mat_floor.Get_Handle(), projection_mat);
@@ -121,20 +100,12 @@ int main()
 	GL_Uniform u_transformation_mat_cube = GetUniform(shader_program_cube, "u_Transformation_mat");
 	SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), mat_transformation_cube);    // Pass the transformation matrix to the shader
 
-
-	//// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
-	//ProjectionMatrix4f projection_mat;
-	//projection_mat.SetFOV(90.0f);
-
 	GL_Uniform u_projection_mat_cube = GetUniform(shader_program_cube, "u_Projection_mat");     // Pass the projection matrix to the shaders
 	SetUniformMat4f(shader_program_cube, u_projection_mat_cube.Get_Handle(), projection_mat);   // IF THE CUBE IS NOT VISIBLE, TRANSLATE IT ALONG THE POSITIVE Z AXIS, THE CUBE WILL PROBABLY BE DEFINED IN CLIP SPACE COORDINATES [-1, 1] 
-																					            // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION
-	
-																						   
+																					            // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION																				   
 	// FRAGMENT SHADER UNIFORMS:
 	GL_Uniform u_window_height = GetUniform(shader_program_cube, "uWindow_Height");
 	SetUniform1f(shader_program_cube, u_window_height.Get_Handle(), window.GetWindowHeight());
-
 
 	cube.Unbind_AllBuffers();
 	GL_Call(glUseProgram(0));
@@ -152,20 +123,25 @@ int main()
 	ScalingMatrix4f mat_scaling_triangle;
 	vec3f scaling_vec_triangle = { 1.0f, 1.0f, 1.0f };
 	mat_scaling_triangle.SetScaling3f(scaling_vec_triangle);
+
 	// ROTATION
 	RotationMatrix4f mat_rotation_y_triangle;
 	// mat_rotation_y_triangle.SetRotation(0.0f, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
+	
 	// TRANSLATION
 	TranslationMatrix4f mat_translation_triangle;
 	vec3f translation_vec_triangle = { -0.75f, 0.0f, 1.75f };
 	mat_translation_triangle.SetTranslation3f(translation_vec_triangle);
+
 	// TRANSFORMATION
 	Matrix4f mat_transformation_triangle = mat_translation_triangle * mat_rotation_y_triangle * mat_scaling_triangle;
 	GL_Uniform u_transformation_mat_triangle = GetUniform(shader_program_triangle, "u_Transformation_mat");
 	SetUniformMat4f(shader_program_triangle, u_transformation_mat_triangle.Get_Handle(), mat_transformation_triangle);
+
 	// PROJECTION
 	GL_Uniform u_projection_mat_triangle = GetUniform(shader_program_triangle, "u_Projection_mat");
 	SetUniformMat4f(shader_program_triangle, u_projection_mat_triangle.Get_Handle(), projection_mat);
+
 	// FRAGMENT SHADER UNIFORMS:
 	GL_Uniform u_window_height_triangle = GetUniform(shader_program_triangle, "uWindow_Height");
 	SetUniform1f(shader_program_triangle, u_window_height_triangle.Get_Handle(), window.GetWindowHeight());

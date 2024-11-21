@@ -14,10 +14,13 @@
 #include "GL_ErrorHandeling.h"
 #include "GL_ShaderProgram.h"
 #include "GL_VertexArray.h"
-#include "GL_VertexBufferLayout.h"
 #include "GL_Buffers.h"
+#include "GL_VertexBufferLayout.h"
 #include "GL_Draw.h"
 #include "Timer.h"
+
+#include "Primitive_Shapes2D.h"
+#include "Primitive_Shapes3D.h"
 
 // TO DO: IF THE USER ALREADY SET A ROTATION MATRIX AND TRIES TO CHANGE THE AXIS OF THE SAME INSTANCE, RESET THE CURRENT ROTATION MATRIX BEFORE SETTING THE NEW VALUES!
 
@@ -25,61 +28,29 @@ void Render(void);
 
 int main()
 {
-	Window window(800, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
+	Window window(1500, 800, "Spinning cube"); // Square window: Aspect ration is not implemented yet
 
 	Camera camera(90.0f, window.GetAspectRatio());
 
 	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
-	ProjectionMatrix4f projection_mat;
-	projection_mat.SetProjectionMatrix(90.0f, window.GetAspectRatio());
+	ProjectionMatrix4f projection_mat = camera.projection_mat; // TO DO: THIS IS JUST A QUICK TEST TO SEE IF THE ASPECT RATIO WORKS => ASPECT RATIO TESTED AND WORKS!
+	// ORIGINAL:
+	// ProjectionMatrix4f projection_mat;
+	// projection_mat.SetProjectionMatrix(90.0f, window.GetAspectRatio());
 
-	float floor_vertices[] =
-	{
-		//Position:		       Color:
-		 0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 0. Top right
-		-0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 1. Top left
-		-0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 2. Bottom left
-		 0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f  // 3. Bottom right
-	};
-	unsigned int floor_indices[] =	// Counter clockwise
-	{
-		0, 1, 2,			        // Top right, top left, bottom left
-		2, 3, 0                     // Bottom left, bottom left, top right
-	};
-
-	float floor_checkerboard_vertices[] = // THIS IS JUST A QUICK TEST. I NEED TO INCLUDE A WHITE AND BLACK VERTEX FOR SOME COORDINATES WHICH IS A WASTE OF SPACE!
-	{
-		//Position:		       Color:
-		 0.0f,   0.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f, //  0. Center:        black
-		 0.0f,   0.0f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  1. Center:        white
-		 0.5f,   0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  2. Top    right   white
-		 0.0f,   0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  3. Top    center  white
-		 0.0f,   0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, //  4. Top    center  black
-		-0.5f,   0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, //  5. Top    left    black
-		-0.5f,   0.0f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, //  6. Left   center  black
-		-0.5f,   0.0f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  7. Left   center  white
-		-0.5f,  -0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  8. Bottom left    white
-		 0.0f,  -0.5f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, //  9. Bottom center  white
-		 0.0f,  -0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, // 10. Bottom center  black
-		 0.5f,  -0.5f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, // 11. Bottom right   black
-		 0.5f,   0.0f,  0.0f,  0.0f, 0.0f, 0.0f, 1.0f, // 12. Right  center  black
-		 0.5f,   0.0f,  0.0f,  1.0f, 1.0f, 1.0f, 1.0f, // 13. Right  center  white
-	};
-	unsigned int floor_checkerboard_indices[] = // Counter clockwise
-	{
-		// TOP RIGHT WHITE PLANE
-		2,  3, 1,   // Top right white,     Top center white,     Center white
-		1, 13, 2,   // Center white,        Right  center white,  Top right white
-		// TOP LEFT BLACK PLANE
-		4, 5, 6,    // Top center black,    Top left black,       Left center black
-		6, 0, 4,    // Left center black,   Center black,         Top center black
-		// BOTTOM LEFT WHITE PLANE
-		1, 7, 8,    // Center white,        Left center white,    Bottom left white
-		8, 9, 1,    // Bottom left white,   Bottom center white,  Center white
-		// BOTTOM RIGHT BLACK PLANE
-		12,  0, 10, // Right center black,  Center black,         Bottom center black
-		10, 11, 12  // Bottom center black, Bottom right black,   Right center black
-	};
+	//float floor_vertices[] = // TO DO: THESE VERTICES SHOULD BE CONVERTED TO A UNITY CUBE AND THE CONVERTED VERTICES AND INDICES SHOULD BE USED IN THE PLANE CLASS WHEN THE PLANE CAN BE DYNAMICALLY CREATED
+	//{
+	//	//Position:		       Color:
+	//	 0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 0. Top right
+	//	-0.5f,   0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 1. Top left
+	//	-0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f, // 2. Bottom left
+	//	 0.5f,  -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, 1.0f  // 3. Bottom right
+	//};
+	//unsigned int floor_indices[] =	// Counter clockwise
+	//{
+	//	0, 1, 2,			        // Top right, top left, bottom left
+	//	2, 3, 0                     // Bottom left, bottom left, top right
+	//};
 
 	// THESE LINES USE floor_vertices[] and floor_indices[]
 	//GL_Vertex_Array vertex_array_floor;
@@ -90,17 +61,12 @@ int main()
 	//vertex_array_floor.AddBuffer(bufferV_floor, layout_bufferV_floor);
 	//GL_ElementBuffer bufferE_floor(floor_indices, 2 * 3);				   // The element buffer is bound to the OpenGL contect on instantiation
 
-	GL_Vertex_Array vertex_array_floor;
-	GL_VertexBuffer bufferV_floor(floor_checkerboard_vertices, 14 * 7 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
-	GL_VertexBufferLayout layout_bufferV_floor;
-	layout_bufferV_floor.Push<float>(3);								   // Push the amount of floats per vertex that are used for the vertex position
-	layout_bufferV_floor.Push<float>(4);								   // Push the amount of floats per vertex that are used for the vertex color
-	vertex_array_floor.AddBuffer(bufferV_floor, layout_bufferV_floor);
-	GL_ElementBuffer bufferE_floor(floor_checkerboard_indices, 8 * 3);	   // The element buffer is bound to the OpenGL contect on instantiation
+	Plane floor_plane;
 	
 	unsigned int shader_program_floor = CreateShaderProgram("../Resources/Shaders/Floor.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program_floor);
 
+	// TO DO: ABSTRACT IN A CLASS TRANSFORM ???
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
 	// SCALING
@@ -122,81 +88,12 @@ int main()
 	GL_Uniform u_projection_mat_floor = GetUniform(shader_program_floor, "u_Projection_mat");
 	SetUniformMat4f(shader_program_floor, u_projection_mat_floor.Get_Handle(), projection_mat);
 
-	GL_Vertex_Array::Unbind();
-	GL_VertexBuffer::Unbind();
-	GL_ElementBuffer::Unbind();
+	floor_plane.Unbind_AllBuffers();
 	GL_Call(glUseProgram(0));
 
 
 
-	float cube_vertices[] =	   // BLENDER .ply EXPORT
-	{
-		-0.5f,  0.5f,  0.5f,   // 0. Back:  Top left
-		 0.5f,  0.5f,  0.5f,   // 1. Back:  Top right
-		 0.5f,  0.5f, -0.5f,   // 2. Front: Top right
-		-0.5f,  0.5f, -0.5f,   // 3. Front: Top left
-		-0.5f, -0.5f, -0.5f,   // 4. Front: Bottom left
-		 0.5f, -0.5f, -0.5f,   // 5. Front: Bottom right
-		 0.5f, -0.5f,  0.5f,   // 6. Back:  Bottom right
-		-0.5f, -0.5f,  0.5f    // 7. Back:  Bottom left
-	}; 
-	unsigned int cube_indices[] = // Counter clockwise		
-	{
-		// BLENDER EXPORT: Fails to render, except for 1 triangle => 4, 0, 1 doesn't make any sense to me ???
-		/*4, 0, 1, 2, 3,
-		4, 4, 3, 2, 5,
-		4, 5, 2, 1, 6,
-		4, 6, 7, 4, 5,
-		4, 7, 0, 3, 4,
-		4, 6, 1, 0, 7*/
-
-		// Cube order explanation: https://stackoverflow.com/questions/8142388/in-what-order-should-i-send-my-vertices-to-opengl-for-culling
-		// FRONT FACE:
-		// TRIANGLE 1:
-		1, 0, 7,       // Back Top right, Back top left, Back bottom left
-		// TRIANGLE 2:
-		7, 6, 1,       // Back bottom left, Back bottom right, Back top right
-		 
-		// BACK FACE:
-		// TRIANGLE 1:
-		2, 5, 4,       // Front Top right, Front botom right, Front bottom left
-		// TRIANGLE 2:
-		4, 3, 2,       // Front bottom left, Front top left, Front top right
-		 
-		// TOP FACE:
-		// TRIANGLE 1:
-		2, 3, 0,       // Front top right, Front top left, Back top left
-		// TRIANGLE 2:
-		0, 1, 2,       // Back top left, Back top right, Front top right
-
-		// BOTTOM FACE: 
-		// TRIANGLE 1:
-		6, 7, 4,       // Back bottom right, Back bottom left, Front bottom left
-		// TRIANGLE 2:
-		4, 5, 6,       // Front bottom left, Front bottom right, Back bottom right
-
-		// RIGHT FACE:
-		// TRIANGLE 1:
-		2, 1, 6,       // Front top right, Back top right, Back bottom right
-		// 6, 1, 2,
-		// TRIANGLE 2:
-		6, 5, 2,       // Back bottom right, Front bottom right, Front top right
-		// 2, 5, 6,
-
-		// LEFT FACE:
-		// TRIANGLE 1:
-		0, 3, 4,	   // Back top left, Front top left, Front bottom left
-		// TRIANGLE 2:
-		4, 7, 0        // Front bottom left, Back bottom left, Back top left
-	};
-
-	
-	GL_Vertex_Array vertex_array_cube;
-	GL_VertexBuffer bufferV_cube(cube_vertices, 8 * 3 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
-	GL_VertexBufferLayout layout_bufferV_cube;
-	layout_bufferV_cube.Push<float>(3);									 // Push the amount of floats per vertex that are used for the vertex position
-	vertex_array_cube.AddBuffer(bufferV_cube, layout_bufferV_cube);
-	GL_ElementBuffer bufferE_cube(cube_indices, 12 * 3);				 // The element buffer is bound to the OpenGL contect on instantiation
+	Cube cube;
 
 	unsigned int shader_program_cube = CreateShaderProgram("../Resources/Shaders/Cube.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program_cube);
@@ -222,7 +119,7 @@ int main()
 	// TRANSFORMATION
 	Matrix4f mat_transformation_cube = mat_translation_cube * mat_rotation_y_cube * mat_scaling_cube;
 	GL_Uniform u_transformation_mat_cube = GetUniform(shader_program_cube, "u_Transformation_mat");
-	SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), mat_transformation_cube);  // Pass the transformation matrix to the shader
+	SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), mat_transformation_cube);    // Pass the transformation matrix to the shader
 
 
 	//// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
@@ -238,47 +135,13 @@ int main()
 	GL_Uniform u_window_height = GetUniform(shader_program_cube, "uWindow_Height");
 	SetUniform1f(shader_program_cube, u_window_height.Get_Handle(), window.GetWindowHeight());
 
-	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
-	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
-	//            When trying to draw with such an 'unconfigured' vao, null pointer errors can/will or even worse, undefinded behaviour will occur.
-	GL_Vertex_Array::Unbind();
-	GL_VertexBuffer::Unbind();
-	GL_ElementBuffer::Unbind();
+
+	cube.Unbind_AllBuffers();
 	GL_Call(glUseProgram(0));
 
 
-	float triangle_vertices[] =	  
-	{
-		 0.0f,  0.5f,  0.1f,   // 0. Back:  Top
-		 0.5f, -0.5f,  0.1f,   // 1. Back:  Bottom right
-		-0.5f, -0.5f,  0.1f,   // 2. Back:  Bottom left
-		 0.0f,  0.5f, -0.1f,   // 3. Front: Top
-		-0.5f, -0.5f, -0.1f,   // 4. Front: Bottom left
-		 0.5f, -0.5f, -0.1f    // 5. Front: Bottom right
-	};
-	unsigned int triangle_indices[] = // Counter clockwise		
-	{
-		// Front face
-		3, 4, 5,       // Front top,         Front bottom left,  Front bottom right
-		// Back face
-		0, 1, 2,       // Back top,          Back bottom left,   Back bottom right
-		// Bottom face
-		1, 5, 4,       // Back Bottom right, Front Bottom right, Front Bottom left
-		4, 2, 1,       // Front Bottom left, Back Bottom left,   Back Bottom right
-		// Left face
-		4, 3, 0,       // Front bottom left, Front top,          Back top
-		0, 2, 4,       // Back top         , Back bottom left,   Front bottom left
-		// Right face
-		1, 0, 3,       // Back bottom right, Back top,           Front top
-		3, 5, 1        // Front top,         Front bottom right, Back bottom right
-	};
 
-	GL_Vertex_Array vertex_array_triangle;
-	GL_VertexBuffer bufferV_triangle(triangle_vertices, 6 * 3 * sizeof(float));  // The vertex buffer is bound to the OpenGL context on instantiation
-	GL_VertexBufferLayout layout_bufferV_triangle;
-	layout_bufferV_triangle.Push<float>(3);									     // Push the amount of floats per vertex that are used for the vertex position
-	vertex_array_triangle.AddBuffer(bufferV_triangle, layout_bufferV_triangle);
-	GL_ElementBuffer bufferE_triangle(triangle_indices, 8 * 3);				     // The element buffer is bound to the OpenGL contect on instantiation
+	Triangle_3D triangle_3d;
 
 	unsigned int shader_program_triangle = CreateShaderProgram("../Resources/Shaders/Triangle.shader"); // Create Shader Program 
 	UseShaderProgram(shader_program_triangle);
@@ -307,9 +170,7 @@ int main()
 	GL_Uniform u_window_height_triangle = GetUniform(shader_program_triangle, "uWindow_Height");
 	SetUniform1f(shader_program_triangle, u_window_height_triangle.Get_Handle(), window.GetWindowHeight());
 
-	GL_Vertex_Array::Unbind();
-	GL_VertexBuffer::Unbind();
-	GL_ElementBuffer::Unbind();
+	triangle_3d.Unbind_AllBuffers();
 	GL_Call(glUseProgram(0));
 
 
@@ -348,18 +209,18 @@ int main()
 		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
 
 		// RENDER THE FLOOR
-		vertex_array_floor.Bind();
+		floor_plane.Bind();
 		GL_Call(glUseProgram(shader_program_floor));
 		// ORIGNAL ONE COLOR FLOOR PLANE
 		// GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));
-		GL_Vertex_Array::Unbind();
+		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
+		floor_plane.Unbind_VAO();
 		GL_Call(glUseProgram(0));
 
 
 		// TRANSFORM AND RENDER THE CUBE:
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
-		vertex_array_cube.Bind();
+		cube.Bind();
 		GL_Call(glUseProgram(shader_program_cube));    	 // Bind the required shader program to the OpenGL context
 
 		if (translation_timer.IsTimerExpired()) 
@@ -374,12 +235,12 @@ int main()
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		GL_Vertex_Array::Unbind();
+		cube.Unbind_VAO();
 		GL_Call(glUseProgram(0));
 
 
 		// TRANSFORM AND RENDER THE TRIANGLE:
-		vertex_array_triangle.Bind();
+		triangle_3d.Bind();
 		GL_Call(glUseProgram(shader_program_triangle));    	 // Bind the required shader program to the OpenGL context
 
 		if (triangle_timer.IsTimerExpired())
@@ -394,7 +255,7 @@ int main()
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		GL_Vertex_Array::Unbind();
+		triangle_3d.Unbind_VAO();
 		GL_Call(glUseProgram(0));
 
 
@@ -407,19 +268,13 @@ int main()
 	}
 
 	// Clean-up:
-	bufferV_floor.Delete();
-	bufferE_floor.Delete();
-	vertex_array_floor.Delete();
+	floor_plane.DeleteGLObjects();
 	GL_Call(glDeleteProgram(shader_program_floor));
 
-	bufferV_cube.Delete();
-	bufferE_cube.Delete();
-	vertex_array_cube.Delete();
+	cube.DeleteGLObjects();
 	GL_Call(glDeleteProgram(shader_program_cube));
 
-	bufferV_triangle.Delete();
-	bufferE_triangle.Delete();
-	vertex_array_triangle.Delete();
+	triangle_3d.DeleteGLObjects();
 	GL_Call(glDeleteProgram(shader_program_triangle));
 
 	window.Exit();

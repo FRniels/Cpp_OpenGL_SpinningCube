@@ -25,7 +25,7 @@ public:
 
 	int  GetWindowWidth()		  const	{ return width; }
 	int  GetWindowHeight()        const	{ return height; }
-	float GetAspectRatio()        const{ return aspect_ratio; }
+	float GetAspectRatio()        const { return aspect_ratio; }
 	void InitTime()						{ window_time.Init(); }
 	void UpdateTime()					{ window_time.Update(); }
 	const Time_t& GetWindowTime() const { return window_time;  }

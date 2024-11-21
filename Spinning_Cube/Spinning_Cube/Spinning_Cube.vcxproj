@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="GL_Draw.cpp" />
     <ClCompile Include="GL_ElementBuffer.cpp" />
     <ClCompile Include="GL_ErrorHandeling.cpp" />
@@ -142,7 +143,11 @@
     <ClCompile Include="GL_VertexArray.cpp" />
     <ClCompile Include="Gl_VertexBuffer.cpp" />
     <ClCompile Include="Math_Types.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
+    <ClCompile Include="Triangle_3D.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +161,10 @@
     <ClInclude Include="GL_VertexArray.h" />
     <ClInclude Include="GL_VertexBufferLayout.h" />
     <ClInclude Include="Math_Types.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Primitive_Shapes2D.h" />
+    <ClInclude Include="Primitive_Shapes3D.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

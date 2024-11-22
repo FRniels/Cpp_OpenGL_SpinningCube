@@ -18,9 +18,3 @@ void Cube::InitVAO()
 	vertex_array.AddBuffer(bufferV, layout_bufferV);
 }
 
-void Cube::DeleteGLObjects()
-{
-	bufferV.Delete();
-	bufferE.Delete();
-	vertex_array.Delete();
-}

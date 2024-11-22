@@ -10,30 +10,10 @@
 
 class Primitive_Shape3D : public Object
 {
-protected:
-	GL_Vertex_Array       vertex_array;
-	GL_VertexBuffer       bufferV;
-	GL_VertexBufferLayout layout_bufferV;
-	GL_ElementBuffer      bufferE;
-
 public:
 	Primitive_Shape3D() {}
 	~Primitive_Shape3D() {}
 
-	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
-	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
-	//            When trying to draw with such an 'unconfigured' vao, null pointer errors can/will or even worse, undefinded behaviour will occur.
-	inline void Unbind_AllBuffers()
-	{
-		GL_Vertex_Array::Unbind();
-		GL_VertexBuffer::Unbind();
-		GL_ElementBuffer::Unbind();
-	}
-
-	inline void Unbind_VAO()
-	{
-		GL_Vertex_Array::Unbind();
-	}
 };
 
 class Cube : public Primitive_Shape3D
@@ -105,8 +85,7 @@ public:
 	Cube();
 	~Cube() {}
 	 
-	inline void Bind() { vertex_array.Bind(); } // TO DO: MAKE BIND A VIRTUAL METHOD OF BASE CLASS OBJECT ???? => WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!!
-	void DeleteGLObjects();				        // THIS CLASS INSTANCE WILL NOT BE DELETED!
+	inline void Bind() { vertex_array.Bind(); } // TO DO: MAKE BIND A VIRTUAL METHOD OF BASE CLASS OBJECT ???? => WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!! => TO DO: FIX THIS!
 
 private:
 	void InitBuffers();
@@ -146,8 +125,7 @@ public:
 	Triangle_3D();
 	~Triangle_3D() {}
 
-	inline void Bind() { vertex_array.Bind(); } // TO DO: MAKE BIND A VIRTUAL METHOD OF BASE CLASS OBJECT ???? => WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!!
-	void DeleteGLObjects();				        // THIS CLASS INSTANCE WILL NOT BE DELETED!
+	inline void Bind() { vertex_array.Bind(); } // TO DO: MAKE BIND A VIRTUAL METHOD OF BASE CLASS OBJECT ???? => WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!! => TO DO: FIX THIS!
 
 private:
 	void InitBuffers();

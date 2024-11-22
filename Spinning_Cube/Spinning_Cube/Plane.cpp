@@ -19,12 +19,6 @@ void Plane::InitVAO()
 	vertex_array.AddBuffer(bufferV, layout_bufferV);
 }
 
-void Plane::DeleteGLObjects()
-{
-	bufferV.Delete();
-	bufferE.Delete();
-	vertex_array.Delete();
-}
 
 // TO DO: THESE VERTICES SHOULD BE CONVERTED TO A UNITY PLANE AND THE CONVERTED VERTICES AND INDICES SHOULD BE USED IN THE PLANE CLASS WHEN THE PLANE CAN BE DYNAMICALLY CREATED
 //float plane_vertices[] =

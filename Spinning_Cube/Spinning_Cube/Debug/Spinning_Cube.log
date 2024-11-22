@@ -1,8 +1,4 @@
-﻿  Cube.cpp
-  Plane.cpp
-  Spinning_Cube.cpp
-C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Spinning_Cube.cpp(108,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Spinning_Cube.cpp(147,101): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Triangle_3D.cpp
-  Generating Code...
+﻿  Spinning_Cube.cpp
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Spinning_Cube.cpp(83,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Spinning_Cube\Spinning_Cube.cpp(110,101): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\Spinning_Cube\Debug\Spinning_Cube.exe

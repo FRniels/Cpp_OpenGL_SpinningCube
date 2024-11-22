@@ -2,38 +2,16 @@
 #define PRIMITIVE_SHAPES2D_H
 
 #include "Object.h"
-#include "GL_VertexArray.h"
-#include "GL_Buffers.h"
-#include "GL_VertexBufferLayout.h"
 
 // NOTE: THESE CLASSES ARE MERELY A STARTING POINT. THE FLOOR PLAIN WILL BE HARDCODED FOR NOW INSTEAD OF A DYNAMICALLY PROGRAMABLE
 
 class Primitive_Shape2D : public Object
 {
-protected:
-	GL_Vertex_Array       vertex_array;			 
-	GL_VertexBuffer       bufferV;
-	GL_VertexBufferLayout layout_bufferV;
-	GL_ElementBuffer      bufferE;
 
 public:
 	Primitive_Shape2D() {}
 	~Primitive_Shape2D() {}
 
-	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
-	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
-	//            When trying to draw with such an 'unconfigured' vao, null pointer errors can/will or even worse, undefinded behaviour will occur.
-	inline void Unbind_AllBuffers()
-	{
-		GL_Vertex_Array::Unbind();
-		GL_VertexBuffer::Unbind();
-		GL_ElementBuffer::Unbind();
-	}
-
-	inline void Unbind_VAO()
-	{
-		GL_Vertex_Array::Unbind();
-	}
 };
 
 class Plane : public Primitive_Shape2D
@@ -78,8 +56,7 @@ public:
 	Plane();
 	~Plane() {}
 
-	inline void Bind() { vertex_array.Bind(); } // WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!!
-	void DeleteGLObjects();				        // THIS CLASS INSTANCE WILL NOT BE DELETED!
+	inline void Bind() const { vertex_array.Bind(); } // WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!! => TO DO: FIX THIS!
 
 private:
 	void InitBuffers();

@@ -145,6 +145,7 @@
     <ClCompile Include="Math_Types.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
     <ClCompile Include="Triangle_3D.cpp" />

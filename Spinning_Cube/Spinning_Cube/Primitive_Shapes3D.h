@@ -95,14 +95,15 @@ private:
 class Triangle_3D : public Primitive_Shape3D
 {
 private:
-	float triangle_vertices[18] =
+	float triangle_vertices[42] =
 	{
-		 0.0f,  0.5f,  0.1f,   // 0. Back:  Top
-		 0.5f, -0.5f,  0.1f,   // 1. Back:  Bottom right
-		-0.5f, -0.5f,  0.1f,   // 2. Back:  Bottom left
-		 0.0f,  0.5f, -0.1f,   // 3. Front: Top
-		-0.5f, -0.5f, -0.1f,   // 4. Front: Bottom left
-		 0.5f, -0.5f, -0.1f    // 5. Front: Bottom right
+		// Position            Color
+		 0.0f,  0.5f,  0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 0. Back:  Top
+		 0.5f, -0.5f,  0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 1. Back:  Bottom right
+		-0.5f, -0.5f,  0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 2. Back:  Bottom left
+		 0.0f,  0.5f, -0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 3. Front: Top
+		-0.5f, -0.5f, -0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 4. Front: Bottom left
+		 0.5f, -0.5f, -0.1f,   0.457f, 0.102f, 0.199f, 0.0f  // 5. Front: Bottom right
 	};
 	unsigned int triangle_indices[24] = // Counter clockwise		
 	{
@@ -124,6 +125,44 @@ private:
 public:
 	Triangle_3D();
 	~Triangle_3D() {}
+
+	inline void Bind() { vertex_array.Bind(); } // TO DO: MAKE BIND A VIRTUAL METHOD OF BASE CLASS OBJECT ???? => WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!! => TO DO: FIX THIS!
+
+private:
+	void InitBuffers();
+	void InitVAO();
+};
+
+class Pyramid : public Object
+{
+private:
+	float pyramid_vertices[35] =
+	{
+		// Position                Color
+		  0.0f,   0.25f,   0.0f,   0.996f, 0.54f, 0.094f, 0.0f,  // 0. Top
+		 0.25f,  -0.25f,  0.25f,   0.996f, 0.54f, 0.094f, 0.0f,  // 1. Back:  Bottom right
+		-0.25f,  -0.25f,  0.25f,   0.996f, 0.54f, 0.094f, 0.0f,  // 2. Back:  Bottom left
+		-0.25f,  -0.25f, -0.25f,   0.996f, 0.54f, 0.094f, 0.0f,  // 3. Front: Bottom left
+		 0.25f,  -0.25f, -0.25f,   0.996f, 0.54f, 0.094f, 0.0f   // 4. Front: Bottom right
+	};
+	unsigned int pyramid_indices[18] = // Counter clockwise
+	{
+		// FRONT PLANE
+		4, 0, 3,		  // Front Bottom right, Top,				 Front Bottom left
+		// BACK PLANE
+		2, 0, 1,		  // Back Bottom left,   Top,				 Back Bottom right
+		// RIGHT PLANE
+		1, 0, 4,		  // Back Bottom right,  Top,				 Front Bottom right
+		// LEFT PLANE
+		3, 0, 2,		  // Front Bottom left,  Top,                Back Bottom left
+		// BOTTOM PLANE
+		1, 4, 3,		  // Back Bottom right,  Front Bottom right, Front Bottom left
+		3, 2, 1,		  // Front Bottom left,  Back Bottom left  , Back Bottom right
+	};
+
+public:
+	Pyramid();
+	~Pyramid() {}
 
 	inline void Bind() { vertex_array.Bind(); } // TO DO: MAKE BIND A VIRTUAL METHOD OF BASE CLASS OBJECT ???? => WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!! => TO DO: FIX THIS!
 

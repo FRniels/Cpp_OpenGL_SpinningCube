@@ -9,6 +9,11 @@
 #include "GL_User_Types.h"
 #include "Math_Types.h"
 
+enum GL_Uniform_t
+{
+	U_FLOAT_t, U_VEC4F_t, U_MAT4f_t
+};
+
 struct GL_Uniform
 {
 private:

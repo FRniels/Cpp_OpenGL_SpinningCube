@@ -8,7 +8,12 @@
 #include "GL_User_Types.h"
 #include "GL_Uniform.h"
 
-
+class Shader
+{
+public:
+	Shader() {}
+	~Shader() {}
+};
 
 struct ShaderProgramSource 
 {

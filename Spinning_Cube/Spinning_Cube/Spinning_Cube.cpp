@@ -68,7 +68,6 @@ int main()
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
 	// TRANSFORMATION
-	// cube.transform.Scale(1.0f, 1.0f, 1.0f);
 	cube.transform.Translate(0.75f, 0.0f, 3.25f);
 
 	GL_Uniform u_transformation_mat_cube = GetUniform(shader_program_cube, "u_Transformation_mat");
@@ -95,7 +94,6 @@ int main()
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
 	// TRANSFORMATION
-	// triangle_3d.transform.Scale(1.0f, 1.0f, 1.0f);	
 	triangle_3d.transform.Translate(-0.75f, 0.0f, 1.75f);
 
 	GL_Uniform u_transformation_mat_triangle = GetUniform(shader_program_triangle, "u_Transformation_mat");
@@ -112,6 +110,8 @@ int main()
 	triangle_3d.Unbind_AllBuffers();
 	GL_Call(glUseProgram(0));
 
+
+
 	Pyramid pyramid;
 
 	unsigned int shader_program_pyramid = CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); // Create Shader Program 
@@ -120,7 +120,6 @@ int main()
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
 	// TRANSFORMATION
-	// pyramid.transform.Scale(1.0f, 1.0f, 1.0f);
 	pyramid.transform.Translate(0.75f, 0.0f, 1.75f);
 
 	GL_Uniform u_transformation_mat_pyramid = GetUniform(shader_program_pyramid, "u_Transformation_mat");
@@ -136,6 +135,7 @@ int main()
 
 	pyramid.Unbind_AllBuffers();
 	GL_Call(glUseProgram(0));
+
 
 
 	// FACE CULLING:

@@ -21,7 +21,7 @@ private:
 
 public:
 	GL_Uniform(unsigned int handle) : handle(handle) {}
-	unsigned int Get_Handle() { return handle;  }
+	unsigned int Get_Handle() const { return handle; }
 };
 
 GL_Uniform GetUniform(unsigned int shader_program, const std::string& u_Name);

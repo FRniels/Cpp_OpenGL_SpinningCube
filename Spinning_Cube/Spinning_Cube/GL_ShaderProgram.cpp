@@ -6,7 +6,7 @@
 #include <string>
 
 
-ShaderProgramSource ParseShader(const std::string& filepPath)
+ShaderProgramSource ShaderProgramManager::ParseShader(const std::string& filepPath)
 {
 	std::ifstream stream(filepPath);
 
@@ -59,10 +59,10 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 				else // Actual shader code is found
 				{
 					std::size_t comment_start_index = std::string::npos;
-					
+
 					if ((comment_start_index = line.find("//")) != std::string::npos)      // Remove a comment starting with // after a line of shader code
 					{
-						line = line.substr(0, (comment_start_index)); 
+						line = line.substr(0, (comment_start_index));
 					}
 					else if ((comment_start_index = line.find("/*")) != std::string::npos) // Remove a block comment starting with /* after a line of shader code
 					{
@@ -105,7 +105,7 @@ ShaderProgramSource ParseShader(const std::string& filepPath)
 	return { ss[0].str(), ss[1].str() };
 }
 
-unsigned int CompileShader(unsigned int type, std::string& source)
+unsigned int ShaderProgramManager::CompileShader(unsigned int type, std::string& source)
 {
 	GL_Call(unsigned int shader = glCreateShader(type));
 	const char* src = source.c_str();
@@ -133,13 +133,13 @@ unsigned int CompileShader(unsigned int type, std::string& source)
 	return shader;
 }
 
-unsigned int CreateShaderProgram(const std::string& filepPath)
+unsigned int ShaderProgramManager::CreateShaderProgram(const std::string& filepPath)
 {
-	ShaderProgramSource shaderProgramSources = ParseShader(filepPath);							  
+	ShaderProgramSource shaderProgramSources = ParseShader(filepPath);
 
 	GL_Call(unsigned int program = glCreateProgram());
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, shaderProgramSources.VertexShader);         
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, shaderProgramSources.FragmentShader);     
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, shaderProgramSources.VertexShader);
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, shaderProgramSources.FragmentShader);
 
 	// Bind both shaders to the OpenGL context and link them to form a shader program
 	GL_Call(glAttachShader(program, vs));
@@ -154,7 +154,18 @@ unsigned int CreateShaderProgram(const std::string& filepPath)
 	return program;
 }
 
-void UseShaderProgram(unsigned int shader_program)
+void ShaderProgramManager::UseShaderProgram(unsigned int shader_program)
 {
 	GL_Call(glUseProgram(shader_program));
 }
+
+void ShaderProgramManager::UnbindShaderProgam()
+{
+	GL_Call(glUseProgram(0));
+}
+
+void ShaderProgramManager::DeleteShaderProgram(unsigned int shader_program)
+{
+	GL_Call(glDeleteProgram(shader_program));
+}
+

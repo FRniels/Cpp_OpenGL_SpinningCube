@@ -21,12 +21,25 @@ struct ShaderProgramSource
 	std::string FragmentShader;
 };
 
-ShaderProgramSource ParseShader(const std::string& filepPath);						   // Returns the vertex and/or fragment shader source code.
 
-unsigned int CompileShader(unsigned int type, std::string& source);					   // Returns the OpenGL shader obj handle.
+class ShaderProgramManager
+{
+public:
+	ShaderProgramManager() {}
+	~ShaderProgramManager() {}
 
-unsigned int CreateShaderProgram(const std::string& filepPath);						   // All shaders in 1 file: Pass the file path in which all shaders are found. Returns the OpenGL shader program handle.
+	unsigned int CreateShaderProgram(const std::string& filepPath);		   // All shaders in 1 file: Pass the file path in which all shaders are found. Returns the OpenGL shader program handle.
 
-void UseShaderProgram(unsigned int shader_program); 
+	void UseShaderProgram(unsigned int shader_program);
+
+	static void UnbindShaderProgam();
+
+	void DeleteShaderProgram(unsigned int shader_program);
+
+private:
+	ShaderProgramSource ParseShader(const std::string& filepPath);		   // Returns the vertex and/or fragment shader source code.
+
+	unsigned int CompileShader(unsigned int type, std::string& source);	   // Returns the OpenGL shader obj handle.
+};
 
 #endif  // GL_SHADER_PROGRAM

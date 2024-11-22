@@ -35,11 +35,12 @@ int main()
 	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
 	ProjectionMatrix4f projection_mat = camera.projection_mat; // TO DO: THIS IS JUST A QUICK TEST TO SEE IF THE ASPECT RATIO WORKS => ASPECT RATIO TESTED AND WORKS!
 
+	ShaderProgramManager shader_prog_manager;
+
 
 	Plane floor_plane;
-	
-	unsigned int shader_program_floor = CreateShaderProgram("../Resources/Shaders/Floor.shader"); // Create Shader Program 
-	UseShaderProgram(shader_program_floor);
+	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Floor.shader");
+	shader_prog_manager.UseShaderProgram(shader_program_floor);
 
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
@@ -56,14 +57,13 @@ int main()
 	SetUniformMat4f(shader_program_floor, u_projection_mat_floor.Get_Handle(), projection_mat);
 
 	floor_plane.Unbind_AllBuffers();
-	GL_Call(glUseProgram(0));
+	ShaderProgramManager::UnbindShaderProgam();
 
 
 
 	Cube cube;
-
-	unsigned int shader_program_cube = CreateShaderProgram("../Resources/Shaders/Cube.shader"); // Create Shader Program 
-	UseShaderProgram(shader_program_cube);
+	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Cube.shader"); 
+	shader_prog_manager.UseShaderProgram(shader_program_cube);
 
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
@@ -82,14 +82,13 @@ int main()
 	SetUniform1f(shader_program_cube, u_window_height.Get_Handle(), window.GetWindowHeight());
 
 	cube.Unbind_AllBuffers();
-	GL_Call(glUseProgram(0));
+	ShaderProgramManager::UnbindShaderProgam();
 
 
 
 	Triangle_3D triangle_3d;
-
-	unsigned int shader_program_triangle = CreateShaderProgram("../Resources/Shaders/Triangle.shader"); // Create Shader Program 
-	UseShaderProgram(shader_program_triangle);
+	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Triangle.shader"); // Create Shader Program 
+	shader_prog_manager.UseShaderProgram(shader_program_triangle);
 
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
@@ -108,14 +107,13 @@ int main()
 	SetUniform1f(shader_program_triangle, u_window_height_triangle.Get_Handle(), window.GetWindowHeight());
 
 	triangle_3d.Unbind_AllBuffers();
-	GL_Call(glUseProgram(0));
+	ShaderProgramManager::UnbindShaderProgam();
 
 
 
 	Pyramid pyramid;
-
-	unsigned int shader_program_pyramid = CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); // Create Shader Program 
-	UseShaderProgram(shader_program_pyramid);
+	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); // Create Shader Program 
+	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
 
 	// SET SHADER UNIFORMS
 	// VERTEX SHADER UNIFORMS:
@@ -134,7 +132,7 @@ int main()
 	SetUniform1f(shader_program_pyramid, u_window_height_pyramid.Get_Handle(), window.GetWindowHeight());
 
 	pyramid.Unbind_AllBuffers();
-	GL_Call(glUseProgram(0));
+	ShaderProgramManager::UnbindShaderProgam();
 
 
 
@@ -177,18 +175,18 @@ int main()
 
 		// RENDER THE FLOOR
 		floor_plane.Bind();
-		GL_Call(glUseProgram(shader_program_floor));
+		shader_prog_manager.UseShaderProgram(shader_program_floor);
 		// ORIGNAL ONE COLOR FLOOR PLANE
 		// GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
 		floor_plane.Unbind_VAO();
-		GL_Call(glUseProgram(0));
+		ShaderProgramManager::UnbindShaderProgam();
 
 
 		// TRANSFORM AND RENDER THE CUBE:
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
 		cube.Bind();
-		GL_Call(glUseProgram(shader_program_cube));    	 // Bind the required shader program to the OpenGL context
+		shader_prog_manager.UseShaderProgram(shader_program_cube);
 
 		if (cube_timer.IsTimerExpired())
 		{
@@ -202,12 +200,12 @@ int main()
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
 		cube.Unbind_VAO();
-		GL_Call(glUseProgram(0));
+		ShaderProgramManager::UnbindShaderProgam();
 
 
 		// TRANSFORM AND RENDER THE TRIANGLE:
 		triangle_3d.Bind();
-		GL_Call(glUseProgram(shader_program_triangle));    	 // Bind the required shader program to the OpenGL context
+		shader_prog_manager.UseShaderProgram(shader_program_triangle);
 
 		if (triangle_timer.IsTimerExpired())
 		{
@@ -221,11 +219,11 @@ int main()
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
 		triangle_3d.Unbind_VAO();
-		GL_Call(glUseProgram(0));
+		ShaderProgramManager::UnbindShaderProgam();
 
 		// TRANSFORM AND RENDER THE PYRAMID:
 		pyramid.Bind();
-		GL_Call(glUseProgram(shader_program_pyramid));    	 // Bind the required shader program to the OpenGL context
+		shader_prog_manager.UseShaderProgram(shader_program_pyramid);
 
 		if (pyramid_timer.IsTimerExpired())
 		{
@@ -243,7 +241,7 @@ int main()
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
 		pyramid.Unbind_VAO();
-		GL_Call(glUseProgram(0));
+		ShaderProgramManager::UnbindShaderProgam();
 
 
 		// ORIGINAL
@@ -256,16 +254,16 @@ int main()
 
 	// Clean-up:
 	floor_plane.DeleteGLObjects();
-	GL_Call(glDeleteProgram(shader_program_floor));
+	shader_prog_manager.DeleteShaderProgram(shader_program_floor);
 
 	cube.DeleteGLObjects();
-	GL_Call(glDeleteProgram(shader_program_cube));
+	shader_prog_manager.DeleteShaderProgram(shader_program_cube);
 
 	triangle_3d.DeleteGLObjects();
-	GL_Call(glDeleteProgram(shader_program_triangle));
+	shader_prog_manager.DeleteShaderProgram(shader_program_triangle);
 
 	pyramid.DeleteGLObjects();
-	GL_Call(glDeleteProgram(shader_program_pyramid));
+	shader_prog_manager.DeleteShaderProgram(shader_program_pyramid);
 
 	window.Exit();
 

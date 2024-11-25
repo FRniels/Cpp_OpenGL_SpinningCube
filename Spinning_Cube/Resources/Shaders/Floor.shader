@@ -14,13 +14,15 @@ out vec4 colorFromVertex;
 
 uniform mat4 u_Transformation_mat;
 uniform mat4 u_Projection_mat;
+uniform vec4 u_color;
 
 void main()      
 {	
 	vec4 transformed_vertex = u_Transformation_mat * vec4(position, 1.0);
 	gl_Position = u_Projection_mat * transformed_vertex;						    // Project the transformed vertex
 	
-	colorFromVertex = color;
+	float temp = u_color.x / u_color.x; // JUST TO DO SOMETHING WITH u_color SO THE COMPILER DOESN'T REMOVE THE UNIFORM
+	colorFromVertex = color * temp;
 };
 
 #shader fragment 
@@ -29,14 +31,11 @@ void main()
 out vec4 color;  
 in  vec4 colorFromVertex;
 
-// uniform float uWindow_Height = 0.0f;
+uniform float u_window_height = 0.0f;
 
 void main()
 {	
-	// float lerpValue = gl_FragCoord.y / uWindow_Height;      // Assign a color that is a linear interpolation of 2 colors based on the Y-coo of the specific fragment.
 	
-	color = colorFromVertex;
-
-	// color = mix(colorFromVertex, vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpValue);
-	// color = mix(vec4(0.2f, 0.2f, 0.2f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), lerpValue);
+	color = colorFromVertex * floatBitsToInt(u_window_height / u_window_height); // JUST TO DO SOMETHING WITH u_window_height SO THE COMPILER DOESN'T REMOVE THE UNIFORM
+																                 // (u_window_height / u_window_height) = 1
 };

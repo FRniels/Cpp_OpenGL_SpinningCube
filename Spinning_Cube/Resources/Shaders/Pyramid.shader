@@ -14,13 +14,17 @@ out vec4 colorFromVertex;
 
 uniform mat4 u_Transformation_mat;
 uniform mat4 u_Projection_mat;
+uniform vec4 u_color;
 
 void main()      
 {	
-	colorFromVertex = color;
+	// colorFromVertex = color;
 
 	vec4 transformed_vertex = u_Transformation_mat * vec4(position, 1.0);
 	gl_Position = u_Projection_mat * transformed_vertex;						    // Project the transformed vertex
+
+	float temp = u_color.y / u_color.y; // JUST TO DO SOMETHING WITH u_color SO THE COMPILER DOESN'T REMOVE THE UNIFORM => MAKE SURE THE PASSED VALUE IS NOT 0!
+	colorFromVertex = color * temp;
 };
 
 #shader fragment 
@@ -29,12 +33,16 @@ void main()
 out vec4 color;
 in vec4 colorFromVertex;
 
-uniform float uWindow_Height = 0.0f;
+// uniform float uWindow_Height = 0.0f;
+uniform float u_window_height = 0.0f;
 
 void main()
 {	
-	float lerpValue = gl_FragCoord.y / uWindow_Height;      // Assign a color that is a linear interpolation of 2 colors based on the Y-coo of the specific fragment.
+	// float lerpValue = gl_FragCoord.y / uWindow_Height;      // Assign a color that is a linear interpolation of 2 colors based on the Y-coo of the specific fragment.
 	
-	color = mix(vec4(0.2f, 0.2f, 0.2f, 1.0f), colorFromVertex, lerpValue);
-	// color = mix(vec4(0.2f, 0.2f, 0.2f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), lerpValue);
+	// color = mix(vec4(0.2f, 0.2f, 0.2f, 1.0f), colorFromVertex, lerpValue);
+	// // color = mix(vec4(0.2f, 0.2f, 0.2f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), lerpValue);
+
+	float lerpValue = gl_FragCoord.y / u_window_height;
+	color = mix(vec4(0.2f, 0.2f, 0.2f, 1.0f), colorFromVertex, lerpValue); // Assign a color that is a linear interpolation of 2 colors based on the Y-coo of the specific fragment.
 };

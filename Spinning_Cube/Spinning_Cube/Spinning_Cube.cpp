@@ -31,30 +31,25 @@ int main()
 	Window window(1500, 800, "Spinning cube"); 
 
 	Camera camera(90.0f, window.GetAspectRatio());
-
 	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
 	ProjectionMatrix4f projection_mat = camera.projection_mat; // TO DO: THIS IS JUST A QUICK TEST TO SEE IF THE ASPECT RATIO WORKS => ASPECT RATIO TESTED AND WORKS!
+
 
 	ShaderProgramManager shader_prog_manager;
 
 
 	Plane floor_plane;
-	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Floor.shader");
-	shader_prog_manager.UseShaderProgram(shader_program_floor);
-
-	// SET SHADER UNIFORMS
-	// VERTEX SHADER UNIFORMS:
-	// TRANSFORMATION
+	vec3f floor_color = { 0.457f, 0.102f, 0.199f }; // THIS COLOR IS NOT USED AND SERVES ONLY TO PLEASE THE CURRENT SHADER IMPLEMENTATION. THE VERTICES INCLUDE COLOR DATA THAT IS USED INSIDE THE SHADER
 	floor_plane.transform.Scale(3.0f, 3.0f, 1.0f);
 	floor_plane.transform.Rotate(90.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
 	floor_plane.transform.Translate(0.0f, -0.75f, 2.5f);
-
-	GL_Uniform u_transformation_mat_floor = GetUniform(shader_program_floor, "u_Transformation_mat");
-	SetUniformMat4f(shader_program_floor, u_transformation_mat_floor.Get_Handle(), floor_plane.transform.GetTransformationMatrix());
-
-	// PROJECTION
-	GL_Uniform u_projection_mat_floor = GetUniform(shader_program_floor, "u_Projection_mat");
-	SetUniformMat4f(shader_program_floor, u_projection_mat_floor.Get_Handle(), projection_mat);
+	
+	// NOTE: THE SHADER CONSTRUCTOR RETRIEVES THE SHADER HANDLE BY NAME AND SETS THE UNIFORM TO THE PASSED VALUES, THIS MEANS THAT THE SHADER PROGRAM NEEDS TO BE BOUND 
+	//       BY CALLING UseShaderProgram() BEFORE CREATING A SHADER INSTANCE!
+	//       THE REQUIRED UNIFORM VALUES CAN BE SET BEFORE OR AFTER CREATING THE SHADER INSTANCE, BUT A DEFAULT VALUE NEEDS TO BE PROVIDED!
+	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Floor.shader");
+	shader_prog_manager.UseShaderProgram(shader_program_floor);
+	Shader shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), floor_color);
 
 	floor_plane.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
@@ -62,24 +57,12 @@ int main()
 
 
 	Cube cube;
-	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Cube.shader"); 
-	shader_prog_manager.UseShaderProgram(shader_program_cube);
-
-	// SET SHADER UNIFORMS
-	// VERTEX SHADER UNIFORMS:
-	// TRANSFORMATION
+	vec3f cube_color = { 0.0f, 0.5f, 0.5f };
 	cube.transform.Translate(0.75f, 0.0f, 3.25f);
 
-	GL_Uniform u_transformation_mat_cube = GetUniform(shader_program_cube, "u_Transformation_mat");
-	SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), cube.transform.GetTransformationMatrix());
-
-	// PROJECTION
-	GL_Uniform u_projection_mat_cube = GetUniform(shader_program_cube, "u_Projection_mat");     // Pass the projection matrix to the shaders
-	SetUniformMat4f(shader_program_cube, u_projection_mat_cube.Get_Handle(), projection_mat);   // IF THE CUBE IS NOT VISIBLE, TRANSLATE IT ALONG THE POSITIVE Z AXIS, THE CUBE WILL PROBABLY BE DEFINED IN CLIP SPACE COORDINATES [-1, 1] 
-																					            // AND THUS BE TO CLOSE OR BEHIND THE 'CAMERA' AFTER PROJECTION																				   
-	// FRAGMENT SHADER UNIFORMS:
-	GL_Uniform u_window_height = GetUniform(shader_program_cube, "uWindow_Height");
-	SetUniform1f(shader_program_cube, u_window_height.Get_Handle(), window.GetWindowHeight());
+	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Cube.shader");
+	shader_prog_manager.UseShaderProgram(shader_program_cube);
+	Shader shader_cube(shader_program_cube, cube.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
 
 	cube.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
@@ -87,24 +70,12 @@ int main()
 
 
 	Triangle_3D triangle_3d;
-	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Triangle.shader"); // Create Shader Program 
-	shader_prog_manager.UseShaderProgram(shader_program_triangle);
-
-	// SET SHADER UNIFORMS
-	// VERTEX SHADER UNIFORMS:
-	// TRANSFORMATION
+	vec3f triangle_color = { 0.0f, 0.5f, 0.5f };
 	triangle_3d.transform.Translate(-0.75f, 0.0f, 1.75f);
 
-	GL_Uniform u_transformation_mat_triangle = GetUniform(shader_program_triangle, "u_Transformation_mat");
-	SetUniformMat4f(shader_program_triangle, u_transformation_mat_triangle.Get_Handle(), triangle_3d.transform.GetTransformationMatrix());
-
-	// PROJECTION
-	GL_Uniform u_projection_mat_triangle = GetUniform(shader_program_triangle, "u_Projection_mat");
-	SetUniformMat4f(shader_program_triangle, u_projection_mat_triangle.Get_Handle(), projection_mat);
-
-	// FRAGMENT SHADER UNIFORMS:
-	GL_Uniform u_window_height_triangle = GetUniform(shader_program_triangle, "uWindow_Height");
-	SetUniform1f(shader_program_triangle, u_window_height_triangle.Get_Handle(), window.GetWindowHeight());
+	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Triangle.shader");  
+	shader_prog_manager.UseShaderProgram(shader_program_triangle);
+	Shader shader_triangle(shader_program_triangle, triangle_3d.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
 
 	triangle_3d.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
@@ -112,24 +83,12 @@ int main()
 
 
 	Pyramid pyramid;
-	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); // Create Shader Program 
-	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
-
-	// SET SHADER UNIFORMS
-	// VERTEX SHADER UNIFORMS:
-	// TRANSFORMATION
+	vec3f pyramid_color = { 0.0f, 0.5f, 0.5f };
 	pyramid.transform.Translate(0.75f, 0.0f, 1.75f);
 
-	GL_Uniform u_transformation_mat_pyramid = GetUniform(shader_program_pyramid, "u_Transformation_mat");
-	SetUniformMat4f(shader_program_pyramid, u_transformation_mat_pyramid.Get_Handle(), pyramid.transform.GetTransformationMatrix());
-
-	// PROJECTION
-	GL_Uniform u_projection_mat_pyramid = GetUniform(shader_program_pyramid, "u_Projection_mat");
-	SetUniformMat4f(shader_program_pyramid, u_projection_mat_pyramid.Get_Handle(), projection_mat);
-
-	// FRAGMENT SHADER UNIFORMS:
-	GL_Uniform u_window_height_pyramid = GetUniform(shader_program_pyramid, "uWindow_Height");
-	SetUniform1f(shader_program_pyramid, u_window_height_pyramid.Get_Handle(), window.GetWindowHeight());
+	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); 
+	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
+	Shader shader_pyramid(shader_program_pyramid, pyramid.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
 
 	pyramid.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
@@ -193,7 +152,7 @@ int main()
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_cube;
 			cube.transform.Rotate(rotation_y_cube, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
-			SetUniformMat4f(shader_program_cube, u_transformation_mat_cube.Get_Handle(), cube.transform.GetTransformationMatrix());
+			shader_cube.SetUniformMat4f(shader_cube.GetTransformationMatLoc(), cube.transform.GetTransformationMatrix());
 
 			cube_timer.Reset();
 		}
@@ -212,7 +171,7 @@ int main()
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_triangle;
 			triangle_3d.transform.Rotate(rotation_y_triangle, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
-			SetUniformMat4f(shader_program_triangle, u_transformation_mat_triangle.Get_Handle(), triangle_3d.transform.GetTransformationMatrix());
+			shader_triangle.SetUniformMat4f(shader_triangle.GetTransformationMatLoc(), triangle_3d.transform.GetTransformationMatrix());
 
 			triangle_timer.Reset();
 		}
@@ -233,8 +192,7 @@ int main()
 
 			++translation_y_Pyramid;
 			pyramid.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), 1.75f); // Translate the pyramid up and down over the Y-axis in the Y-range [-0.5, 0.5]
-
-			SetUniformMat4f(shader_program_pyramid, u_transformation_mat_pyramid.Get_Handle(), pyramid.transform.GetTransformationMatrix());
+			shader_pyramid.SetUniformMat4f(shader_pyramid.GetTransformationMatLoc(), pyramid.transform.GetTransformationMatrix());
 
 			pyramid_timer.Reset();
 		}

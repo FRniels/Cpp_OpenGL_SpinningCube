@@ -154,18 +154,65 @@ unsigned int ShaderProgramManager::CreateShaderProgram(const std::string& filepP
 	return program;
 }
 
-void ShaderProgramManager::UseShaderProgram(unsigned int shader_program)
-{
-	GL_Call(glUseProgram(shader_program));
-}
-
-void ShaderProgramManager::UnbindShaderProgam()
-{
-	GL_Call(glUseProgram(0));
-}
-
 void ShaderProgramManager::DeleteShaderProgram(unsigned int shader_program)
 {
 	GL_Call(glDeleteProgram(shader_program));
 }
 
+
+
+const std::string Shader::u_transformation_mat_name = "u_Transformation_mat";
+const std::string Shader::u_projection_mat_name     = "u_Projection_mat";
+const std::string Shader::u_color_name              = "u_color";
+const std::string Shader::u_window_height_name      = "u_window_height"; 
+
+Shader::Shader(unsigned int program_handle, const Matrix4f& trans_mat, const Matrix4f& proj_mat, float window_height, vec4f color) : handle(program_handle)
+{
+	u_transformation_mat_loc = GetUniformByName(u_transformation_mat_name);
+	SetUniformMat4f(u_transformation_mat_loc, trans_mat);
+
+	u_projection_mat_loc = GetUniformByName(u_projection_mat_name);
+	SetUniformMat4f(u_projection_mat_loc, proj_mat);
+
+	u_window_height_1f_loc = GetUniformByName(u_window_height_name);
+	SetUniform1f(u_window_height_1f_loc, window_height);
+
+	u_color_vec4f_loc = GetUniformByName(u_color_name);
+	SetUniform4f(u_color_vec4f_loc, color);
+}
+
+GL_Uniform_Handle_t Shader::GetUniformByName(const std::string& u_Name) const
+{
+	GL_Call(int uniformLocation = glGetUniformLocation(handle, u_Name.c_str()));
+	ASSERT(uniformLocation != -1);
+
+	return uniformLocation;
+}
+
+void Shader::SetUniform1f(GL_Uniform_Handle_t u_Location, float data)
+{
+	ASSERT(u_Location != -1);
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: " << data << std::endl;
+	GL_Call(glUniform1f(u_Location, data));
+}
+
+void Shader::SetUniform4f(GL_Uniform_Handle_t u_Location, vec4f data)
+{
+	ASSERT(u_Location != -1);
+
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: ";
+	for (int i = 0; i < VEC4F_SIZE; ++i)
+	{
+		std::cout << *(data + i) << "F ";
+	}
+	std::cout << std::endl;
+
+	GL_Call(glUniform4f(u_Location, *data, *(data + 1), *(data + 2), *(data + 3)));
+}
+
+void Shader::SetUniformMat4f(GL_Uniform_Handle_t u_Location, const Matrix4f& mat4f)
+{
+	ASSERT(u_Location != -1);
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << std::endl;
+	GL_Call(glUniformMatrix4fv((unsigned int)u_Location, 1, GL_TRUE, mat4f.GetMatrix()));
+}

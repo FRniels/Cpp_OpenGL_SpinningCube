@@ -21,7 +21,11 @@ public:
 	ShaderProgramManager() {}
 	~ShaderProgramManager() {}
 
-	unsigned int CreateShaderProgram(const std::string& filepPath);		   // All shaders in 1 file: Pass the file path in which all shaders are found. Returns the OpenGL shader program handle.
+	unsigned int CreateShaderProgram(const std::string& filepPath);  // All shaders in 1 file: Pass the file path in which all shaders are found. Returns the OpenGL shader program handle.
+	unsigned int CreateShaderProgram(unsigned int vertex_shader, unsigned int fragment_shader);
+
+	unsigned int CreateShader(unsigned int shader_type, const std::string& shader_src); // NEW: Pass seperate source files. This should only create the GL shader, compile the shader and return the handle to be stored in the corresponding Geometry or Material class.
+	void DeleteShader(unsigned int shader);
 
 	inline void UseShaderProgram(unsigned int shader_program) { GL_Call(glUseProgram(shader_program)); }
 
@@ -31,6 +35,7 @@ public:
 
 private:
 	ShaderProgramSource ParseShader(const std::string& filepPath);		   // Returns the vertex and/or fragment shader source code.
+	std::string ParseShader_NEW(const std::string& filepPath); 
 
 	unsigned int CompileShader(unsigned int type, std::string& source);	   // Returns the OpenGL shader obj handle.
 };

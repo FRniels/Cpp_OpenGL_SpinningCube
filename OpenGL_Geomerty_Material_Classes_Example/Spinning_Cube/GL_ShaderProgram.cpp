@@ -105,6 +105,76 @@ ShaderProgramSource ShaderProgramManager::ParseShader(const std::string& filepPa
 	return { ss[0].str(), ss[1].str() };
 }
 
+std::string ShaderProgramManager::ParseShader_NEW(const std::string& filepPath)
+{
+	std::ifstream stream(filepPath);
+
+	std::string line;
+	std::stringstream ss;  
+
+	if (stream)
+	{
+		while (getline(stream, line))
+		{
+			if (strncmp(line.c_str(), "/*", 2) == 0)           // Start of a block comment on a new line starting with /*
+			{
+				do
+				{
+					if (line.find("*/") != std::string::npos)  // End of the block comment
+					{
+						break;
+					}
+				} while (getline(stream, line));
+				// THERE IS NO CHECK TO SEE IF A BLOCK COMMENT OPENED WITH /* BUT NOT CLOSED WITH */ => ALL THE LINES AFTER /* WILL BE IGNORED.
+				// Go to the next line, when the loop breaks due to finding the end of the block comment. 
+				// A comment like this could be made: /*comment*/ // comment => the last comment would be automatically skipped so this is not a problem.
+				// This does not allow for comments inside statements like if(i == 0 /* comment*/){} !
+			}
+			else if (strncmp(line.c_str(), "//", 2) != 0)      // If a line starts with a single comment with //, skip the line
+			{
+				std::size_t comment_start_index = std::string::npos;
+
+				if ((comment_start_index = line.find("//")) != std::string::npos)      // Remove a comment starting with // after a line of shader code
+				{
+					line = line.substr(0, (comment_start_index));
+				}
+				else if ((comment_start_index = line.find("/*")) != std::string::npos) // Remove a block comment starting with /* after a line of shader code
+				{
+					if (line.find("*/") != std::string::npos)                          // Check if the block comment is ending on the same line
+					{
+						line = line.substr(0, (comment_start_index));
+					}
+					else                                                               // Else check the next lines until reaching the end of the block comment, ending with */
+					{
+						line = line.substr(0, (comment_start_index));
+						std::cout << line << std::endl;                                // Save the valid shader source code before the block comment starts with /*
+						ss << line << "\n";
+						while (getline(stream, line))
+						{
+							if (line.find("*/") != std::string::npos)                  // No checking if the end of a block comment */ eventually exist, if not, all lines after the opening /* will be ignored.
+							{
+								line = "";
+								break;
+							}
+						}
+					}
+				}
+
+				std::cout << line << std::endl;
+				ss << line << "\n";
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Failed to created a stream object. Check your file path." << std::endl;
+	}
+
+	stream.close();
+
+	return ss.str();
+}
+
 unsigned int ShaderProgramManager::CompileShader(unsigned int type, std::string& source)
 {
 	GL_Call(unsigned int shader = glCreateShader(type));
@@ -153,6 +223,37 @@ unsigned int ShaderProgramManager::CreateShaderProgram(const std::string& filepP
 
 	return program;
 }
+
+unsigned int ShaderProgramManager::CreateShaderProgram(unsigned int vertex_shader, unsigned int fragment_shader)
+{
+	GL_Call(unsigned int program = glCreateProgram());
+
+	// Bind both shaders to the OpenGL context and link them to form a shader program
+	GL_Call(glAttachShader(program, vertex_shader));
+	GL_Call(glAttachShader(program, fragment_shader));
+	GL_Call(glLinkProgram(program));
+	GL_Call(glValidateProgram(program));
+
+	// Delete the shader resources after the program validation succeeds. // DELTE WHENEVER IT IS NEEDED BY CALLING DeleteShader()
+	// GL_Call(glDeleteShader(vertex_shader));
+	// GL_Call(glDeleteShader(fragment_shader));
+
+	return program;
+}
+
+unsigned int ShaderProgramManager::CreateShader(unsigned int shader_type, const std::string& shader_src)
+{
+	std::string shader_source = ParseShader_NEW(shader_src);
+	unsigned int handle = CompileShader(shader_type, shader_source); 
+
+	return handle;
+}
+
+void ShaderProgramManager::DeleteShader(unsigned int shader)
+{
+	GL_Call(glDeleteShader(shader));
+}
+
 
 void ShaderProgramManager::DeleteShaderProgram(unsigned int shader_program)
 {

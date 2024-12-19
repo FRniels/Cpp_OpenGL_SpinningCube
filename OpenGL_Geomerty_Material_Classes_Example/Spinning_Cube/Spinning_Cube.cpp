@@ -62,7 +62,11 @@ int main()
 	vec3f cube_color = { 0.0f, 0.5f, 0.5f };
 	cube.transform.Translate(0.75f, 0.0f, 3.25f);
 
-	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Cube.shader");
+	// unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Cube.shader");
+	// shader_prog_manager.UseShaderProgram(shader_program_cube);
+	unsigned int cube_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Cube.vert");
+	unsigned int cube_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Cube.frag");
+	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram(cube_vert_shader, cube_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_cube);
 	Shader shader_cube(shader_program_cube, cube.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
 
@@ -75,7 +79,11 @@ int main()
 	vec3f triangle_color = { 0.0f, 0.5f, 0.5f };
 	triangle_3d.transform.Translate(-0.75f, 0.0f, 1.75f);
 
-	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Triangle.shader");  
+	// unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Triangle.shader");  
+	// shader_prog_manager.UseShaderProgram(shader_program_triangle);
+	unsigned int triangle_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Triangle.vert");
+	unsigned int triangle_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Triangle.frag");
+	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram(triangle_vert_shader, triangle_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_triangle);
 	Shader shader_triangle(shader_program_triangle, triangle_3d.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
 
@@ -88,7 +96,11 @@ int main()
 	vec3f pyramid_color = { 0.0f, 0.5f, 0.5f };
 	pyramid.transform.Translate(0.75f, 0.0f, 1.75f);
 
-	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); 
+	// unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); 
+	// shader_prog_manager.UseShaderProgram(shader_program_pyramid);
+	unsigned int pyramid_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Pyramid.vert");
+	unsigned int pyramid_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Pyramid.frag");
+	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram(pyramid_vert_shader, pyramid_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
 	Shader shader_pyramid(shader_program_pyramid, pyramid.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
 

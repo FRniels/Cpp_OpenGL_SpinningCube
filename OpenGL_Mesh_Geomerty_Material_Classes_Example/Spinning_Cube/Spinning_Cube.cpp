@@ -77,19 +77,19 @@ int main()
 
 
 
-	Triangle_3D triangle_3d;
-	vec3f triangle_color = { 0.0f, 0.5f, 0.5f };
-	triangle_3d.transform.Translate(-0.75f, 0.0f, 1.75f);
+	Geometry_Triangle3D triangle_3d_geometry;
+	Mesh triangle_3d_mesh(&triangle_3d_geometry, NULL);
+	triangle_3d_mesh.transform.Translate(-0.75f, 0.0f, 1.75f);
 
-	// unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Triangle.shader");  
-	// shader_prog_manager.UseShaderProgram(shader_program_triangle);
 	unsigned int triangle_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Triangle.vert");
 	unsigned int triangle_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Triangle.frag");
 	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram(triangle_vert_shader, triangle_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_triangle);
-	Shader shader_triangle(shader_program_triangle, triangle_3d.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
+	
+	vec3f triangle_color = { 0.0f, 0.5f, 0.5f };
+	Shader shader_triangle(shader_program_triangle, triangle_3d_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
 
-	triangle_3d.Unbind_AllBuffers();
+	triangle_3d_mesh.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -179,21 +179,21 @@ int main()
 
 
 		// TRANSFORM AND RENDER THE TRIANGLE:
-		triangle_3d.Bind();
+		triangle_3d_mesh.Bind();
 		shader_prog_manager.UseShaderProgram(shader_program_triangle);
 
 		if (triangle_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_triangle;
-			triangle_3d.transform.Rotate(rotation_y_triangle, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
-			shader_triangle.SetUniformMat4f(shader_triangle.GetTransformationMatLoc(), triangle_3d.transform.GetTransformationMatrix());
+			triangle_3d_mesh.transform.Rotate(rotation_y_triangle, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
+			shader_triangle.SetUniformMat4f(shader_triangle.GetTransformationMatLoc(), triangle_3d_mesh.transform.GetTransformationMatrix());
 
 			triangle_timer.Reset();
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		triangle_3d.Unbind_VAO();
+		triangle_3d_mesh.Unbind_VAO();
 		ShaderProgramManager::UnbindShaderProgam();
 
 		// TRANSFORM AND RENDER THE PYRAMID:
@@ -233,7 +233,7 @@ int main()
 	cube_mesh.DeleteGLObjects();
 	shader_prog_manager.DeleteShaderProgram(shader_program_cube);
 
-	triangle_3d.DeleteGLObjects();
+	triangle_3d_mesh.DeleteGLObjects();
 	shader_prog_manager.DeleteShaderProgram(shader_program_triangle);
 
 	pyramid.DeleteGLObjects();

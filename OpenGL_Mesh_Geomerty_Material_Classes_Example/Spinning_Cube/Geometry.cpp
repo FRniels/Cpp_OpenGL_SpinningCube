@@ -87,3 +87,31 @@ std::vector<unsigned int> Geometry_Cube::cube_indices = // 36 indices, Counter c
 	// TRIANGLE 2:
 	4, 7, 0        // Front bottom left, Back bottom left, Back top left
 };
+
+std::vector<float> Geometry_Triangle3D::triangle_vertices = // 18 vertices,   42 vertices with color
+{
+	// Position            Color
+	 0.0f,  0.5f,  0.1f,   /*0.457f, 0.102f, 0.199f, 0.0f,*/ // 0. Back:  Top
+	 0.5f, -0.5f,  0.1f,   /*0.457f, 0.102f, 0.199f, 0.0f,*/ // 1. Back:  Bottom right
+	-0.5f, -0.5f,  0.1f,   /*0.457f, 0.102f, 0.199f, 0.0f,*/ // 2. Back:  Bottom left
+	 0.0f,  0.5f, -0.1f,   /*0.457f, 0.102f, 0.199f, 0.0f,*/ // 3. Front: Top
+	-0.5f, -0.5f, -0.1f,   /*0.457f, 0.102f, 0.199f, 0.0f,*/ // 4. Front: Bottom left
+	 0.5f, -0.5f, -0.1f    /*0.457f, 0.102f, 0.199f, 0.0f */ // 5. Front: Bottom right
+};
+
+std::vector<unsigned int> Geometry_Triangle3D::triangle_indices = // 24 indices Counter clockwise		
+{
+	// Front face
+	3, 4, 5,       // Front top,         Front bottom left,  Front bottom right
+	// Back face
+	0, 1, 2,       // Back top,          Back bottom left,   Back bottom right
+	// Bottom face
+	1, 5, 4,       // Back Bottom right, Front Bottom right, Front Bottom left
+	4, 2, 1,       // Front Bottom left, Back Bottom left,   Back Bottom right
+	// Left face
+	4, 3, 0,       // Front bottom left, Front top,          Back top
+	0, 2, 4,       // Back top         , Back bottom left,   Front bottom left
+	// Right face
+	1, 0, 3,       // Back bottom right, Back top,           Front top
+	3, 5, 1        // Front top,         Front bottom right, Back bottom right
+};

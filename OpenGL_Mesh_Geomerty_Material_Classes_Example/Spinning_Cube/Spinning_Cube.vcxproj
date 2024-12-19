@@ -148,7 +148,6 @@
     <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
-    <ClCompile Include="Triangle_3D.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>

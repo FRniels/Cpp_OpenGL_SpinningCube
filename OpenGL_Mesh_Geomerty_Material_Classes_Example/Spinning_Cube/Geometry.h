@@ -23,8 +23,6 @@ public:
 	Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indices);
 	~Geometry() {}
 
-	// inline void Bind() { vertex_array.Bind(); }
-
 private:
 	void InitBuffers();
 	void InitVAO();
@@ -44,13 +42,17 @@ public:
 	~Geometry_Cube() {}
 };
 
-//class Geometry_Triangle3D : public Geometry
-//{
-//public:
-//	Geometry_Triangle3D() {}
-//	~Geometry_Triangle3D() {}
-//};
-//
+class Geometry_Triangle3D : public Geometry
+{
+private:
+	static std::vector<float>        triangle_vertices;
+	static std::vector<unsigned int> triangle_indices;
+
+public:
+	Geometry_Triangle3D() : Geometry(&triangle_vertices, &triangle_indices) {}
+	~Geometry_Triangle3D() {}
+};
+
 //class Geometry_Pyramid : public Geometry
 //{
 //public:

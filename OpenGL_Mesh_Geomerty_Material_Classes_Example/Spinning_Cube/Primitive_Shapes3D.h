@@ -16,46 +16,6 @@ public:
 
 };
 
-class Triangle_3D : public Primitive_Shape3D
-{
-private:
-	float triangle_vertices[42] =
-	{
-		// Position            Color
-		 0.0f,  0.5f,  0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 0. Back:  Top
-		 0.5f, -0.5f,  0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 1. Back:  Bottom right
-		-0.5f, -0.5f,  0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 2. Back:  Bottom left
-		 0.0f,  0.5f, -0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 3. Front: Top
-		-0.5f, -0.5f, -0.1f,   0.457f, 0.102f, 0.199f, 0.0f, // 4. Front: Bottom left
-		 0.5f, -0.5f, -0.1f,   0.457f, 0.102f, 0.199f, 0.0f  // 5. Front: Bottom right
-	};
-	unsigned int triangle_indices[24] = // Counter clockwise		
-	{
-		// Front face
-		3, 4, 5,       // Front top,         Front bottom left,  Front bottom right
-		// Back face
-		0, 1, 2,       // Back top,          Back bottom left,   Back bottom right
-		// Bottom face
-		1, 5, 4,       // Back Bottom right, Front Bottom right, Front Bottom left
-		4, 2, 1,       // Front Bottom left, Back Bottom left,   Back Bottom right
-		// Left face
-		4, 3, 0,       // Front bottom left, Front top,          Back top
-		0, 2, 4,       // Back top         , Back bottom left,   Front bottom left
-		// Right face
-		1, 0, 3,       // Back bottom right, Back top,           Front top
-		3, 5, 1        // Front top,         Front bottom right, Back bottom right
-	};
-
-public:
-	Triangle_3D();
-	~Triangle_3D() {}
-
-	inline void Bind() { vertex_array.Bind(); } // TO DO: MAKE BIND A VIRTUAL METHOD OF BASE CLASS OBJECT ???? => WATCH OUT: THIS METHOD DOES NOT CHECK IF THE VERTEX ARRAY IS DELETED !!! => TO DO: FIX THIS!
-
-private:
-	void InitBuffers();
-	void InitVAO();
-};
 
 class Pyramid : public Primitive_Shape3D
 {

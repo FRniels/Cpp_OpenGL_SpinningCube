@@ -47,9 +47,11 @@ int main()
 	// NOTE: THE SHADER CONSTRUCTOR RETRIEVES THE SHADER HANDLE BY NAME AND SETS THE UNIFORM TO THE PASSED VALUES, THIS MEANS THAT THE SHADER PROGRAM NEEDS TO BE BOUND 
 	//       BY CALLING UseShaderProgram() BEFORE CREATING A SHADER INSTANCE!
 	//       THE REQUIRED UNIFORM VALUES CAN BE SET BEFORE OR AFTER CREATING THE SHADER INSTANCE, BUT A DEFAULT VALUE NEEDS TO BE PROVIDED!
-	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Floor.shader");
-	shader_prog_manager.UseShaderProgram(shader_program_floor);
-	Shader shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), floor_color);
+	unsigned int floor_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Floor.vert");
+	unsigned int floor_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Floor.frag");
+	unsigned int shader_program_floor_new = shader_prog_manager.CreateShaderProgram(floor_vert_shader, floor_frag_shader);
+	shader_prog_manager.UseShaderProgram(shader_program_floor_new);
+	Shader shader_floor(shader_program_floor_new, floor_plane.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), floor_color);
 
 	floor_plane.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
@@ -134,7 +136,8 @@ int main()
 
 		// RENDER THE FLOOR
 		floor_plane.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_floor);
+		// shader_prog_manager.UseShaderProgram(shader_program_floor);
+		shader_prog_manager.UseShaderProgram(shader_program_floor_new);
 		// ORIGNAL ONE COLOR FLOOR PLANE
 		// GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
@@ -212,7 +215,8 @@ int main()
 
 	// Clean-up:
 	floor_plane.DeleteGLObjects();
-	shader_prog_manager.DeleteShaderProgram(shader_program_floor);
+	// shader_prog_manager.DeleteShaderProgram(shader_program_floor);
+	shader_prog_manager.DeleteShaderProgram(shader_program_floor_new);
 
 	cube.DeleteGLObjects();
 	shader_prog_manager.DeleteShaderProgram(shader_program_cube);

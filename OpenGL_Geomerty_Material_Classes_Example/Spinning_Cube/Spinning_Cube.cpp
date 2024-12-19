@@ -22,13 +22,15 @@
 #include "Primitive_Shapes2D.h"
 #include "Primitive_Shapes3D.h"
 
+#include "Mesh.h";
+
 // TO DO: IF THE USER ALREADY SET A ROTATION MATRIX AND TRIES TO CHANGE THE AXIS OF THE SAME INSTANCE, RESET THE CURRENT ROTATION MATRIX BEFORE SETTING THE NEW VALUES!
 
 void Render(void);
 
 int main()
 {
-	Window window(1500, 800, "Spinning cube"); 
+	Window window(1500, 1200, "Spinning cube"); 
 
 	Camera camera(90.0f, window.GetAspectRatio());
 	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
@@ -49,28 +51,28 @@ int main()
 	//       THE REQUIRED UNIFORM VALUES CAN BE SET BEFORE OR AFTER CREATING THE SHADER INSTANCE, BUT A DEFAULT VALUE NEEDS TO BE PROVIDED!
 	unsigned int floor_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Floor.vert");
 	unsigned int floor_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Floor.frag");
-	unsigned int shader_program_floor_new = shader_prog_manager.CreateShaderProgram(floor_vert_shader, floor_frag_shader);
-	shader_prog_manager.UseShaderProgram(shader_program_floor_new);
-	Shader shader_floor(shader_program_floor_new, floor_plane.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), floor_color);
+	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram(floor_vert_shader, floor_frag_shader);
+	shader_prog_manager.UseShaderProgram(shader_program_floor);
+	Shader shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), floor_color);
 
 	floor_plane.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
 
 
 
-	Cube cube;
-	vec3f cube_color = { 0.0f, 0.5f, 0.5f };
-	cube.transform.Translate(0.75f, 0.0f, 3.25f);
+	Geometry_Cube cube_geometry;
+	Mesh cube_mesh(&cube_geometry, NULL);
+	cube_mesh.transform.Translate(0.75f, 0.0f, 3.25f);
 
-	// unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Cube.shader");
-	// shader_prog_manager.UseShaderProgram(shader_program_cube);
 	unsigned int cube_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Cube.vert");
 	unsigned int cube_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Cube.frag");
 	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram(cube_vert_shader, cube_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_cube);
-	Shader shader_cube(shader_program_cube, cube.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
+	
+	vec3f cube_color = { 0.0f, 0.5f, 0.5f };
+	Shader shader_cube(shader_program_cube, cube_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
 
-	cube.Unbind_AllBuffers();
+	cube_mesh.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -148,8 +150,7 @@ int main()
 
 		// RENDER THE FLOOR
 		floor_plane.Bind();
-		// shader_prog_manager.UseShaderProgram(shader_program_floor);
-		shader_prog_manager.UseShaderProgram(shader_program_floor_new);
+		shader_prog_manager.UseShaderProgram(shader_program_floor);
 		// ORIGNAL ONE COLOR FLOOR PLANE
 		// GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
@@ -159,21 +160,21 @@ int main()
 
 		// TRANSFORM AND RENDER THE CUBE:
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
-		cube.Bind();
+		cube_mesh.Bind();
 		shader_prog_manager.UseShaderProgram(shader_program_cube);
 
 		if (cube_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_cube;
-			cube.transform.Rotate(rotation_y_cube, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
-			shader_cube.SetUniformMat4f(shader_cube.GetTransformationMatLoc(), cube.transform.GetTransformationMatrix());
+			cube_mesh.transform.Rotate(rotation_y_cube, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
+			shader_cube.SetUniformMat4f(shader_cube.GetTransformationMatLoc(), cube_mesh.transform.GetTransformationMatrix());
 
 			cube_timer.Reset();
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		cube.Unbind_VAO();
+		cube_mesh.Unbind_VAO();
 		ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -227,10 +228,9 @@ int main()
 
 	// Clean-up:
 	floor_plane.DeleteGLObjects();
-	// shader_prog_manager.DeleteShaderProgram(shader_program_floor);
-	shader_prog_manager.DeleteShaderProgram(shader_program_floor_new);
+	shader_prog_manager.DeleteShaderProgram(shader_program_floor);
 
-	cube.DeleteGLObjects();
+	cube_mesh.DeleteGLObjects();
 	shader_prog_manager.DeleteShaderProgram(shader_program_cube);
 
 	triangle_3d.DeleteGLObjects();

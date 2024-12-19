@@ -134,7 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GL_Draw.cpp" />
     <ClCompile Include="GL_ElementBuffer.cpp" />
     <ClCompile Include="GL_ErrorHandeling.cpp" />
@@ -164,6 +164,7 @@
     <ClInclude Include="GL_VertexBufferLayout.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Math_Types.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Primitive_Shapes2D.h" />
     <ClInclude Include="Primitive_Shapes3D.h" />

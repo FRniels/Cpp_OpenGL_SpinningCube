@@ -35,7 +35,7 @@ public:
 
 private:
 	ShaderProgramSource ParseShader(const std::string& filepPath);		   // Returns the vertex and/or fragment shader source code.
-	std::string ParseShader_NEW(const std::string& filepPath); 
+	std::string ParseShader_NEW(const std::string& filepPath);			   // This parser only handles 1 shader type defined in 1 source file unlike the other parser which handles vertex and fragment shaders defined in 1 file.
 
 	unsigned int CompileShader(unsigned int type, std::string& source);	   // Returns the OpenGL shader obj handle.
 };

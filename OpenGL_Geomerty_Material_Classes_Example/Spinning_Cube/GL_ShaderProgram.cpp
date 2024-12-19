@@ -234,7 +234,7 @@ unsigned int ShaderProgramManager::CreateShaderProgram(unsigned int vertex_shade
 	GL_Call(glLinkProgram(program));
 	GL_Call(glValidateProgram(program));
 
-	// Delete the shader resources after the program validation succeeds. // DELTE WHENEVER IT IS NEEDED BY CALLING DeleteShader()
+	// Delete the shader resources after the program validation succeeds. // DELETE WHENEVER IT IS NEEDED BY CALLING DeleteShader()
 	// GL_Call(glDeleteShader(vertex_shader));
 	// GL_Call(glDeleteShader(fragment_shader));
 

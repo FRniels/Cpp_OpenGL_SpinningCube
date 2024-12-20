@@ -115,3 +115,28 @@ std::vector<unsigned int> Geometry_Triangle3D::triangle_indices = // 24 indices 
 	1, 0, 3,       // Back bottom right, Back top,           Front top
 	3, 5, 1        // Front top,         Front bottom right, Back bottom right
 };
+
+std::vector<float> Geometry_Pyramid::pyramid_vertices = // 15 vertices, 35 vertices with color
+{
+	// Position                Color
+	  0.0f,   0.25f,   0.0f,   /*0.996f, 0.54f, 0.094f, 0.0f,*/  // 0. Top
+	 0.25f,  -0.25f,  0.25f,   /*0.996f, 0.54f, 0.094f, 0.0f,*/  // 1. Back:  Bottom right
+	-0.25f,  -0.25f,  0.25f,   /*0.996f, 0.54f, 0.094f, 0.0f,*/  // 2. Back:  Bottom left
+	-0.25f,  -0.25f, -0.25f,   /*0.996f, 0.54f, 0.094f, 0.0f,*/  // 3. Front: Bottom left
+	 0.25f,  -0.25f, -0.25f    /*0.996f, 0.54f, 0.094f, 0.0f */  // 4. Front: Bottom right
+};
+
+std::vector<unsigned int> Geometry_Pyramid::pyramid_indices = // 18 indices. Counter clockwise
+{
+	// FRONT PLANE
+	4, 0, 3,		  // Front Bottom right, Top,				 Front Bottom left
+	// BACK PLANE
+	2, 0, 1,		  // Back Bottom left,   Top,				 Back Bottom right
+	// RIGHT PLANE
+	1, 0, 4,		  // Back Bottom right,  Top,				 Front Bottom right
+	// LEFT PLANE
+	3, 0, 2,		  // Front Bottom left,  Top,                Back Bottom left
+	// BOTTOM PLANE
+	1, 4, 3,		  // Back Bottom right,  Front Bottom right, Front Bottom left
+	3, 2, 1,		  // Front Bottom left,  Back Bottom left  , Back Bottom right
+};

@@ -53,11 +53,15 @@ public:
 	~Geometry_Triangle3D() {}
 };
 
-//class Geometry_Pyramid : public Geometry
-//{
-//public:
-//	Geometry_Pyramid() {}
-//	~Geometry_Pyramid() {}
-//};
+class Geometry_Pyramid : public Geometry
+{
+private:
+	static std::vector<float>        pyramid_vertices;
+	static std::vector<unsigned int> pyramid_indices;
+
+public:
+	Geometry_Pyramid() : Geometry(&pyramid_vertices, &pyramid_indices) {}
+	~Geometry_Pyramid() {}
+};
 
 #endif // GEOMETRY_H

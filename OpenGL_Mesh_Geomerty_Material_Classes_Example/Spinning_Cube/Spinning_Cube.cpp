@@ -20,7 +20,6 @@
 #include "Timer.h"
 
 #include "Primitive_Shapes2D.h"
-#include "Primitive_Shapes3D.h"
 
 #include "Mesh.h";
 
@@ -94,19 +93,19 @@ int main()
 
 
 
-	Pyramid pyramid;
-	vec3f pyramid_color = { 0.0f, 0.5f, 0.5f };
-	pyramid.transform.Translate(0.75f, 0.0f, 1.75f);
+	Geometry_Pyramid pyramid_geometry;
+	Mesh pyramid_mesh(&pyramid_geometry, NULL);
+	pyramid_mesh.transform.Translate(0.75f, 0.0f, 1.75f);
 
-	// unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); 
-	// shader_prog_manager.UseShaderProgram(shader_program_pyramid);
 	unsigned int pyramid_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Pyramid.vert");
 	unsigned int pyramid_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Pyramid.frag");
 	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram(pyramid_vert_shader, pyramid_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
-	Shader shader_pyramid(shader_program_pyramid, pyramid.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
 
-	pyramid.Unbind_AllBuffers();
+	vec3f pyramid_color = { 0.0f, 0.5f, 0.5f };
+	Shader shader_pyramid(shader_program_pyramid, pyramid_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
+
+	pyramid_mesh.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -197,24 +196,24 @@ int main()
 		ShaderProgramManager::UnbindShaderProgam();
 
 		// TRANSFORM AND RENDER THE PYRAMID:
-		pyramid.Bind();
+		pyramid_mesh.Bind();
 		shader_prog_manager.UseShaderProgram(shader_program_pyramid);
 
 		if (pyramid_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_pyramid;
-			pyramid.transform.Rotate(rotation_y_pyramid, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
+			pyramid_mesh.transform.Rotate(rotation_y_pyramid, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
 			++translation_y_Pyramid;
-			pyramid.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), 1.75f); // Translate the pyramid up and down over the Y-axis in the Y-range [-0.5, 0.5]
-			shader_pyramid.SetUniformMat4f(shader_pyramid.GetTransformationMatLoc(), pyramid.transform.GetTransformationMatrix());
+			pyramid_mesh.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), 1.75f); // Translate the pyramid up and down over the Y-axis in the Y-range [-0.5, 0.5]
+			shader_pyramid.SetUniformMat4f(shader_pyramid.GetTransformationMatLoc(), pyramid_mesh.transform.GetTransformationMatrix());
 
 			pyramid_timer.Reset();
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		pyramid.Unbind_VAO();
+		pyramid_mesh.Unbind_VAO();
 		ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -236,7 +235,7 @@ int main()
 	triangle_3d_mesh.DeleteGLObjects();
 	shader_prog_manager.DeleteShaderProgram(shader_program_triangle);
 
-	pyramid.DeleteGLObjects();
+	pyramid_mesh.DeleteGLObjects();
 	shader_prog_manager.DeleteShaderProgram(shader_program_pyramid);
 
 	window.Exit();

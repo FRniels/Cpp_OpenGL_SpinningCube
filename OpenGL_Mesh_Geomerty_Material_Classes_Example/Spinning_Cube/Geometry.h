@@ -20,12 +20,31 @@ protected:
 	std::vector<unsigned int>* indices = NULL;
 
 public:
+	// This constructor unbinds all the GL buffers belonging to this geometry from the GL context after their creation and initialisation.
 	Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indices);
 	~Geometry() {}
+
+
+	inline void Unbind_GL_VAO()
+	{
+		GL_Vertex_Array::Unbind();
+	}
+
+	void Delete_GL_Buffers();
 
 private:
 	void InitBuffers();
 	void InitVAO();
+
+	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
+	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
+	//            When trying to draw with such an 'unconfigured' vao, null pointer errors can/will or even worse, undefinded behaviour will occur.
+	inline void Unbind_GL_Buffers()
+	{
+		GL_Vertex_Array::Unbind();
+		GL_VertexBuffer::Unbind();   
+		GL_ElementBuffer::Unbind();
+	}
 };
 
 class Geometry_Cube : public Geometry 

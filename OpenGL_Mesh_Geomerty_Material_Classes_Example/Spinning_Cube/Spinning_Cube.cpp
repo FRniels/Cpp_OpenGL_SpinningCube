@@ -70,8 +70,6 @@ int main()
 	
 	vec3f cube_color = { 0.0f, 0.5f, 0.5f };
 	Shader shader_cube(shader_program_cube, cube_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
-
-	cube_mesh.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -87,8 +85,6 @@ int main()
 	
 	vec3f triangle_color = { 0.0f, 0.5f, 0.5f };
 	Shader shader_triangle(shader_program_triangle, triangle_3d_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
-
-	triangle_3d_mesh.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -104,8 +100,6 @@ int main()
 
 	vec3f pyramid_color = { 0.0f, 0.5f, 0.5f };
 	Shader shader_pyramid(shader_program_pyramid, pyramid_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
-
-	pyramid_mesh.Unbind_AllBuffers();
 	ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -150,8 +144,6 @@ int main()
 		// RENDER THE FLOOR
 		floor_plane.Bind();
 		shader_prog_manager.UseShaderProgram(shader_program_floor);
-		// ORIGNAL ONE COLOR FLOOR PLANE
-		// GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
 		floor_plane.Unbind_VAO();
 		ShaderProgramManager::UnbindShaderProgam();
@@ -173,7 +165,7 @@ int main()
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		cube_mesh.Unbind_VAO();
+		cube_mesh.Unbind();
 		ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -192,7 +184,7 @@ int main()
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		triangle_3d_mesh.Unbind_VAO();
+		triangle_3d_mesh.Unbind();
 		ShaderProgramManager::UnbindShaderProgam();
 
 		// TRANSFORM AND RENDER THE PYRAMID:
@@ -213,7 +205,7 @@ int main()
 		}
 
 		GL_Call(glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		pyramid_mesh.Unbind_VAO();
+		pyramid_mesh.Unbind();
 		ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -229,13 +221,13 @@ int main()
 	floor_plane.DeleteGLObjects();
 	shader_prog_manager.DeleteShaderProgram(shader_program_floor);
 
-	cube_mesh.DeleteGLObjects();
+	cube_mesh.Delete_GL_Buffers();
 	shader_prog_manager.DeleteShaderProgram(shader_program_cube);
 
-	triangle_3d_mesh.DeleteGLObjects();
+	triangle_3d_mesh.Delete_GL_Buffers();
 	shader_prog_manager.DeleteShaderProgram(shader_program_triangle);
 
-	pyramid_mesh.DeleteGLObjects();
+	pyramid_mesh.Delete_GL_Buffers();
 	shader_prog_manager.DeleteShaderProgram(shader_program_pyramid);
 
 	window.Exit();

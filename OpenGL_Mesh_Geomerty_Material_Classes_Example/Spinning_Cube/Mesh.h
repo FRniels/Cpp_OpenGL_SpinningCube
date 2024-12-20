@@ -15,7 +15,9 @@ public:
 	Mesh(Geometry* geometry, Material* material) : geometry(geometry), material(material) {}
 	~Mesh() {}
 
-	inline void Bind() { geometry->vertex_array.Bind(); }
+	inline void Bind()   { geometry->vertex_array.Bind(); }
+	inline void Unbind() { GL_Vertex_Array::Unbind(); }
+	void Delete_GL_Buffers() { geometry->Delete_GL_Buffers(); }
 };
 
 #endif // MESH_H

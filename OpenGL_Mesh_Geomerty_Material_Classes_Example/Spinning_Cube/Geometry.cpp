@@ -7,6 +7,7 @@ Geometry::Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indi
 	{
 		InitBuffers();
 		InitVAO();
+		Unbind_GL_Buffers(); // Unbind all the GL buffers after their creation and initialisation.
 	}
 	else
 	{
@@ -24,6 +25,13 @@ void Geometry::InitVAO()
 {
 	buffer_vertices_layout.Push<float>(3);	// Push the amount of floats per vertex that are used for the vertex position
 	vertex_array.AddBuffer(buffer_vertices, buffer_vertices_layout);
+}
+
+void Geometry::Delete_GL_Buffers()
+{
+	buffer_vertices.Delete();
+	buffer_indices.Delete();
+	vertex_array.Delete();
 }
 
 std::vector<float> Geometry_Cube::cube_vertices = // 24 vertices, BLENDER .ply EXPORT

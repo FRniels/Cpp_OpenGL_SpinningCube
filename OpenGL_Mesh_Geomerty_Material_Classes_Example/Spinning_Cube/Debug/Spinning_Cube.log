@@ -1,10 +1,12 @@
-﻿  Spinning_Cube.cpp
+﻿  Geometry.cpp
+  Spinning_Cube.cpp
 C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Mesh_Geomerty_Material_Classes_Example\Spinning_Cube\Spinning_Cube.cpp(24,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Mesh_Geomerty_Material_Classes_Example\Spinning_Cube\Spinning_Cube.cpp(55,131): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Mesh_Geomerty_Material_Classes_Example\Spinning_Cube\Spinning_Cube.cpp(72,127): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Mesh_Geomerty_Material_Classes_Example\Spinning_Cube\Spinning_Cube.cpp(89,142): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Mesh_Geomerty_Material_Classes_Example\Spinning_Cube\Spinning_Cube.cpp(106,136): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Mesh_Geomerty_Material_Classes_Example\Spinning_Cube\Spinning_Cube.cpp(209,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Mesh_Geomerty_Material_Classes_Example\Spinning_Cube\Spinning_Cube.cpp(207,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
 glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info

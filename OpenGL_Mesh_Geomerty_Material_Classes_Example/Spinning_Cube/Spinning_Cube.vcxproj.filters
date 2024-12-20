@@ -21,7 +21,7 @@
     <ClCompile Include="GL_ErrorHandeling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GL_ShaderProgram.cpp">
+    <ClCompile Include="GL_Shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GL_Draw.cpp">
@@ -51,9 +51,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,7 +62,7 @@
     <ClInclude Include="GL_ErrorHandeling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GL_ShaderProgram.h">
+    <ClInclude Include="GL_Shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GL_User_Types.h">
@@ -99,9 +96,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitive_Shapes2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">

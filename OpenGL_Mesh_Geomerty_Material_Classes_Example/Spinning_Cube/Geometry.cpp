@@ -6,7 +6,7 @@ Geometry::Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indi
 	if (vertices != NULL && indices != NULL)
 	{
 		InitBuffers();
-		InitVAO();
+		InitVAO(/*false*/);
 		Unbind_GL_Buffers(); // Unbind all the GL buffers after their creation and initialisation.
 	}
 	else
@@ -15,15 +15,35 @@ Geometry::Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indi
 	}
 }
 
+//Geometry::Geometry(std::vector<float>* vertices, bool contains_color_vec4, std::vector<unsigned int>* indices)
+//	: vertices(vertices), indices(indices)
+//{
+//	if (vertices != NULL && indices != NULL)
+//	{
+//		InitBuffers();
+//		InitVAO(/*true*/);
+//		Unbind_GL_Buffers(); // Unbind all the GL buffers after their creation and initialisation.
+//	}
+//	else
+//	{
+//		std::cout << "Vertices buffer or Indices buffer can't be NULL!" << std::endl;
+//	}
+//}
+
 void Geometry::InitBuffers()
 {
 	buffer_vertices.Init(&(vertices->front()), vertices->size() * sizeof(float));
 	buffer_indices.Init(&(indices->front()), indices->size());
 }
 
-void Geometry::InitVAO()
+void Geometry::InitVAO(/*bool contains_color_vec4*/)
 {
-	buffer_vertices_layout.Push<float>(3);	// Push the amount of floats per vertex that are used for the vertex position
+	buffer_vertices_layout.Push<float>(3);	    // Push the amount of floats per vertex that are used for the vertex position
+
+	/*if (contains_color_vec4)
+		buffer_vertices_layout.Push<float>(4);	// Push the amount of floats per vertex that are used for the vertex color
+	*/
+
 	vertex_array.AddBuffer(buffer_vertices, buffer_vertices_layout);
 }
 
@@ -34,7 +54,22 @@ void Geometry::Delete_GL_Buffers()
 	vertex_array.Delete();
 }
 
-std::vector<float> Geometry_Cube::cube_vertices = // 24 vertices, BLENDER .ply EXPORT
+
+std::vector<float> Geometry_Plane::plane_vertices = 
+{
+	 0.5f,  0.5f,  0.0f,  // 0. Top    right
+    -0.5f,  0.5f,  0.0f,  // 1. Top    left
+    -0.5f, -0.5f,  0.0f,  // 2. Bottom left
+     0.5f, -0.5f,  0.0f   // 3. Bottom right
+};
+
+std::vector<unsigned int> Geometry_Plane::plane_indices = // 6 Indices, Counter clockwise
+{
+	0, 1, 2,  // Top right	  Top left      Bottom left
+	2, 3, 0   // Bottom left  Bottom right  Top right 
+};
+
+std::vector<float> Geometry_Cube::cube_vertices = // BLENDER .ply EXPORT
 {
 	-0.5f,  0.5f,  0.5f,   // 0. Back:  Top left
 	 0.5f,  0.5f,  0.5f,   // 1. Back:  Top right
@@ -96,7 +131,7 @@ std::vector<unsigned int> Geometry_Cube::cube_indices = // 36 indices, Counter c
 	4, 7, 0        // Front bottom left, Back bottom left, Back top left
 };
 
-std::vector<float> Geometry_Triangle3D::triangle_vertices = // 18 vertices,   42 vertices with color
+std::vector<float> Geometry_Triangle3D::triangle_vertices = 
 {
 	// Position            Color
 	 0.0f,  0.5f,  0.1f,   /*0.457f, 0.102f, 0.199f, 0.0f,*/ // 0. Back:  Top
@@ -124,7 +159,7 @@ std::vector<unsigned int> Geometry_Triangle3D::triangle_indices = // 24 indices 
 	3, 5, 1        // Front top,         Front bottom right, Back bottom right
 };
 
-std::vector<float> Geometry_Pyramid::pyramid_vertices = // 15 vertices, 35 vertices with color
+std::vector<float> Geometry_Pyramid::pyramid_vertices = 
 {
 	// Position                Color
 	  0.0f,   0.25f,   0.0f,   /*0.996f, 0.54f, 0.094f, 0.0f,*/  // 0. Top

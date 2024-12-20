@@ -22,6 +22,11 @@ protected:
 public:
 	// This constructor unbinds all the GL buffers belonging to this geometry from the GL context after their creation and initialisation.
 	Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indices);
+
+	// Supports color data defined inside the vertices array, example: vec3 position followed by vec4 color
+	//																  -0.5f, 0.0f, 0.0f, 0.5F, 0.5F, 0.2F, 0.0F
+	// Geometry(std::vector<float>* vertices, bool contains_color_vec4, std::vector<unsigned int>* indices); // DON'T NOW IF THIS CONSTRUCTOR IS TO STAY, THIS IS MAINLY USED FOR THE FLOOR PLANE FOR NOW!
+
 	~Geometry() {}
 
 
@@ -34,7 +39,7 @@ public:
 
 private:
 	void InitBuffers();
-	void InitVAO();
+	void InitVAO(/*bool contains_color_vec4*/);
 
 	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
 	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.
@@ -45,6 +50,17 @@ private:
 		GL_VertexBuffer::Unbind();   
 		GL_ElementBuffer::Unbind();
 	}
+};
+
+class Geometry_Plane : public Geometry
+{
+private:
+	static std::vector<float>        plane_vertices;
+	static std::vector<unsigned int> plane_indices;
+
+public:
+	Geometry_Plane() : Geometry(&plane_vertices, &plane_indices) {}
+	~Geometry_Plane() {}
 };
 
 class Geometry_Cube : public Geometry 

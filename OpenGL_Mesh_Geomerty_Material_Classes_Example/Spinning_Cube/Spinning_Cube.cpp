@@ -12,16 +12,13 @@
 #include "GL_User_Types.h" 
 #include "Math_Types.h"
 #include "GL_ErrorHandeling.h"
-#include "GL_ShaderProgram.h"
-#include "GL_VertexArray.h"
-#include "GL_Buffers.h"
-#include "GL_VertexBufferLayout.h"
+
+#include "Mesh.h"
+#include "GL_Shaders.h"
+
 #include "GL_Draw.h"
 #include "Timer.h"
 
-#include "Primitive_Shapes2D.h"
-
-#include "Mesh.h";
 
 // TO DO: IF THE USER ALREADY SET A ROTATION MATRIX AND TRIES TO CHANGE THE AXIS OF THE SAME INSTANCE, RESET THE CURRENT ROTATION MATRIX BEFORE SETTING THE NEW VALUES!
 
@@ -39,8 +36,8 @@ int main()
 	ShaderProgramManager shader_prog_manager;
 
 
-	Plane floor_plane;
-	vec3f floor_color = { 0.457f, 0.102f, 0.199f }; // THIS COLOR IS NOT USED AND SERVES ONLY TO PLEASE THE CURRENT SHADER IMPLEMENTATION. THE VERTICES INCLUDE COLOR DATA THAT IS USED INSIDE THE SHADER
+	Geometry_Plane floor_geometry;
+	Mesh floor_plane(&floor_geometry, NULL);
 	floor_plane.transform.Scale(3.0f, 3.0f, 1.0f);
 	floor_plane.transform.Rotate(90.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
 	floor_plane.transform.Translate(0.0f, -0.75f, 2.5f);
@@ -52,9 +49,10 @@ int main()
 	unsigned int floor_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Floor.frag");
 	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram(floor_vert_shader, floor_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_floor);
-	Shader shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), floor_color);
 
-	floor_plane.Unbind_AllBuffers();
+	vec4f floor_color = { 1.0f, 0.388f, 0.278f, 0.4f }; // THIS COLOR IS NOT USED AND SERVES ONLY TO PLEASE THE CURRENT SHADER IMPLEMENTATION. THE VERTICES INCLUDE COLOR DATA THAT IS USED INSIDE THE SHADER
+	Shader shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, /*window.GetWindowHeight()*/ 1.0f, floor_color);
+
 	ShaderProgramManager::UnbindShaderProgam();
 
 
@@ -68,7 +66,7 @@ int main()
 	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram(cube_vert_shader, cube_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_cube);
 	
-	vec3f cube_color = { 0.0f, 0.5f, 0.5f };
+	vec4f cube_color = { 0.235f, 0.702f, 0.443f, 0.0f };
 	Shader shader_cube(shader_program_cube, cube_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
 	ShaderProgramManager::UnbindShaderProgam();
 
@@ -83,7 +81,7 @@ int main()
 	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram(triangle_vert_shader, triangle_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_triangle);
 	
-	vec3f triangle_color = { 0.0f, 0.5f, 0.5f };
+	vec4f triangle_color = { 0.416f, 0.353f, 0.804f, 0.0f };
 	Shader shader_triangle(shader_program_triangle, triangle_3d_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
 	ShaderProgramManager::UnbindShaderProgam();
 
@@ -98,7 +96,7 @@ int main()
 	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram(pyramid_vert_shader, pyramid_frag_shader);
 	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
 
-	vec3f pyramid_color = { 0.0f, 0.5f, 0.5f };
+	vec4f pyramid_color = { 0.0f, 0.5f, 0.5f, 0.0f };
 	Shader shader_pyramid(shader_program_pyramid, pyramid_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
 	ShaderProgramManager::UnbindShaderProgam();
 
@@ -144,13 +142,14 @@ int main()
 		// RENDER THE FLOOR
 		floor_plane.Bind();
 		shader_prog_manager.UseShaderProgram(shader_program_floor);
-		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
-		floor_plane.Unbind_VAO();
+		// GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
+		GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
+		floor_plane.Unbind();
 		ShaderProgramManager::UnbindShaderProgam();
 
 
 		// TRANSFORM AND RENDER THE CUBE:
-		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
+		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing.
 		cube_mesh.Bind();
 		shader_prog_manager.UseShaderProgram(shader_program_cube);
 
@@ -218,7 +217,7 @@ int main()
 	}
 
 	// Clean-up:
-	floor_plane.DeleteGLObjects();
+	floor_plane.Delete_GL_Buffers();
 	shader_prog_manager.DeleteShaderProgram(shader_program_floor);
 
 	cube_mesh.Delete_GL_Buffers();

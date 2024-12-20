@@ -1,7 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "GL_ShaderProgram.h"
+#include "GL_Shaders.h"
 
 class Material
 {

@@ -7,7 +7,6 @@
 
 class Geometry
 {
-
 friend class Mesh;
 
 protected:
@@ -16,8 +15,8 @@ protected:
 	GL_VertexBufferLayout buffer_vertices_layout;
 	GL_ElementBuffer      buffer_indices;
 
-	std::vector<float>* vertices = NULL;
-	std::vector<unsigned int>* indices = NULL;
+	std::vector<float>*        vertices = NULL;
+	std::vector<unsigned int>* indices  = NULL;
 
 public:
 	// This constructor unbinds all the GL buffers belonging to this geometry from the GL context after their creation and initialisation.
@@ -29,11 +28,13 @@ public:
 
 	~Geometry() {}
 
+	// inline unsigned int GetIndicesCount() const { return buffer_indices.GetCount(); } 
+	inline unsigned int GetIndicesCount() const { return indices->size(); }
 
-	inline void Unbind_GL_VAO()
+	/*inline void Unbind_GL_VAO()
 	{
 		GL_Vertex_Array::Unbind();
-	}
+	}*/
 
 	void Delete_GL_Buffers();
 

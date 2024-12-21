@@ -30,6 +30,7 @@ Geometry::Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indi
 //	}
 //}
 
+
 void Geometry::InitBuffers()
 {
 	buffer_vertices.Init(&(vertices->front()), vertices->size() * sizeof(float));

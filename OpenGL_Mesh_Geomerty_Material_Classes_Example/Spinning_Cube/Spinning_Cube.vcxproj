@@ -142,8 +142,10 @@
     <ClCompile Include="GL_Uniform.cpp" />
     <ClCompile Include="GL_VertexArray.cpp" />
     <ClCompile Include="Gl_VertexBuffer.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Math_Types.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -163,6 +165,7 @@
     <ClInclude Include="Math_Types.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />

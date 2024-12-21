@@ -6,7 +6,7 @@
 #include <string>
 
 
-ShaderProgramSource ShaderProgramManager::ParseShader(const std::string& filepPath)
+ShaderProgramSource ShaderManager::ParseShader(const std::string& filepPath) const
 {
 	std::ifstream stream(filepPath);
 
@@ -105,7 +105,7 @@ ShaderProgramSource ShaderProgramManager::ParseShader(const std::string& filepPa
 	return { ss[0].str(), ss[1].str() };
 }
 
-std::string ShaderProgramManager::ParseShader_NEW(const std::string& filepPath)
+std::string ShaderManager::ParseShader_NEW(const std::string& filepPath) const
 {
 	std::ifstream stream(filepPath);
 
@@ -175,7 +175,7 @@ std::string ShaderProgramManager::ParseShader_NEW(const std::string& filepPath)
 	return ss.str();
 }
 
-unsigned int ShaderProgramManager::CompileShader(unsigned int type, std::string& source)
+unsigned int ShaderManager::CompileShader(unsigned int type, std::string& source) const
 {
 	GL_Call(unsigned int shader = glCreateShader(type));
 	const char* src = source.c_str();
@@ -203,7 +203,7 @@ unsigned int ShaderProgramManager::CompileShader(unsigned int type, std::string&
 	return shader;
 }
 
-unsigned int ShaderProgramManager::CreateShaderProgram(const std::string& filepPath)
+unsigned int ShaderManager::CreateShaderProgram(const std::string& filepPath) const
 {
 	ShaderProgramSource shaderProgramSources = ParseShader(filepPath);
 
@@ -224,7 +224,7 @@ unsigned int ShaderProgramManager::CreateShaderProgram(const std::string& filepP
 	return program;
 }
 
-unsigned int ShaderProgramManager::CreateShaderProgram(unsigned int vertex_shader, unsigned int fragment_shader)
+unsigned int ShaderManager::CreateShaderProgram(unsigned int vertex_shader, unsigned int fragment_shader) const
 {
 	GL_Call(unsigned int program = glCreateProgram());
 
@@ -241,7 +241,7 @@ unsigned int ShaderProgramManager::CreateShaderProgram(unsigned int vertex_shade
 	return program;
 }
 
-unsigned int ShaderProgramManager::CreateShader(unsigned int shader_type, const std::string& shader_src)
+unsigned int ShaderManager::CreateShader(unsigned int shader_type, const std::string& shader_src) const
 {
 	std::string shader_source = ParseShader_NEW(shader_src);
 	unsigned int handle = CompileShader(shader_type, shader_source); 
@@ -249,25 +249,60 @@ unsigned int ShaderProgramManager::CreateShader(unsigned int shader_type, const 
 	return handle;
 }
 
-void ShaderProgramManager::DeleteShader(unsigned int shader)
+GL_Uniform_Handle_t ShaderManager::GetUniformByName(unsigned int shader_program_handle, const std::string& u_Name) const
+{
+	GL_Call(int uniformLocation = glGetUniformLocation(shader_program_handle, u_Name.c_str()));
+	ASSERT(uniformLocation != -1);
+
+	return uniformLocation;
+}
+
+void ShaderManager::SetUniform1f(GL_Uniform_Handle_t u_Location, float data)
+{
+	ASSERT(u_Location != -1);
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: " << data << std::endl;
+	GL_Call(glUniform1f(u_Location, data));
+}
+
+void ShaderManager::SetUniform4f(GL_Uniform_Handle_t u_Location, vec4f data)
+{
+	ASSERT(u_Location != -1);
+
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: ";
+	for (int i = 0; i < VEC4F_SIZE; ++i)
+	{
+		std::cout << *(data + i) << "F ";
+	}
+	std::cout << std::endl;
+
+	GL_Call(glUniform4f(u_Location, *data, *(data + 1), *(data + 2), *(data + 3)));
+}
+
+void ShaderManager::SetUniformMat4f(GL_Uniform_Handle_t u_Location, const Matrix4f& mat4f)
+{
+	ASSERT(u_Location != -1);
+	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << std::endl;
+	GL_Call(glUniformMatrix4fv((unsigned int)u_Location, 1, GL_TRUE, mat4f.GetMatrix()));
+}
+
+void ShaderManager::DeleteShader(unsigned int shader) const
 {
 	GL_Call(glDeleteShader(shader));
 }
 
-
-void ShaderProgramManager::DeleteShaderProgram(unsigned int shader_program)
+void ShaderManager::DeleteShaderProgram(unsigned int shader_program) const
 {
 	GL_Call(glDeleteProgram(shader_program));
 }
 
 
 
-const std::string Shader::u_transformation_mat_name = "u_Transformation_mat";
-const std::string Shader::u_projection_mat_name     = "u_Projection_mat";
-const std::string Shader::u_color_name              = "u_color";
-const std::string Shader::u_window_height_name      = "u_window_height"; 
+const std::string ShaderProgram::u_transformation_mat_name = "u_Transformation_mat";
+const std::string ShaderProgram::u_projection_mat_name     = "u_Projection_mat";
+const std::string ShaderProgram::u_color_name              = "u_color";
+const std::string ShaderProgram::u_window_height_name      = "u_window_height";
 
-Shader::Shader(unsigned int program_handle, const Matrix4f& trans_mat, const Matrix4f& proj_mat, float window_height, vec4f color) : handle(program_handle)
+ShaderProgram::ShaderProgram(unsigned int program_handle, const Matrix4f& trans_mat, const Matrix4f& proj_mat, float window_height, vec4f color) : handle(program_handle)
 {
 	u_transformation_mat_loc = GetUniformByName(u_transformation_mat_name);
 	SetUniformMat4f(u_transformation_mat_loc, trans_mat);
@@ -282,7 +317,7 @@ Shader::Shader(unsigned int program_handle, const Matrix4f& trans_mat, const Mat
 	SetUniform4f(u_color_vec4f_loc, color);
 }
 
-GL_Uniform_Handle_t Shader::GetUniformByName(const std::string& u_Name) const
+GL_Uniform_Handle_t ShaderProgram::GetUniformByName(const std::string& u_Name) const
 {
 	GL_Call(int uniformLocation = glGetUniformLocation(handle, u_Name.c_str()));
 	ASSERT(uniformLocation != -1);
@@ -290,14 +325,14 @@ GL_Uniform_Handle_t Shader::GetUniformByName(const std::string& u_Name) const
 	return uniformLocation;
 }
 
-void Shader::SetUniform1f(GL_Uniform_Handle_t u_Location, float data)
+void ShaderProgram::SetUniform1f(GL_Uniform_Handle_t u_Location, float data)
 {
 	ASSERT(u_Location != -1);
 	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << " Value: " << data << std::endl;
 	GL_Call(glUniform1f(u_Location, data));
 }
 
-void Shader::SetUniform4f(GL_Uniform_Handle_t u_Location, vec4f data)
+void ShaderProgram::SetUniform4f(GL_Uniform_Handle_t u_Location, vec4f data)
 {
 	ASSERT(u_Location != -1);
 
@@ -311,7 +346,7 @@ void Shader::SetUniform4f(GL_Uniform_Handle_t u_Location, vec4f data)
 	GL_Call(glUniform4f(u_Location, *data, *(data + 1), *(data + 2), *(data + 3)));
 }
 
-void Shader::SetUniformMat4f(GL_Uniform_Handle_t u_Location, const Matrix4f& mat4f)
+void ShaderProgram::SetUniformMat4f(GL_Uniform_Handle_t u_Location, const Matrix4f& mat4f)
 {
 	ASSERT(u_Location != -1);
 	// std::cout << std::endl << "Set shader uniform:" << std::endl << "Shader program: " << shader_program << " u_Location: " << u_Location << std::endl;

@@ -16,6 +16,7 @@
 #include "Mesh.h"
 #include "GL_Shaders.h"
 
+#include "Renderer.h"
 #include "GL_Draw.h"
 #include "Timer.h"
 
@@ -33,11 +34,12 @@ int main()
 	ProjectionMatrix4f projection_mat = camera.projection_mat; // TO DO: THIS IS JUST A QUICK TEST TO SEE IF THE ASPECT RATIO WORKS => ASPECT RATIO TESTED AND WORKS!
 
 
-	ShaderProgramManager shader_prog_manager;
+	ShaderManager shader_manager;
 
 
 	Geometry_Plane floor_geometry;
-	Mesh floor_plane(&floor_geometry, NULL);
+	Material       floor_material(shader_manager, "../Resources/Shaders/Floor.vert", "../Resources/Shaders/Floor.frag");
+	Mesh floor_plane(&floor_geometry, &floor_material);
 	floor_plane.transform.Scale(3.0f, 3.0f, 1.0f);
 	floor_plane.transform.Rotate(90.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
 	floor_plane.transform.Translate(0.0f, -0.75f, 2.5f);
@@ -45,15 +47,14 @@ int main()
 	// NOTE: THE SHADER CONSTRUCTOR RETRIEVES THE SHADER HANDLE BY NAME AND SETS THE UNIFORM TO THE PASSED VALUES, THIS MEANS THAT THE SHADER PROGRAM NEEDS TO BE BOUND 
 	//       BY CALLING UseShaderProgram() BEFORE CREATING A SHADER INSTANCE!
 	//       THE REQUIRED UNIFORM VALUES CAN BE SET BEFORE OR AFTER CREATING THE SHADER INSTANCE, BUT A DEFAULT VALUE NEEDS TO BE PROVIDED!
-	unsigned int floor_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Floor.vert");
-	unsigned int floor_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Floor.frag");
-	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram(floor_vert_shader, floor_frag_shader);
-	shader_prog_manager.UseShaderProgram(shader_program_floor);
+	unsigned int floor_vert_shader = shader_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Floor.vert");
+	unsigned int floor_frag_shader = shader_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Floor.frag");
+	unsigned int shader_program_floor = shader_manager.CreateShaderProgram(floor_vert_shader, floor_frag_shader);
+	shader_manager.UseShaderProgram(shader_program_floor);
 
-	vec4f floor_color = { 1.0f, 0.388f, 0.278f, 0.4f }; // THIS COLOR IS NOT USED AND SERVES ONLY TO PLEASE THE CURRENT SHADER IMPLEMENTATION. THE VERTICES INCLUDE COLOR DATA THAT IS USED INSIDE THE SHADER
-	Shader shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, /*window.GetWindowHeight()*/ 1.0f, floor_color);
-
-	ShaderProgramManager::UnbindShaderProgam();
+	vec4f floor_color = { 1.0f, 0.388f, 0.278f, 0.4f };
+	ShaderProgram shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, /*window.GetWindowHeight()*/ 1.0f, floor_color);
+	ShaderManager::UnbindShaderProgam();
 
 
 
@@ -61,14 +62,14 @@ int main()
 	Mesh cube_mesh(&cube_geometry, NULL);
 	cube_mesh.transform.Translate(0.75f, 0.0f, 3.25f);
 
-	unsigned int cube_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Cube.vert");
-	unsigned int cube_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Cube.frag");
-	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram(cube_vert_shader, cube_frag_shader);
-	shader_prog_manager.UseShaderProgram(shader_program_cube);
+	unsigned int cube_vert_shader = shader_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Cube.vert");
+	unsigned int cube_frag_shader = shader_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Cube.frag");
+	unsigned int shader_program_cube = shader_manager.CreateShaderProgram(cube_vert_shader, cube_frag_shader);
+	shader_manager.UseShaderProgram(shader_program_cube);
 	
 	vec4f cube_color = { 0.235f, 0.702f, 0.443f, 0.0f };
-	Shader shader_cube(shader_program_cube, cube_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
-	ShaderProgramManager::UnbindShaderProgam();
+	ShaderProgram shader_cube(shader_program_cube, cube_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
+	ShaderManager::UnbindShaderProgam();
 
 
 
@@ -76,14 +77,14 @@ int main()
 	Mesh triangle_3d_mesh(&triangle_3d_geometry, NULL);
 	triangle_3d_mesh.transform.Translate(-0.75f, 0.0f, 1.75f);
 
-	unsigned int triangle_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Triangle.vert");
-	unsigned int triangle_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Triangle.frag");
-	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram(triangle_vert_shader, triangle_frag_shader);
-	shader_prog_manager.UseShaderProgram(shader_program_triangle);
+	unsigned int triangle_vert_shader = shader_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Triangle.vert");
+	unsigned int triangle_frag_shader = shader_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Triangle.frag");
+	unsigned int shader_program_triangle = shader_manager.CreateShaderProgram(triangle_vert_shader, triangle_frag_shader);
+	shader_manager.UseShaderProgram(shader_program_triangle);
 	
 	vec4f triangle_color = { 0.416f, 0.353f, 0.804f, 0.0f };
-	Shader shader_triangle(shader_program_triangle, triangle_3d_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
-	ShaderProgramManager::UnbindShaderProgam();
+	ShaderProgram shader_triangle(shader_program_triangle, triangle_3d_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
+	ShaderManager::UnbindShaderProgam();
 
 
 
@@ -91,14 +92,14 @@ int main()
 	Mesh pyramid_mesh(&pyramid_geometry, NULL);
 	pyramid_mesh.transform.Translate(0.75f, 0.0f, 1.75f);
 
-	unsigned int pyramid_vert_shader = shader_prog_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Pyramid.vert");
-	unsigned int pyramid_frag_shader = shader_prog_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Pyramid.frag");
-	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram(pyramid_vert_shader, pyramid_frag_shader);
-	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
+	unsigned int pyramid_vert_shader = shader_manager.CreateShader(GL_VERTEX_SHADER, "../Resources/Shaders/Pyramid.vert");
+	unsigned int pyramid_frag_shader = shader_manager.CreateShader(GL_FRAGMENT_SHADER, "../Resources/Shaders/Pyramid.frag");
+	unsigned int shader_program_pyramid = shader_manager.CreateShaderProgram(pyramid_vert_shader, pyramid_frag_shader);
+	shader_manager.UseShaderProgram(shader_program_pyramid);
 
 	vec4f pyramid_color = { 0.0f, 0.5f, 0.5f, 0.0f };
-	Shader shader_pyramid(shader_program_pyramid, pyramid_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
-	ShaderProgramManager::UnbindShaderProgam();
+	ShaderProgram shader_pyramid(shader_program_pyramid, pyramid_mesh.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
+	ShaderManager::UnbindShaderProgam();
 
 
 
@@ -141,17 +142,16 @@ int main()
 
 		// RENDER THE FLOOR
 		floor_plane.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_floor);
-		// GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
-		GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
+		shader_manager.UseShaderProgram(shader_program_floor);
+		GL_Call(glDrawElements(GL_TRIANGLES, floor_plane.GetIndicesCount(), GL_UNSIGNED_INT, nullptr)); 
 		floor_plane.Unbind();
-		ShaderProgramManager::UnbindShaderProgam();
+		ShaderManager::UnbindShaderProgam();
 
 
 		// TRANSFORM AND RENDER THE CUBE:
 		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing.
 		cube_mesh.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_cube);
+		shader_manager.UseShaderProgram(shader_program_cube);
 
 		if (cube_timer.IsTimerExpired())
 		{
@@ -163,14 +163,14 @@ int main()
 			cube_timer.Reset();
 		}
 
-		GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
+		GL_Call(glDrawElements(GL_TRIANGLES, cube_mesh.GetIndicesCount(), GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
 		cube_mesh.Unbind();
-		ShaderProgramManager::UnbindShaderProgam();
+		ShaderManager::UnbindShaderProgam();
 
 
 		// TRANSFORM AND RENDER THE TRIANGLE:
 		triangle_3d_mesh.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_triangle);
+		shader_manager.UseShaderProgram(shader_program_triangle);
 
 		if (triangle_timer.IsTimerExpired())
 		{
@@ -182,13 +182,13 @@ int main()
 			triangle_timer.Reset();
 		}
 
-		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
+		GL_Call(glDrawElements(GL_TRIANGLES, triangle_3d_mesh.GetIndicesCount(), GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
 		triangle_3d_mesh.Unbind();
-		ShaderProgramManager::UnbindShaderProgam();
+		ShaderManager::UnbindShaderProgam();
 
 		// TRANSFORM AND RENDER THE PYRAMID:
 		pyramid_mesh.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_pyramid);
+		shader_manager.UseShaderProgram(shader_program_pyramid);
 
 		if (pyramid_timer.IsTimerExpired())
 		{
@@ -203,9 +203,9 @@ int main()
 			pyramid_timer.Reset();
 		}
 
-		GL_Call(glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
+		GL_Call(glDrawElements(GL_TRIANGLES, pyramid_mesh.GetIndicesCount(), GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
 		pyramid_mesh.Unbind();
-		ShaderProgramManager::UnbindShaderProgam();
+		ShaderManager::UnbindShaderProgam();
 
 
 		// ORIGINAL
@@ -218,16 +218,16 @@ int main()
 
 	// Clean-up:
 	floor_plane.Delete_GL_Buffers();
-	shader_prog_manager.DeleteShaderProgram(shader_program_floor);
+	shader_manager.DeleteShaderProgram(shader_program_floor);
 
 	cube_mesh.Delete_GL_Buffers();
-	shader_prog_manager.DeleteShaderProgram(shader_program_cube);
+	shader_manager.DeleteShaderProgram(shader_program_cube);
 
 	triangle_3d_mesh.Delete_GL_Buffers();
-	shader_prog_manager.DeleteShaderProgram(shader_program_triangle);
+	shader_manager.DeleteShaderProgram(shader_program_triangle);
 
 	pyramid_mesh.Delete_GL_Buffers();
-	shader_prog_manager.DeleteShaderProgram(shader_program_pyramid);
+	shader_manager.DeleteShaderProgram(shader_program_pyramid);
 
 	window.Exit();
 

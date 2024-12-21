@@ -15,6 +15,8 @@ public:
 	Mesh(Geometry* geometry, Material* material) : geometry(geometry), material(material) {}
 	~Mesh() {}
 
+	inline unsigned int GetIndicesCount() const { return geometry->GetIndicesCount(); }
+
 	inline void Bind()   { geometry->vertex_array.Bind(); }
 	inline void Unbind() { GL_Vertex_Array::Unbind(); }
 	void Delete_GL_Buffers() { geometry->Delete_GL_Buffers(); }

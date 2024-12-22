@@ -108,15 +108,10 @@ int main()
 		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
 
 		// RENDER THE FLOOR
-		floor_plane.Bind(shader_manager);
 		renderer.Render(floor_plane, shader_manager);
-		floor_plane.Unbind(shader_manager);
 
 
 		// TRANSFORM AND RENDER THE CUBE:
-		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing.
-		cube_mesh.Bind(shader_manager);
-
 		if (cube_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
@@ -126,13 +121,10 @@ int main()
 		}
 
 		renderer.Render(cube_mesh, shader_manager);
-		cube_mesh.Unbind(shader_manager);
 
 
 
 		// TRANSFORM AND RENDER THE TRIANGLE:
-		triangle_3d_mesh.Bind(shader_manager);
-
 		if (triangle_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
@@ -142,13 +134,10 @@ int main()
 		}
 
 		renderer.Render(triangle_3d_mesh, shader_manager);
-		triangle_3d_mesh.Unbind(shader_manager);
 
 
 
 		// TRANSFORM AND RENDER THE PYRAMID:
-		pyramid_mesh.Bind(shader_manager);
-
 		if (pyramid_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
@@ -162,7 +151,6 @@ int main()
 		}
 
 		renderer.Render(pyramid_mesh, shader_manager);
-		pyramid_mesh.Unbind(shader_manager);
 
 
 		window.SwapBuffers();

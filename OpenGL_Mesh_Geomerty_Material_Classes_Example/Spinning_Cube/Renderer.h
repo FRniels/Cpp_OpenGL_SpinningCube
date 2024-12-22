@@ -25,7 +25,7 @@ public:
 	~Renderer() {}
 
 	void Render(Mesh& mesh, ShaderManager& shader_manager) const;
-	void Render(std::vector<Mesh*> mesh_list, ShaderManager& shader_manager) const;
+	void Render(std::vector<Mesh*>& mesh_list, ShaderManager& shader_manager) const;
 };
 
 #endif // RENDERER_H

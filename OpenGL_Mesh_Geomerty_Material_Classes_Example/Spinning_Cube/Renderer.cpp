@@ -19,7 +19,7 @@ void Renderer::Render(Mesh& mesh, ShaderManager& shader_manager) const
 	mesh.Unbind(shader_manager);
 }
 
-void Renderer::Render(std::vector<Mesh*> mesh_list, ShaderManager& shader_manager) const
+void Renderer::Render(std::vector<Mesh*>& mesh_list, ShaderManager& shader_manager) const
 {
 	for (Mesh* mesh : mesh_list) 
 	{

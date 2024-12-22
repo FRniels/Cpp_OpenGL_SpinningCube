@@ -30,7 +30,7 @@ int main()
 
 	Renderer renderer;
 
-	Camera camera(90.0f, window.GetAspectRatio(), renderer.context);
+	Camera camera(90.0f, window.GetAspectRatio(), renderer.context); // TO DO: SET THE NEAR AND FAR FIELD
 
 	ShaderManager shader_manager;
 
@@ -44,13 +44,11 @@ int main()
 	floor_plane.transform.Translate(0.0f, -0.75f, 2.5f);
 
 
-
 	Geometry_Cube cube_geometry;
 	vec4f cube_color = { 0.235f, 0.702f, 0.443f, 0.0f };
 	Material cube_material(cube_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Cube.vert", "../Resources/Shaders/Cube.frag");
 	Mesh cube_mesh(&cube_geometry, &cube_material);
 	cube_mesh.transform.Translate(0.75f, 0.0f, 3.25f);
-
 
 
 	Geometry_Triangle3D triangle_3d_geometry;
@@ -60,13 +58,18 @@ int main()
 	triangle_3d_mesh.transform.Translate(-0.75f, 0.0f, 1.75f);
 
 
-
 	Geometry_Pyramid pyramid_geometry;
 	vec4f pyramid_color = { 0.0f, 0.5f, 0.5f, 0.0f };
 	Material pyramid_material(pyramid_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Pyramid.vert", "../Resources/Shaders/Pyramid.frag");
 	Mesh pyramid_mesh(&pyramid_geometry, &pyramid_material);
 	pyramid_mesh.transform.Translate(0.75f, 0.0f, 1.75f);
 
+
+	std::vector<Mesh*> mesh_list;
+	mesh_list.push_back(&floor_plane);
+	mesh_list.push_back(&cube_mesh);
+	mesh_list.push_back(&triangle_3d_mesh);
+	mesh_list.push_back(&pyramid_mesh);
 
 
 	// FACE CULLING:
@@ -107,11 +110,8 @@ int main()
 
 		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
 
-		// RENDER THE FLOOR
-		renderer.Render(floor_plane, shader_manager);
 
-
-		// TRANSFORM AND RENDER THE CUBE:
+		// TRANSFORM THE CUBE:
 		if (cube_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
@@ -120,11 +120,8 @@ int main()
 			cube_timer.Reset();
 		}
 
-		renderer.Render(cube_mesh, shader_manager);
 
-
-
-		// TRANSFORM AND RENDER THE TRIANGLE:
+		// TRANSFORM THE TRIANGLE:
 		if (triangle_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
@@ -133,11 +130,8 @@ int main()
 			triangle_timer.Reset();
 		}
 
-		renderer.Render(triangle_3d_mesh, shader_manager);
 
-
-
-		// TRANSFORM AND RENDER THE PYRAMID:
+		// TRANSFORM THE PYRAMID:
 		if (pyramid_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
@@ -150,8 +144,8 @@ int main()
 			pyramid_timer.Reset();
 		}
 
-		renderer.Render(pyramid_mesh, shader_manager);
 
+		renderer.Render(mesh_list, shader_manager);
 
 		window.SwapBuffers();
 		window.PollEvents();

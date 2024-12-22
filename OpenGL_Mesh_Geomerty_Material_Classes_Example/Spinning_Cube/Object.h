@@ -12,7 +12,7 @@ private:
 	static unsigned int id; // Initialised to 0 in the source file Object.cpp
 
 public:
-	Transform transform;
+	Transform transform; // TO DO: THIS SHOULD NOT REALLY BE PUBLIC. FIND BETTER ALTERNATIVE
 
 public:
 	Object() { ++id;  }

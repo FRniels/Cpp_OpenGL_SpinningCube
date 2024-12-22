@@ -3,7 +3,7 @@
 Geometry::Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indices)
 	: vertices(vertices), indices(indices)
 {
-	if (vertices != NULL && indices != NULL)
+	if (vertices != NULL && indices != NULL) // TO DO: USE THE ASSERT FROM THE ERROR HANDELING
 	{
 		InitBuffers();
 		InitVAO(/*false*/);

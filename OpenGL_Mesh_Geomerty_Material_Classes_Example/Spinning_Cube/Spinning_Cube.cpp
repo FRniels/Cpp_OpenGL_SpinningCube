@@ -28,7 +28,8 @@ int main()
 {
 	Window window(1500, 1200, "Spinning cube"); 
 
-	Renderer renderer;
+	vec4f clear_color = { 0.2F, 0.2F, 0.2F, 0.0F };
+	Renderer renderer(clear_color);
 
 	Camera camera(90.0f, window.GetAspectRatio(), renderer.context); // TO DO: SET THE NEAR AND FAR FIELD
 
@@ -85,14 +86,8 @@ int main()
 	// Accept fragment if it closer to the camera than the former one
 	// glDepthFunc(GL_LESS);
 
-
 	
-	// SET SCREEN CLEAR COLOR
-	// vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
-	vec4f clear_color = { 0.2F, 0.2F, 0.2F, 0.0F };
-	glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
-	
-	// RENDER LOOP 
+	// UPDATE / RENDER LOOP 
 	float rotation_y_cube	    = 0.0f; 
 	float rotation_y_triangle   = 0.0f;
 	float rotation_y_pyramid    = 0.0f;
@@ -107,9 +102,6 @@ int main()
 	while (!window.ShouldWindowClose()) 
 	{
 		window.UpdateTime();
-
-		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
-
 
 		// TRANSFORM THE CUBE:
 		if (cube_timer.IsTimerExpired())
@@ -144,7 +136,7 @@ int main()
 			pyramid_timer.Reset();
 		}
 
-
+		renderer.ClearScreen();
 		renderer.Render(mesh_list, shader_manager);
 
 		window.SwapBuffers();

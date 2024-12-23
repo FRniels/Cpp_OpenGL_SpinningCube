@@ -1,0 +1,15 @@
+﻿  GL_Draw.cpp
+  GL_ElementBuffer.cpp
+  GL_ErrorHandeling.cpp
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Vertex_Element_Buffer_Example\Spinning_Cube\GL_ErrorHandeling.cpp(41,39): warning C4018: '<': signed/unsigned mismatch
+C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Vertex_Element_Buffer_Example\Spinning_Cube\GL_ErrorHandeling.cpp(42,21): warning C4018: '<': signed/unsigned mismatch
+  GL_ShaderProgram.cpp
+  Gl_VertexBuffer.cpp
+  Spinning_Cube.cpp
+  Previous IPDB not found, fall back to full compilation.
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Generating code
+  All 238 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
+  Spinning_Cube.vcxproj -> C:\Users\11307533\Documents\Programming\C++\OpenGL_Projects\Cpp_OpenGL_SpinningCube\OpenGL_Vertex_Element_Buffer_Example\Release\Spinning_Cube.exe

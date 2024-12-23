@@ -19,7 +19,7 @@ public:
 	Camera(float FOV, float near_field, float far_field, float window_aspect_ratio, RenderContext& render_context);
 	~Camera() {};
 
-	void UpdateProjectionMatrix(float FOV, float window_aspect_ratio);
+	void UpdateProjectionMatrix(float FOV, float near_field, float far_field, float window_aspect_ratio);
 };
 
 #endif // CAMERA_H

@@ -116,11 +116,12 @@ void ScalingMatrix4f::SetScaling3f(vec3f scaling_xyz)									// Set the X, Y an
 }
 
 
-void ProjectionMatrix4f::SetProjectionMatrix(float fov_degrees, float aspect_ration)
+void ProjectionMatrix4f::SetProjectionMatrix(float fov_degrees, float near_field, float far_field, float aspect_ration)
 {
 	// Note: The FOV needs to be set first before being able to set the aspect ratio!
 	SetFOV(fov_degrees);
 	SetAspectRatio(aspect_ration);
+	SetNearFarField(near_field, far_field);
 }
 
 void ProjectionMatrix4f::SetFOV(float fov_degrees)
@@ -148,6 +149,17 @@ void ProjectionMatrix4f::SetFOV(float fov_degrees)
 	*/
 
 	// MORE INFO: https://www.youtube.com/watch?v=LhQ85bPCAJ8&list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA&index=14
+}
+
+void ProjectionMatrix4f::SetNearFarField(float near_field, float far_field)
+{
+	// source: https://www.youtube.com/watch?v=md3jFANT3UM&list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA&index=15
+
+	float field_A = (-far_field - near_field) / (near_field - far_field);
+	float field_B = (2 * far_field * near_field) / (near_field - far_field);
+
+	mat4f[2][2] = field_A;
+	mat4f[2][3] = field_B;
 }
 
 void ProjectionMatrix4f::SetAspectRatio(float aspect_ration)

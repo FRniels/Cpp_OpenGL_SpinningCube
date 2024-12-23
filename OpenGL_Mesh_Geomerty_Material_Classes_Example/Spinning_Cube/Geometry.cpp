@@ -70,41 +70,39 @@ std::vector<unsigned int> Geometry_Cube::cube_indices = // 36 indices, Counter c
 	// Cube order explanation: https://stackoverflow.com/questions/8142388/in-what-order-should-i-send-my-vertices-to-opengl-for-culling
 	// FRONT FACE:
 	// TRIANGLE 1:
-	1, 0, 7,       // Back Top right, Back top left, Back bottom left
+	2, 3, 4,       // Front top right,   Front top left,     Front bottom left
 	// TRIANGLE 2:
-	7, 6, 1,       // Back bottom left, Back bottom right, Back top right
+	4, 5, 2,       // Front bottom left, Front bottom right, Front top right
 
 	// BACK FACE:
 	// TRIANGLE 1:
-	2, 5, 4,       // Front Top right, Front botom right, Front bottom left
+	1, 6, 7,       // Back top right,   Back bottom right, Back bottom left
 	// TRIANGLE 2:
-	4, 3, 2,       // Front bottom left, Front top left, Front top right
+	7, 0, 1,       // Back bottom left, Back top left,     Back top right
 
 	// TOP FACE:
 	// TRIANGLE 1:
-	2, 3, 0,       // Front top right, Front top left, Back top left
+	1, 0, 3,       // Back top right, Back top left,   Front top left
 	// TRIANGLE 2:
-	0, 1, 2,       // Back top left, Back top right, Front top right
+	3, 2, 1,       // Front top left, Front top right, Back top right
 
 	// BOTTOM FACE: 
 	// TRIANGLE 1:
-	6, 7, 4,       // Back bottom right, Back bottom left, Front bottom left
+	6, 5, 4,       // Back bottom right, Front bottom right, Front bottom left
 	// TRIANGLE 2:
-	4, 5, 6,       // Front bottom left, Front bottom right, Back bottom right
+	4, 7, 6,       // Front bottom left, Back bottom left, Back bottom right
 
 	// RIGHT FACE:
 	// TRIANGLE 1:
-	2, 1, 6,       // Front top right, Back top right, Back bottom right
-	// 6, 1, 2,
+	1, 2, 5,       // Back top right,     Front top right,   Front bottom right
 	// TRIANGLE 2:
-	6, 5, 2,       // Back bottom right, Front bottom right, Front top right
-	// 2, 5, 6,
+	5, 6, 1,       // Front bottom right, Back bottom right, Back top right
 
 	// LEFT FACE:
 	// TRIANGLE 1:
-	0, 3, 4,	   // Back top left, Front top left, Front bottom left
+	3, 0, 7,	   // Front top left,   Back top left,     Back bottom left
 	// TRIANGLE 2:
-	4, 7, 0        // Front bottom left, Back bottom left, Back top left
+	7, 4, 3        // Back bottom left, Front bottom left, Front top left
 };
 
 std::vector<float> Geometry_Triangle3D::triangle_vertices = 

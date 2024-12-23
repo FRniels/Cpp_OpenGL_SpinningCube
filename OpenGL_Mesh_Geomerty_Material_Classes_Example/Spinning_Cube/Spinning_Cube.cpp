@@ -30,7 +30,7 @@ int main()
 	vec4f clear_color = { 0.2F, 0.2F, 0.2F, 0.0F };
 	Renderer renderer(clear_color);
 
-	Camera camera(90.0f, 0.2f, 10.0f, window.GetAspectRatio(), renderer.context); // TO DO: SET THE NEAR AND FAR FIELD
+	Camera camera(90.0f, 1.5f, 3.0f, window.GetAspectRatio(), renderer.context); // TO DO: SET THE NEAR AND FAR FIELD
 
 	ShaderManager shader_manager;
 
@@ -71,7 +71,7 @@ int main()
 	mesh_list.push_back(&triangle_3d_mesh);
 	mesh_list.push_back(&pyramid_mesh);
 
-
+	// TO DO: SOMETHINGS WRONG WITH THIS, IF I COMMENT IT OUT, THE RESULT IS AS EXPECTED. SOMETHING WRONG WITH THE INDICES ORDER ???
 	// FACE CULLING:
 	// When having a closed mesh, avoid running the fragment shader on all fragments that are back facing the camera.
 	// This to avoid unnecessary calculations and thus boost performance.

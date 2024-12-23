@@ -9,12 +9,13 @@ Taking my first footsteps into OpenGL programming.
   
 # Example order
 
-	1. GLFW Setup
-	2. GLEW Setup
-	3. OpenGL Error Handling
-	4. OpenGL Shaders
-	5. OpenGL Vertex/Element buffer
-	6. OpenGL Vertex Array Object
-	7. OpenGl Basic Object Transformations
-	8. OpenGL Perspective Projection
-	9. Main project: Spinning Cube
+	 1. GLFW Setup
+	 2. GLEW Setup
+	 3. OpenGL Error Handling
+	 4. OpenGL Shaders
+	 5. OpenGL Vertex/Element buffer
+	 6. OpenGL Vertex Array Object
+	 7. OpenGl Basic Object Transformations
+	 8. OpenGL Perspective Projection
+         9. OpenGL Mesh, Geometry, Material and Renderer
+	10. Main project: Spinning Cube

@@ -8,7 +8,6 @@ Taking my first footsteps into OpenGL programming.
   - OpenGL wrapper:       GLEW
   
 # Example order
-
 	1. GLFW Setup
 	2. GLEW Setup
 	3. OpenGL Error Handling

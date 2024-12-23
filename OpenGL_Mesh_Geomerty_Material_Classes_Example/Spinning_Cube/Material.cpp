@@ -54,3 +54,15 @@ Material::Material(vec4f color, float window_height, ShaderManager& shader_manag
 
 	shader_manager.UnbindShaderProgam();
 }
+
+void Material::Delete(ShaderManager& shader_manager)
+{
+	shader_manager.DeleteShader(shader_vert_handle);
+	shader_vert_handle = -1;
+
+	shader_manager.DeleteShader(shader_frag_handle);
+	shader_frag_handle = -1;
+
+	shader_manager.DeleteShaderProgram(shader_program_handle);
+	shader_program_handle = -1;
+}

@@ -3,33 +3,13 @@
 Geometry::Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indices)
 	: vertices(vertices), indices(indices)
 {
-	if (vertices != NULL && indices != NULL) // TO DO: USE THE ASSERT FROM THE ERROR HANDELING
-	{
-		InitBuffers();
-		InitVAO(/*false*/);
-		Unbind_GL_Buffers(); // Unbind all the GL buffers after their creation and initialisation.
-	}
-	else
-	{
-		std::cout << "Vertices buffer or Indices buffer can't be NULL!" << std::endl;
-	}
+	ASSERT(vertices != NULL);
+	ASSERT(indices != NULL);
+	
+	InitBuffers();
+	InitVAO();
+	Unbind_GL_Buffers(); // Unbind all the GL buffers after their creation and initialisation.
 }
-
-//Geometry::Geometry(std::vector<float>* vertices, bool contains_color_vec4, std::vector<unsigned int>* indices)
-//	: vertices(vertices), indices(indices)
-//{
-//	if (vertices != NULL && indices != NULL)
-//	{
-//		InitBuffers();
-//		InitVAO(/*true*/);
-//		Unbind_GL_Buffers(); // Unbind all the GL buffers after their creation and initialisation.
-//	}
-//	else
-//	{
-//		std::cout << "Vertices buffer or Indices buffer can't be NULL!" << std::endl;
-//	}
-//}
-
 
 void Geometry::InitBuffers()
 {
@@ -37,14 +17,9 @@ void Geometry::InitBuffers()
 	buffer_indices.Init(&(indices->front()), indices->size());
 }
 
-void Geometry::InitVAO(/*bool contains_color_vec4*/)
+void Geometry::InitVAO()
 {
 	buffer_vertices_layout.Push<float>(3);	    // Push the amount of floats per vertex that are used for the vertex position
-
-	/*if (contains_color_vec4)
-		buffer_vertices_layout.Push<float>(4);	// Push the amount of floats per vertex that are used for the vertex color
-	*/
-
 	vertex_array.AddBuffer(buffer_vertices, buffer_vertices_layout);
 }
 

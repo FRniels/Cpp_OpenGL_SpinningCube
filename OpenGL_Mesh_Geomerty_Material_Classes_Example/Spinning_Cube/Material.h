@@ -28,7 +28,10 @@ public:
 	Material(vec4f color, float window_height, ShaderManager& shader_manager, const std::string& vert_shader_src, const std::string& frag_shader_src);
 	~Material() {}
 
+	inline GL_Uniform_Handle_t GetShaderProgramHandle() const { return shader_program_handle; }
+
 	inline void Bind(ShaderManager& shader_manager) const { shader_manager.UseShaderProgram(shader_program_handle); }
+	void Delete(ShaderManager& shader_manager);
 };
 
 #endif // MATERIAL_H

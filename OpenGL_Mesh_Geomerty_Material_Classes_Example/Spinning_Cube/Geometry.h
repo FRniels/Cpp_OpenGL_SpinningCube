@@ -1,6 +1,7 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+#include "GL_ErrorHandeling.h"
 #include "GL_VertexArray.h"
 #include "GL_Buffers.h"
 #include "GL_VertexBufferLayout.h"
@@ -21,14 +22,8 @@ protected:
 public:
 	// This constructor unbinds all the GL buffers belonging to this geometry from the GL context after their creation and initialisation.
 	Geometry(std::vector<float>* vertices, std::vector<unsigned int>* indices);
-
-	// Supports color data defined inside the vertices array, example: vec3 position followed by vec4 color
-	//																  -0.5f, 0.0f, 0.0f, 0.5F, 0.5F, 0.2F, 0.0F
-	// Geometry(std::vector<float>* vertices, bool contains_color_vec4, std::vector<unsigned int>* indices); // DON'T NOW IF THIS CONSTRUCTOR IS TO STAY, THIS IS MAINLY USED FOR THE FLOOR PLANE FOR NOW!
-
 	~Geometry() {}
-
-	// inline unsigned int GetIndicesCount() const { return buffer_indices.GetCount(); } 
+ 
 	inline unsigned int GetIndicesCount() const { return indices->size(); }
 
 	/*inline void Unbind_GL_VAO()
@@ -40,7 +35,7 @@ public:
 
 private:
 	void InitBuffers();
-	void InitVAO(/*bool contains_color_vec4*/);
+	void InitVAO();
 
 	// IMPORTANT: Always unbind the vao before unbinding the associated vertex/element buffer. If the vertex/element buffer is unbound before 
 	//            the vao is unbound, the vertex/element will be unbound from the vao, thus the vao will not have the vertex/element buffer bound to it anymore.

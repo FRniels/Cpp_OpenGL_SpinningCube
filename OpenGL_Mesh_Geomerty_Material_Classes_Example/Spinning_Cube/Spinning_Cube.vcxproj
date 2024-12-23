@@ -135,7 +135,6 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Geometry.cpp" />
-    <ClCompile Include="GL_Draw.cpp" />
     <ClCompile Include="GL_ElementBuffer.cpp" />
     <ClCompile Include="GL_ErrorHandeling.cpp" />
     <ClCompile Include="GL_Shaders.cpp" />
@@ -154,7 +153,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="GL_Buffers.h" />
-    <ClInclude Include="GL_Draw.h" />
     <ClInclude Include="GL_ErrorHandeling.h" />
     <ClInclude Include="GL_Shaders.h" />
     <ClInclude Include="GL_Uniform.h" />

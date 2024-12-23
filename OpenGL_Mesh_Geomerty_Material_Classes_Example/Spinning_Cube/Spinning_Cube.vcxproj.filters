@@ -24,9 +24,6 @@
     <ClCompile Include="GL_Shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GL_Draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Gl_VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GL_User_Types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GL_Draw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GL_Buffers.h">

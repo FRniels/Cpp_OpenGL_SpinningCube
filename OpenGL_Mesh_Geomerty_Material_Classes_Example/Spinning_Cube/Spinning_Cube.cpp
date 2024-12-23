@@ -17,7 +17,6 @@
 #include "GL_Shaders.h"
 
 #include "Renderer.h"
-#include "GL_Draw.h"
 #include "Timer.h"
 
 
@@ -31,7 +30,7 @@ int main()
 	vec4f clear_color = { 0.2F, 0.2F, 0.2F, 0.0F };
 	Renderer renderer(clear_color);
 
-	Camera camera(90.0f, window.GetAspectRatio(), renderer.context); // TO DO: SET THE NEAR AND FAR FIELD
+	Camera camera(90.0f, 0.2f, 10.0f, window.GetAspectRatio(), renderer.context); // TO DO: SET THE NEAR AND FAR FIELD
 
 	ShaderManager shader_manager;
 
@@ -144,17 +143,13 @@ int main()
 	}
 
 	// Clean-up:
-	floor_plane.Delete_GL_Buffers();
-	// shader_manager.DeleteShaderProgram(shader_program_floor); // TO DO: FIX THIS
+	floor_plane.Delete(shader_manager);
 
-	cube_mesh.Delete_GL_Buffers();
-	// shader_manager.DeleteShaderProgram(shader_program_cube); // TO DO: FIX THIS
+	cube_mesh.Delete(shader_manager);
 
-	triangle_3d_mesh.Delete_GL_Buffers();
-	// shader_manager.DeleteShaderProgram(shader_program_triangle); // TO DO: FIX THIS
+	triangle_3d_mesh.Delete(shader_manager); 
 
-	pyramid_mesh.Delete_GL_Buffers();
-	// shader_manager.DeleteShaderProgram(shader_program_pyramid); // TO DO: FIX THIS
+	pyramid_mesh.Delete(shader_manager);
 
 	window.Exit();
 

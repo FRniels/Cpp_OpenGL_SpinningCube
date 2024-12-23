@@ -1,5 +1,5 @@
-#ifndef GL_SHADER_PROGRAM
-#define GL_SHADER_PROGRAM
+#ifndef GL_SHADER_PROGRAM_H
+#define GL_SHADER_PROGRAM_H
 
 #include <string>
 #include <unordered_map>
@@ -53,51 +53,4 @@ private:
 	unsigned int CompileShader(unsigned int type, std::string& source) const;	   // Returns the OpenGL shader obj handle.
 };
 
-
-class ShaderProgram
-{
-private:
-	unsigned int handle = 0;
-
-	GL_Uniform_Handle_t vert_shader    = -1;
-	GL_Uniform_Handle_t frag_shader    = -1;
-	GL_Uniform_Handle_t shader_program = -1;
-
-	// SHADER UNIFORMS ARE INITIALISED (HARCODED) INSIDE GL_Shaders.cpp
-	// NOTE: FOR NOW, EVERY SHADER HAS TO OBEY THIS UNIFORM LAYOUT. LATER FEATURE IS TO ALLOW FOR OBJECT SPECIFIC SHADER UNIFORM LAYOUTS
-	static const std::string u_transformation_mat_name;
-	GL_Uniform_Handle_t u_transformation_mat_loc = 0;
-
-	static const std::string u_projection_mat_name;
-	GL_Uniform_Handle_t u_projection_mat_loc = 0;
-
-	static const std::string u_color_name;
-	GL_Uniform_Handle_t u_color_vec4f_loc = 0;
-
-	static const std::string u_window_height_name;
-	GL_Uniform_Handle_t u_window_height_1f_loc = 0;
-
-public:
-	ShaderProgram(unsigned int program_handle) : handle(program_handle) {}
-	ShaderProgram(unsigned int program_handle, const Matrix4f& trans_mat, const Matrix4f& proj_mat, float window_height, vec4f color); // NOT SURE IF THIS CONSTRUCTOR IS TO STAY, IN THE CASE FOR THIS STATIC SHADER UNIFORM LAYOUT IT COULD STAY
-	~ShaderProgram() {}
-
-	unsigned int GetHandle() const { return handle; }
-
-	// TO DO: THESE METHODS SHOULD BE REMOVED AS I THINK IT BELONGS MORE TO THE SHADER MANAGER THAN THE PROGRAM ITSELF. THIS CLASS SHOULD BE MORE OF A DATA STRUCT.
-	void SetUniform1f(   GL_Uniform_Handle_t u_Location, float			data);
-	void SetUniform4f(   GL_Uniform_Handle_t u_Location, vec4f           data);
-	void SetUniformMat4f(GL_Uniform_Handle_t u_Location, const Matrix4f& mat4f);
-
-	// GETTERS: THE SHADER LAYOUT IS HARDCODED FOR NOW. DO THESE INLINE GETTERS ADD A OVERHEAD ???
-	inline GL_Uniform_Handle_t GetTransformationMatLoc() const { return u_transformation_mat_loc; }
-	inline GL_Uniform_Handle_t GetProjectionMatLoc()     const { return u_projection_mat_loc; }
-	inline GL_Uniform_Handle_t GetColorLoc()             const { return u_color_vec4f_loc; }
-	inline GL_Uniform_Handle_t GetWindowHeightLoc()      const { return u_window_height_1f_loc; }
-
-private:
-	// TO DO: THIS METHOD SHOULD BE REMOVED AS I THINK IT BELONGS MORE TO THE SHADER MANAGER THAN THE PROGRAM ITSELF. THIS CLASS SHOULD BE MORE OF A DATA STRUCT.
-	GL_Uniform_Handle_t GetUniformByName(const std::string& u_Name) const;
-};
-
-#endif  // GL_SHADER_PROGRAM
+#endif  // GL_SHADER_PROGRAM_H

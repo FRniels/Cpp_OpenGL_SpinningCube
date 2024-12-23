@@ -17,6 +17,8 @@ void GL_ElementBuffer::Init(const unsigned int* data, unsigned int count)
 	{
 		ASSERT(sizeof(unsigned int) == sizeof(GLuint)); // Check if a GLuint is the same size as an unsigned int, else break -> 99.99% it will be the same
 
+		m_Count = count;
+
 		GL_Call(glGenBuffers(1, &handle));
 		GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle));
 		GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW));

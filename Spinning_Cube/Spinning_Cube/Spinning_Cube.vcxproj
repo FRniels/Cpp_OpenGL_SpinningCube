@@ -134,39 +134,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Cube.cpp" />
-    <ClCompile Include="GL_Draw.cpp" />
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GL_ElementBuffer.cpp" />
     <ClCompile Include="GL_ErrorHandeling.cpp" />
-    <ClCompile Include="GL_ShaderProgram.cpp" />
+    <ClCompile Include="GL_Shaders.cpp" />
     <ClCompile Include="GL_Uniform.cpp" />
     <ClCompile Include="GL_VertexArray.cpp" />
     <ClCompile Include="Gl_VertexBuffer.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Math_Types.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Plane.cpp" />
-    <ClCompile Include="Pyramid.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Spinning_Cube.cpp" />
-    <ClCompile Include="Triangle_3D.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="GL_Buffers.h" />
-    <ClInclude Include="GL_Draw.h" />
     <ClInclude Include="GL_ErrorHandeling.h" />
-    <ClInclude Include="GL_ShaderProgram.h" />
+    <ClInclude Include="GL_Shaders.h" />
     <ClInclude Include="GL_Uniform.h" />
     <ClInclude Include="GL_User_Types.h" />
     <ClInclude Include="GL_VertexArray.h" />
     <ClInclude Include="GL_VertexBufferLayout.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Math_Types.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="Primitive_Shapes2D.h" />
-    <ClInclude Include="Primitive_Shapes3D.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />

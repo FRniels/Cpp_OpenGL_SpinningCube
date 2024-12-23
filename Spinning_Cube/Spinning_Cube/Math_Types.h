@@ -120,10 +120,11 @@ public:
 	ProjectionMatrix4f() {}
 	~ProjectionMatrix4f() {}
 
-	void SetProjectionMatrix(float fov_degrees, float aspect_ration);
+	void SetProjectionMatrix(float fov_degrees, float near_field, float far_field, float aspect_ration);
 
 private:
 	void SetFOV(float fov_degrees);
+	void SetNearFarField(float near_field, float far_field);
 	void SetAspectRatio(float aspect_ration);
 };
 

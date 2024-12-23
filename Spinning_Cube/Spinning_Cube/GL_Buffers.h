@@ -57,6 +57,8 @@ public:
 
 	static void Unbind();
 
+	inline unsigned int GetCount() const { return m_Count; }
+
 	void Delete() const;
 
 	void Print() const;

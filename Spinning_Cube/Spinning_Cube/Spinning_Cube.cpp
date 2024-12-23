@@ -12,88 +12,65 @@
 #include "GL_User_Types.h" 
 #include "Math_Types.h"
 #include "GL_ErrorHandeling.h"
-#include "GL_ShaderProgram.h"
-#include "GL_VertexArray.h"
-#include "GL_Buffers.h"
-#include "GL_VertexBufferLayout.h"
-#include "GL_Draw.h"
+
+#include "Mesh.h"
+#include "GL_Shaders.h"
+
+#include "Renderer.h"
 #include "Timer.h"
 
-#include "Primitive_Shapes2D.h"
-#include "Primitive_Shapes3D.h"
 
 // TO DO: IF THE USER ALREADY SET A ROTATION MATRIX AND TRIES TO CHANGE THE AXIS OF THE SAME INSTANCE, RESET THE CURRENT ROTATION MATRIX BEFORE SETTING THE NEW VALUES!
 
-void Render(void);
 
 int main()
 {
-	Window window(1500, 800, "Spinning cube"); 
+	Window window(1500, 1200, "Spinning cube"); 
 
-	Camera camera(90.0f, window.GetAspectRatio());
-	// PROJECTION: COMMON PROJECTION MATRIX FOR ALL OBJECTS
-	ProjectionMatrix4f projection_mat = camera.projection_mat; // TO DO: THIS IS JUST A QUICK TEST TO SEE IF THE ASPECT RATIO WORKS => ASPECT RATIO TESTED AND WORKS!
+	vec4f clear_color = { 0.2F, 0.2F, 0.2F, 0.0F };
+	Renderer renderer(clear_color);
+
+	// Note: The near and far field are chosen to clip the current scene both on the near and the far field as a demonstration.
+	Camera camera(90.0f, 1.5f, 3.0f, window.GetAspectRatio(), renderer.context); 
+
+	ShaderManager shader_manager;
 
 
-	ShaderProgramManager shader_prog_manager;
-
-
-	Plane floor_plane;
-	vec3f floor_color = { 0.457f, 0.102f, 0.199f }; // THIS COLOR IS NOT USED AND SERVES ONLY TO PLEASE THE CURRENT SHADER IMPLEMENTATION. THE VERTICES INCLUDE COLOR DATA THAT IS USED INSIDE THE SHADER
+	Geometry_Plane floor_geometry;
+	vec4f floor_color = { 1.0f, 0.388f, 0.278f, 0.4f };
+	Material floor_material(floor_color, shader_manager, "../Resources/Shaders/Floor.vert", "../Resources/Shaders/Floor.frag");
+	Mesh floor_plane(&floor_geometry, &floor_material);
 	floor_plane.transform.Scale(3.0f, 3.0f, 1.0f);
 	floor_plane.transform.Rotate(90.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
 	floor_plane.transform.Translate(0.0f, -0.75f, 2.5f);
-	
-	// NOTE: THE SHADER CONSTRUCTOR RETRIEVES THE SHADER HANDLE BY NAME AND SETS THE UNIFORM TO THE PASSED VALUES, THIS MEANS THAT THE SHADER PROGRAM NEEDS TO BE BOUND 
-	//       BY CALLING UseShaderProgram() BEFORE CREATING A SHADER INSTANCE!
-	//       THE REQUIRED UNIFORM VALUES CAN BE SET BEFORE OR AFTER CREATING THE SHADER INSTANCE, BUT A DEFAULT VALUE NEEDS TO BE PROVIDED!
-	unsigned int shader_program_floor = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Floor.shader");
-	shader_prog_manager.UseShaderProgram(shader_program_floor);
-	Shader shader_floor(shader_program_floor, floor_plane.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), floor_color);
-
-	floor_plane.Unbind_AllBuffers();
-	ShaderProgramManager::UnbindShaderProgam();
 
 
-
-	Cube cube;
-	vec3f cube_color = { 0.0f, 0.5f, 0.5f };
-	cube.transform.Translate(0.75f, 0.0f, 3.25f);
-
-	unsigned int shader_program_cube = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Cube.shader");
-	shader_prog_manager.UseShaderProgram(shader_program_cube);
-	Shader shader_cube(shader_program_cube, cube.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), cube_color);
-
-	cube.Unbind_AllBuffers();
-	ShaderProgramManager::UnbindShaderProgam();
+	Geometry_Cube cube_geometry;
+	vec4f cube_color = { 0.235f, 0.702f, 0.443f, 0.0f };
+	Material cube_material(cube_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Cube.vert", "../Resources/Shaders/Cube.frag");
+	Mesh cube_mesh(&cube_geometry, &cube_material);
+	cube_mesh.transform.Translate(0.75f, 0.0f, 3.25f);
 
 
-
-	Triangle_3D triangle_3d;
-	vec3f triangle_color = { 0.0f, 0.5f, 0.5f };
-	triangle_3d.transform.Translate(-0.75f, 0.0f, 1.75f);
-
-	unsigned int shader_program_triangle = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Triangle.shader");  
-	shader_prog_manager.UseShaderProgram(shader_program_triangle);
-	Shader shader_triangle(shader_program_triangle, triangle_3d.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), triangle_color);
-
-	triangle_3d.Unbind_AllBuffers();
-	ShaderProgramManager::UnbindShaderProgam();
+	Geometry_Triangle3D triangle_3d_geometry;
+	vec4f triangle_color = { 0.416f, 0.353f, 0.804f, 0.0f };
+	Material triangle_material(triangle_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Triangle.vert", "../Resources/Shaders/Triangle.frag");
+	Mesh triangle_3d_mesh(&triangle_3d_geometry, &triangle_material);
+	triangle_3d_mesh.transform.Translate(-0.75f, 0.0f, 1.75f);
 
 
-
-	Pyramid pyramid;
-	vec3f pyramid_color = { 0.0f, 0.5f, 0.5f };
-	pyramid.transform.Translate(0.75f, 0.0f, 1.75f);
-
-	unsigned int shader_program_pyramid = shader_prog_manager.CreateShaderProgram("../Resources/Shaders/Pyramid.shader"); 
-	shader_prog_manager.UseShaderProgram(shader_program_pyramid);
-	Shader shader_pyramid(shader_program_pyramid, pyramid.transform.GetTransformationMatrix(), projection_mat, window.GetWindowHeight(), pyramid_color);
-
-	pyramid.Unbind_AllBuffers();
-	ShaderProgramManager::UnbindShaderProgam();
+	Geometry_Pyramid pyramid_geometry;
+	vec4f pyramid_color = { 0.0f, 0.5f, 0.5f, 0.0f };
+	Material pyramid_material(pyramid_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Pyramid.vert", "../Resources/Shaders/Pyramid.frag");
+	Mesh pyramid_mesh(&pyramid_geometry, &pyramid_material);
+	pyramid_mesh.transform.Translate(0.75f, 0.0f, 1.75f);
 
 
+	std::vector<Mesh*> mesh_list;
+	mesh_list.push_back(&floor_plane);
+	mesh_list.push_back(&cube_mesh);
+	mesh_list.push_back(&triangle_3d_mesh);
+	mesh_list.push_back(&pyramid_mesh);
 
 	// FACE CULLING:
 	// When having a closed mesh, avoid running the fragment shader on all fragments that are back facing the camera.
@@ -108,14 +85,8 @@ int main()
 	// Accept fragment if it closer to the camera than the former one
 	// glDepthFunc(GL_LESS);
 
-
 	
-	// SET SCREEN CLEAR COLOR
-	// vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F };
-	vec4f clear_color = { 0.2F, 0.2F, 0.2F, 0.0F };
-	glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]);
-	
-	// RENDER LOOP 
+	// UPDATE / RENDER LOOP 
 	float rotation_y_cube	    = 0.0f; 
 	float rotation_y_triangle   = 0.0f;
 	float rotation_y_pyramid    = 0.0f;
@@ -126,112 +97,61 @@ int main()
 
 	window.InitTime();
 
-	while (!window.ShouldWindowClose())              // Loop until the user closes the window
+	// Loop until the user closes the window
+	while (!window.ShouldWindowClose()) 
 	{
 		window.UpdateTime();
 
-		GL_Call(glClear(GL_COLOR_BUFFER_BIT));
-
-		// RENDER THE FLOOR
-		floor_plane.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_floor);
-		// ORIGNAL ONE COLOR FLOOR PLANE
-		// GL_Call(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr));   // TO DO: GET THE INDEX COUNT FROM THE ELEMENT BUFFER ITSELF THAT IS BEING DRAWN => THE DRAW CALLS SHOULD BE ABSTRACTED IN A RENDERER CLASS IN THE FUTURE!
-		floor_plane.Unbind_VAO();
-		ShaderProgramManager::UnbindShaderProgam();
-
-
-		// TRANSFORM AND RENDER THE CUBE:
-		// Bind the required/necesarry/application specific vao and shader program to the OpenGL context before drawing. => In this case, the vao and shader program stay the same thus is would be unnecessarry to perform these gl calls each iteration.
-		cube.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_cube);
-
+		// TRANSFORM THE CUBE:
 		if (cube_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_cube;
-			cube.transform.Rotate(rotation_y_cube, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
-			shader_cube.SetUniformMat4f(shader_cube.GetTransformationMatLoc(), cube.transform.GetTransformationMatrix());
-
+			cube_mesh.transform.Rotate(rotation_y_cube, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 			cube_timer.Reset();
 		}
 
-		GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		cube.Unbind_VAO();
-		ShaderProgramManager::UnbindShaderProgam();
 
-
-		// TRANSFORM AND RENDER THE TRIANGLE:
-		triangle_3d.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_triangle);
-
+		// TRANSFORM THE TRIANGLE:
 		if (triangle_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_triangle;
-			triangle_3d.transform.Rotate(rotation_y_triangle, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
-			shader_triangle.SetUniformMat4f(shader_triangle.GetTransformationMatLoc(), triangle_3d.transform.GetTransformationMatrix());
-
+			triangle_3d_mesh.transform.Rotate(rotation_y_triangle, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 			triangle_timer.Reset();
 		}
 
-		GL_Call(glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		triangle_3d.Unbind_VAO();
-		ShaderProgramManager::UnbindShaderProgam();
 
-		// TRANSFORM AND RENDER THE PYRAMID:
-		pyramid.Bind();
-		shader_prog_manager.UseShaderProgram(shader_program_pyramid);
-
+		// TRANSFORM THE PYRAMID:
 		if (pyramid_timer.IsTimerExpired())
 		{
 			// std::cout << "Translation timer expired. Reset timer." << std::endl;
 			++rotation_y_pyramid;
-			pyramid.transform.Rotate(rotation_y_pyramid, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
+			pyramid_mesh.transform.Rotate(rotation_y_pyramid, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
 			++translation_y_Pyramid;
-			pyramid.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), 1.75f); // Translate the pyramid up and down over the Y-axis in the Y-range [-0.5, 0.5]
-			shader_pyramid.SetUniformMat4f(shader_pyramid.GetTransformationMatLoc(), pyramid.transform.GetTransformationMatrix());
+			pyramid_mesh.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), 1.75f); // Translate the pyramid up and down over the Y-axis in the Y-range [-0.5, 0.5]
 
 			pyramid_timer.Reset();
 		}
 
-		GL_Call(glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, nullptr)); // TO DO: RETRIEVE THE INDEX COUNT FROM THE ELEMENT BUFFER 
-		pyramid.Unbind_VAO();
-		ShaderProgramManager::UnbindShaderProgam();
-
-
-		// ORIGINAL
-		// Render();									 // Render the scene
+		renderer.ClearScreen();
+		renderer.Render(mesh_list, shader_manager);
 
 		window.SwapBuffers();
-
 		window.PollEvents();
 	}
 
 	// Clean-up:
-	floor_plane.DeleteGLObjects();
-	shader_prog_manager.DeleteShaderProgram(shader_program_floor);
+	floor_plane.Delete(shader_manager);
 
-	cube.DeleteGLObjects();
-	shader_prog_manager.DeleteShaderProgram(shader_program_cube);
+	cube_mesh.Delete(shader_manager);
 
-	triangle_3d.DeleteGLObjects();
-	shader_prog_manager.DeleteShaderProgram(shader_program_triangle);
+	triangle_3d_mesh.Delete(shader_manager); 
 
-	pyramid.DeleteGLObjects();
-	shader_prog_manager.DeleteShaderProgram(shader_program_pyramid);
+	pyramid_mesh.Delete(shader_manager);
 
 	window.Exit();
 
     return 0;
-}
-
-void Render(void) // TO DO: MOVE SETTING THE CLEARCOLOR, CLEARING AND RENDERING TO THE WINDOW CLASS ??
-{
-	vec4f clear_color = { 0.996F, 0.54F, 0.094F, 0.0F }; // TO DO: Setting the clear color is happening each call to Render() => This should only happen when a change in color needs to occur!
-	GL_ClearScreen(clear_color); // NEW: NOW CLEARS THE DEPTH BUFFER EACH FRAME => COMMENTED OUT
-
-	GL_Call(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr)); // Draw the current bound vertex buffer using the indices specified in the element buffer
 }

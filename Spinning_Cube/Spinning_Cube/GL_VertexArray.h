@@ -12,6 +12,7 @@ private:
 	unsigned int id;
 
 public:
+	// Note: The constructor binds the newly created vertex array object to the OpenGL context.
 	GL_Vertex_Array();
 	~GL_Vertex_Array();
 

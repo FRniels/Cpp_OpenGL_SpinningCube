@@ -15,7 +15,7 @@ GL_VertexBuffer::~GL_VertexBuffer()
 	GL_Call(glDeleteBuffers(1, &handle));
 }
 
-void GL_VertexBuffer::Init(const void* data, int size) // TO DO: THE INIT FUNCTION CAN NOT BE CALLED AFTER USING THE PARAMETRIZED CONSTRUCTOR, THIS WOULD CREATE A NEW OPENGL BUFFER INSTEAD OF INITIALIZING THE EXISTING ONE!
+void GL_VertexBuffer::Init(const void* data, int size) 
 {
 	if (is_initialised == false)
 	{

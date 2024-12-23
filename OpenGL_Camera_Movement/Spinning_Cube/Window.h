@@ -29,18 +29,19 @@ public:
 	void InitTime()						{ window_time.Init(); }
 	void UpdateTime()					{ window_time.Update(); }
 	const Time_t& GetWindowTime() const { return window_time;  }
-	void SwapBuffers();													// Swap front and back buffers 
-	void PollEvents();													// Poll and process events
+	void SwapBuffers();			  // Swap front and back buffers 
+	void PollEvents();			  // Poll and process events
 	bool ShouldWindowClose();
 	int  Exit();
 	inline GLFWwindow* GetWindow() const { return window; }
 
 private:
-	void SetResizeCallback();
-	void GetWindowDimensions();
 	void InitGLEW();			 // Initialize GLEW: FIRST THERE NEEDS TO BE A VALID OPENGL CONTEXT!!! CALL THIS AFTER THE CONTEXT CREATION 
+	void GetWindowDimensions();
 
+	void SetWindowCallbacks();
 	static void Callback_Resize(GLFWwindow* window, int width, int height);
+	static void Callback_Key(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
 
 inline void Window::SwapBuffers()

@@ -28,7 +28,7 @@ Window::Window(int width, int height, const std::string& title)
 	// glfw accepts 1 user pointer to whatever the user likes. This pointer is retained until the glfw window is destroyed.
 	// To be able to access this specific Window class instance from the glfw callbacks, the pointer of this specific class instance is set as the user pointer.
 	glfwSetWindowUserPointer(window, this); 
-	SetResizeCallback();
+	SetWindowCallbacks();
 
 	InitGLEW();	// Initialize GLEW: FIRST THERE NEEDS TO BE A VALID OPENGL CONTEXT!!! CALL THIS AFTER THE CONTEXT CREATION 
 }
@@ -45,9 +45,11 @@ int Window::Exit()
 	return -1;
 }
 
-void Window::SetResizeCallback()
+
+void Window::SetWindowCallbacks()
 {
 	glfwSetWindowSizeCallback(window, Callback_Resize);
+	glfwSetKeyCallback(window, Callback_Key);
 }
 
 void Window::GetWindowDimensions()
@@ -75,7 +77,28 @@ void Window::Callback_Resize(GLFWwindow* window, int width, int height)
 	this_window->aspect_ratio = (float)width / (float)height;
 
 	std::cout << "Window width: " << this_window->width << " Window height: " << this_window->height << " Aspect ratio: " << this_window->aspect_ratio << std::endl;
+}
 
-	// TO DO: THE CALLBACK HAS NO ACCESS TO THE SHADER PROGRAM => SOLVE THIS
-	// SetUniform1f(shader_program, "uWindow_Height", height);
+void Window::Callback_Key(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (action == GLFW_PRESS)
+	{
+		switch (key)
+		{
+		case GLFW_KEY_UP:
+			std::cout << "Up key pressed" << std::endl;
+			break;
+		case GLFW_KEY_DOWN:
+			std::cout << "Down key pressed" << std::endl;
+			break;
+		case GLFW_KEY_LEFT:
+			std::cout << "Left key pressed" << std::endl;
+			break;
+		case GLFW_KEY_RIGHT:
+			std::cout << "Right key pressed" << std::endl;
+			break;
+		default:
+			break;
+		}
+	}
 }

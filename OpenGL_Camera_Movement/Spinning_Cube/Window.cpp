@@ -69,11 +69,9 @@ void Window::InitGLEW()
 void Window::Callback_Resize(GLFWwindow* window, int width, int height)
 {
 	Window* this_window = (Window*)glfwGetWindowUserPointer(window);
-
-	// this_window->are_dimensions_changed = true;
-
-	this_window->width  = width;
-	this_window->height = height;
+	 
+	this_window->width        = width;
+	this_window->height       = height;
 	this_window->aspect_ratio = (float)width / (float)height;
 
 	std::cout << "Window width: " << this_window->width << " Window height: " << this_window->height << " Aspect ratio: " << this_window->aspect_ratio << std::endl;

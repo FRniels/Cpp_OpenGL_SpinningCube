@@ -2,6 +2,8 @@
 #define CAMERA_H
 
 #include <string.h>
+#include "GL/glew.h" 
+#include "GLFW/glfw3.h"
 #include "Math_Types.h"
 #include "Renderer.h"
 
@@ -25,11 +27,15 @@ public:
 
 	inline void SetPosition(vec3f position) 
 	{ 
-		memcmp(this->position, position, 3 * sizeof(float)); 
+		memcpy(this->position, position, sizeof(vec3f));
 		view_matrix.SetWorldTranslation(position);
 	}; 
+	// void SetPosition(vec3f position);
 
 	void UpdateProjectionMatrix(float FOV, float near_field, float far_field, float window_aspect_ratio);
+
+	// Callback to register with the GLFW Key callback ( Set the callback using the window class method void SetKeyCallback(KeyCallback callback) )
+	void Callback_Key(int key, int scancode, int action, int mods);
 };
 
 #endif // CAMERA_H

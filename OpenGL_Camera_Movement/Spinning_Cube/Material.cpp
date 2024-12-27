@@ -34,7 +34,7 @@ Material::Material(vec4f color, ShaderManager& shader_manager, const std::string
 Material::Material(vec4f color, float window_height, ShaderManager& shader_manager, const std::string& vert_shader_src, const std::string& frag_shader_src)
 {
 	// Save the passed uniform values
-	memcpy(u_color_value, color, 4 * sizeof(float));
+	memcpy(u_color_value, color, sizeof(vec4f));
 	u_window_height_value = window_height;
 
 	// Create the shader program

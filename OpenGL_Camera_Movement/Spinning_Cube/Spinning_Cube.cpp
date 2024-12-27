@@ -31,8 +31,8 @@ int main()
 	Renderer renderer(clear_color);
 
 	// Note: The near and far field are chosen to clip the current scene both on the near and the far field as a demonstration.
-	vec3f camera_position = { 0.0f, 0.0f, -1.0f }; // Move tge camera back 1unit along the N-axis, which is the world Z-axis in this case because the camera is not rotated.
-	Camera camera(90.0f, 1.5f, 3.0f, window.GetAspectRatio(), renderer.context); 
+	vec3f camera_position = { 0.35f, 0.25f, -2.5f }; // Move the camera back 1unit along the N-axis, which is the world Z-axis in this case because the camera is not rotated.
+	Camera camera(90.0f, 0.2f, 8.0f, window.GetAspectRatio(), renderer.context); 
 	camera.SetPosition(camera_position);
 
 	ShaderManager shader_manager;
@@ -44,28 +44,32 @@ int main()
 	Mesh floor_plane(&floor_geometry, &floor_material);
 	floor_plane.transform.Scale(3.0f, 3.0f, 1.0f);
 	floor_plane.transform.Rotate(90.0f, GL_ROTATION_AXIS::GL_ROTATION_X_AXIS);
-	floor_plane.transform.Translate(0.0f, -0.75f, 2.5f);
+	// floor_plane.transform.Translate(0.0f, -0.75f, 2.5f);
+	floor_plane.transform.Translate(0.0f, -0.75f, 0.0f);
 
 
 	Geometry_Cube cube_geometry;
 	vec4f cube_color = { 0.235f, 0.702f, 0.443f, 0.0f };
 	Material cube_material(cube_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Cube.vert", "../Resources/Shaders/Cube.frag");
 	Mesh cube_mesh(&cube_geometry, &cube_material);
-	cube_mesh.transform.Translate(0.75f, 0.0f, 3.25f);
+	// cube_mesh.transform.Translate(0.75f, 0.0f, 3.25f);
+	cube_mesh.transform.Translate(0.75f, 0.0f, 0.75f);
 
 
 	Geometry_Triangle3D triangle_3d_geometry;
 	vec4f triangle_color = { 0.416f, 0.353f, 0.804f, 0.0f };
 	Material triangle_material(triangle_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Triangle.vert", "../Resources/Shaders/Triangle.frag");
 	Mesh triangle_3d_mesh(&triangle_3d_geometry, &triangle_material);
-	triangle_3d_mesh.transform.Translate(-0.75f, 0.0f, 1.75f);
+	// triangle_3d_mesh.transform.Translate(-0.75f, 0.0f, 1.75f);
+	triangle_3d_mesh.transform.Translate(-0.75f, 0.0f, -0.75f);
 
 
 	Geometry_Pyramid pyramid_geometry;
 	vec4f pyramid_color = { 0.0f, 0.5f, 0.5f, 0.0f };
 	Material pyramid_material(pyramid_color, window.GetWindowHeight(), shader_manager, "../Resources/Shaders/Pyramid.vert", "../Resources/Shaders/Pyramid.frag");
 	Mesh pyramid_mesh(&pyramid_geometry, &pyramid_material);
-	pyramid_mesh.transform.Translate(0.75f, 0.0f, 1.75f);
+	// pyramid_mesh.transform.Translate(0.75f, 0.0f, 1.75f);
+	pyramid_mesh.transform.Translate(0.75f, 0.0f, -0.75f);
 
 
 	std::vector<Mesh*> mesh_list;
@@ -132,7 +136,8 @@ int main()
 			pyramid_mesh.transform.Rotate(rotation_y_pyramid, GL_ROTATION_AXIS::GL_ROTATION_Y_AXIS);
 
 			++translation_y_Pyramid;
-			pyramid_mesh.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), 1.75f); // Translate the pyramid up and down over the Y-axis in the Y-range [-0.5, 0.5]
+			// pyramid_mesh.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), 1.75f); // Translate the pyramid up and down over the Y-axis in the Y-range [-0.5, 0.5]
+			pyramid_mesh.transform.Translate(0.75f, (sin(TO_RADIANS(translation_y_Pyramid)) / 2.0f), -0.75f);
 
 			pyramid_timer.Reset();
 		}

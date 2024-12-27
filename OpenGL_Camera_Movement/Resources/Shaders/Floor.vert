@@ -8,10 +8,12 @@ layout(location = 0) in vec3 position; 	// Changed the type to vec3 instead of t
 // layout(location = 1) in vec4 color;
 
 uniform mat4 u_Transformation_mat;
+uniform mat4 u_View_mat;
 uniform mat4 u_Projection_mat;
 
 void main()      
 {	
 	vec4 transformed_vertex = u_Transformation_mat * vec4(position, 1.0);
-	gl_Position = u_Projection_mat * transformed_vertex;						    // Project the transformed vertex
+	// gl_Position = u_Projection_mat * transformed_vertex;						    // Project the transformed vertex
+	gl_Position = u_Projection_mat * u_View_mat * transformed_vertex;
 };

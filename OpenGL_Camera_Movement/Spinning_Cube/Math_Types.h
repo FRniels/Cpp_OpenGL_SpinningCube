@@ -81,6 +81,7 @@ public:
 	void SetScaling3f(vec3f scaling_xyz);
 };
 
+// Camera view matrix: Translates the world coordinates of every object to the reference of the camera view
 class ViewMatrix4f : public Matrix4f
 {
 private:
@@ -97,6 +98,16 @@ public:
 	}
 
 	~ViewMatrix4f() {}
+
+	// THIS IMPLEMENTATION WORKS BECAUSE THERE IS NO ROTATION YET 
+	// => TO DO: ADJUST THE IMPLEMENTATION WHEN THE ROTATION OF THE CAMERA IS ADDED!
+	//           USE THE INVERSE METHOD OF THE TRANSLATION MATRIX.
+	inline void SetWorldTranslation(vec3f translation_xyz)
+	{
+		mat4f[0][3] = -(*translation_xyz);       // -X
+		mat4f[1][3] = -(*(translation_xyz + 1)); // -Y
+		mat4f[2][3] = -(*(translation_xyz + 2)); // -Z
+	}
 };
 
 class ProjectionMatrix4f : public Matrix4f		// This matrix needs to be multiplied with the FINAL transformation matrix to transform the vertices and achieve perspective projection (sense of depth by accounting for the z values of the vertices. 

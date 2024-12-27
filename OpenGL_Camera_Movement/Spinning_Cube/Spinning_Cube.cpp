@@ -31,7 +31,9 @@ int main()
 	Renderer renderer(clear_color);
 
 	// Note: The near and far field are chosen to clip the current scene both on the near and the far field as a demonstration.
+	vec3f camera_position = { 0.0f, 0.0f, -1.0f }; // Move tge camera back 1unit along the N-axis, which is the world Z-axis in this case because the camera is not rotated.
 	Camera camera(90.0f, 1.5f, 3.0f, window.GetAspectRatio(), renderer.context); 
+	camera.SetPosition(camera_position);
 
 	ShaderManager shader_manager;
 

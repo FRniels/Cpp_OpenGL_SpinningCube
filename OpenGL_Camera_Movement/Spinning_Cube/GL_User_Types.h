@@ -1,6 +1,8 @@
 #ifndef GL_USER_TYPES_H
 #define GL_USER_TYPES_H
 
+// TO DO: THESE DEFINE ARE CONFUSING BECUASE THE SIZE IS THE ELEMENT COUNT AND NOT THE ACTUAL SIZE IN BYTES, FIX THIS !!!
+
 #define VEC2I_SIZE 2
 typedef int   vec2i[VEC2I_SIZE]; // Typedefing an array of 2 ints   to be used like the GLSL (shader) type vec2
 
